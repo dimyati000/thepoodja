@@ -97,7 +97,7 @@ export default function App() {
           top: `${mousePos.y}px`,
           width: isInHero && !cursorHovered ? "65px" : "30px",
           height: isInHero && !cursorHovered ? "65px" : "30px",
-          border: `1px solid ${isDark ? "#FBD47B" : "#000000"}`,
+          border: `1px solid ${isDark ? "#FCD57B" : "#000000"}`,
           transform: "translate(-50%, -50%)",
           zIndex: 9999,
           transition:
@@ -113,7 +113,7 @@ export default function App() {
         {/* Indikator Teks Panah di Dalam Kursor Lingkaran */}
         {isInHero && !cursorHovered && (
           <div
-            style={{ color: isDark ? "#FBD47B" : "#000000" }}
+            style={{ color: isDark ? "#FCD57B" : "#000000" }}
             className="w-full h-full flex items-center justify-center text-[8px] font-bold tracking-widest text-center"
           >
             {heroSide === "left" ? "‹ PREV" : "NEXT ›"}
@@ -129,7 +129,7 @@ export default function App() {
           top: `${mousePos.y}px`,
           transform: "translate(-50%, -50%)",
           zIndex: 9999,
-          backgroundColor: isDark ? "#FBD47B" : "#000000",
+          backgroundColor: isDark ? "#FCD57B" : "#000000",
           opacity: isInHero ? 1 : 0,
         }}
       />

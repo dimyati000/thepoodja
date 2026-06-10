@@ -23,7 +23,7 @@ export function Footer({ isDark }) {
 
   // Setelan warna latar belakang & teks adaptif
   const footerBg = isDark ? "#010e22" : "#ffffff";
-  const titleColor = isDark ? "#FBD47B" : "#000000";
+  const titleColor = isDark ? "#FCD57B" : "#000000";
   const descColor = isDark ? "rgba(255,255,255,0.4)" : "rgba(0,0,0,0.6)";
   const linkColorClass = isDark
     ? "text-white/45 hover:text-white"

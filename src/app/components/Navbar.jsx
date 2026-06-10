@@ -37,9 +37,8 @@ export function Navbar({ isDark, onThemeToggle }) {
       ? "rgba(255, 255, 255, 0.98)"
       : "rgba(255, 255, 255, 0.85)";
 
-  // 🎨 SINKRONISASI WARNA LINK (Hitam Pekat vs Putih Bersih)
   const linkColor = (isActive) => {
-    if (isDark) return isActive ? "#FBD47B" : "rgba(255, 255, 255, 0.75)";
+    if (isDark) return isActive ? "#FCD57B" : "rgba(255, 255, 255, 0.75)";
     return isActive ? "#000000" : "rgba(0, 0, 0, 0.55)";
   };
 
@@ -47,7 +46,7 @@ export function Navbar({ isDark, onThemeToggle }) {
     ? "rgba(255, 255, 255, 0.06)"
     : "rgba(0, 0, 0, 0.08)";
   const mobileBg = isDark ? "#010e22" : "#ffffff";
-  const hamColor = isDark ? "#FBD47B" : "#000000";
+  const hamColor = isDark ? "#FCD57B" : "#000000";
 
   return (
     <nav
@@ -106,7 +105,7 @@ export function Navbar({ isDark, onThemeToggle }) {
             >
               {l}
               <span
-                style={{ backgroundColor: isDark ? "#FBD47B" : "#000000" }}
+                style={{ backgroundColor: isDark ? "#FCD57B" : "#000000" }}
                 className={`absolute bottom-0 left-0 h-px w-0 transition-all duration-300 group-hover:w-full ${active === l ? "w-full" : "w-0"}`}
               />
             </button>
@@ -122,7 +121,7 @@ export function Navbar({ isDark, onThemeToggle }) {
               border: `1px solid ${isDark ? "rgba(251,212,123,0.35)" : "rgba(0, 0, 0, 0.15)"}`,
               borderRadius: "50%",
               background: "transparent",
-              color: isDark ? "#FBD47B" : "#000000",
+              color: isDark ? "#FCD57B" : "#000000",
               cursor: "pointer",
             }}
           >
@@ -170,7 +169,7 @@ export function Navbar({ isDark, onThemeToggle }) {
               border: `1px solid ${isDark ? "rgba(251,212,123,0.3)" : "rgba(0, 0, 0, 0.12)"}`,
               borderRadius: "50%",
               background: "transparent",
-              color: isDark ? "#FBD47B" : "#000000",
+              color: isDark ? "#FCD57B" : "#000000",
               cursor: "pointer",
             }}
             className="flex items-center justify-center"

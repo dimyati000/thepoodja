@@ -141,7 +141,7 @@ export function HeroSection({ isDark }) {
           <span
             style={{
               fontFamily: "'Nunito Sans', sans-serif",
-              color: isDark ? "#FBD47B" : "#000000",
+              color: isDark ? "#FCD57B" : "#000000",
             }}
             className={`block text-[9px] tracking-[0.4em] font-bold uppercase transition-all duration-500 ${fade ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-2"}`}
           >
@@ -173,12 +173,12 @@ export function HeroSection({ isDark }) {
               {SLIDES[current].desc}
             </p>
             <button
-              style={{ color: isDark ? "#FBD47B" : "#000000" }}
+              style={{ color: isDark ? "#FCD57B" : "#000000" }}
               className="group flex items-center gap-3 text-[9px] font-bold tracking-[0.3em] uppercase bg-transparent border-none outline-none"
             >
               <span>VIEW DETAILS</span>
               <div
-                style={{ backgroundColor: isDark ? "#FBD47B" : "#000000" }}
+                style={{ backgroundColor: isDark ? "#FCD57B" : "#000000" }}
                 className="w-6 h-px transition-all duration-300 group-hover:w-12"
               />
             </button>
@@ -209,7 +209,7 @@ export function HeroSection({ isDark }) {
             <p
               style={{
                 fontFamily: "'Nunito Sans', sans-serif",
-                color: isDark ? "#FBD47B" : "#000000",
+                color: isDark ? "#FCD57B" : "#000000",
                 fontSize: "7.5px",
                 letterSpacing: "0.35em",
                 fontWeight: 700,
@@ -245,7 +245,7 @@ export function HeroSection({ isDark }) {
             <p
               style={{
                 fontFamily: "'Nunito Sans', sans-serif",
-                color: isDark ? "#FBD47B" : "#000000",
+                color: isDark ? "#FCD57B" : "#000000",
                 fontSize: "7.5px",
                 letterSpacing: "0.35em",
                 fontWeight: 700,
@@ -288,7 +288,7 @@ export function HeroSection({ isDark }) {
             <p
               style={{
                 fontFamily: "'Nunito Sans', sans-serif",
-                color: isDark ? "#FBD47B" : "#000000",
+                color: isDark ? "#FCD57B" : "#000000",
                 fontSize: "7.5px",
                 letterSpacing: "0.35em",
                 fontWeight: 700,
@@ -348,7 +348,7 @@ export function HeroSection({ isDark }) {
           {/* Search Button */}
           <button
             style={{
-              background: isDark ? "#FBD47B" : "#000000",
+              background: isDark ? "#FCD57B" : "#000000",
               color: isDark ? "#011434" : "#ffffff",
               fontFamily: "'Nunito Sans', sans-serif",
               fontSize: "9px",
@@ -357,7 +357,7 @@ export function HeroSection({ isDark }) {
               textTransform: "uppercase",
               border: "none",
             }}
-            className={`w-full h-full py-4 md:py-0 transition-all duration-300 ${isDark ? "hover:bg-[#fcdfa2] focus:ring-[#FBD47B]" : "hover:bg-neutral-800 focus:ring-black"} hover:letter-spacing-[0.35em] active:scale-[0.98] focus:outline-none focus:ring-2`}
+            className={`w-full h-full py-4 md:py-0 transition-all duration-300 ${isDark ? "hover:bg-[#fcdfa2] focus:ring-[#FCD57B]" : "hover:bg-neutral-800 focus:ring-black"} hover:letter-spacing-[0.35em] active:scale-[0.98] focus:outline-none focus:ring-2`}
           >
             Search
           </button>
@@ -385,7 +385,7 @@ export function HeroSection({ isDark }) {
                 <div
                   style={{
                     backgroundColor:
-                      current === idx ? (isDark ? "#FBD47B" : "#000000") : "",
+                      current === idx ? (isDark ? "#FCD57B" : "#000000") : "",
                   }}
                   className={`h-0.5 transition-all duration-500 ${current === idx ? "w-12" : `w-4 ${isDark ? "bg-white/30 group-hover:bg-white/60" : "bg-black/20 group-hover:bg-black/50"}`}`}
                 />
