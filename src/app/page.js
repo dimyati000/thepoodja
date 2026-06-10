@@ -1,65 +1,170 @@
-import Image from "next/image";
+"use client";
+import { useState, useEffect, useRef } from "react";
+import { Navbar } from "./components/Navbar";
+import { HeroSection } from "./components/HeroSection";
+import { Footer } from "./components/Footer";
 
-export default function Home() {
+export default function App() {
+  const [isDark, setIsDark] = useState(true);
+  const [mousePos, setMousePos] = useState({ x: -100, y: -100 });
+  const [cursorHovered, setCursorHovered] = useState(false);
+  const [isInHero, setIsInHero] = useState(false);
+
+  const [heroSide, setHeroSide] = useState(""); // "left" atau "right"
+  const heroRef = useRef(null);
+
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      requestAnimationFrame(() => {
+        setMousePos({ x: e.clientX, y: e.clientY });
+      });
+
+      if (isInHero) {
+        const halfWidth = window.innerWidth / 2;
+        if (e.clientX < halfWidth) {
+          setHeroSide("left");
+        } else {
+          setHeroSide("right");
+        }
+      }
+    };
+
+    const handleMouseOver = (e) => {
+      if (
+        e.target.tagName === "BUTTON" ||
+        e.target.tagName === "A" ||
+        e.target.tagName === "INPUT" ||
+        e.target.tagName === "SELECT" ||
+        e.target.closest("button") ||
+        e.target.closest("a")
+      ) {
+        setCursorHovered(true);
+      } else {
+        setCursorHovered(false);
+      }
+    };
+
+    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mouseover", handleMouseOver);
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mouseover", handleMouseOver);
+    };
+  }, [isInHero]);
+
+  const triggerHeroSlide = () => {
+    if (!isInHero || cursorHovered) return;
+    const eventName = heroSide === "left" ? "prevHeroSlide" : "nextHeroSlide";
+    window.dispatchEvent(new Event(eventName));
+  };
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
+    <div
+      style={{
+        fontFamily: "'Nunito Sans', sans-serif",
+        overflowX: "hidden",
+        backgroundColor: isDark ? "#011434" : "#ffffff",
+        color: isDark ? "#ffffff" : "#011434",
+        position: "relative",
+        minHeight: "100vh",
+      }}
+      className="transition-colors duration-500"
+    >
+      <style>{`
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        @media (max-width: 768px) {
+          .contact-grid { grid-template-columns: 1fr !important; gap: 48px !important; }
+        }
+        
+        /* 🎯 SOLUSI KURSOR RIGID: Menyembunyikan kursor asli laptop secara global hanya saat berada di dalam Hero */
+        ${
+          isInHero
+            ? `
+          body, button, a, input, select, pointer {
+            cursor: none !important;
+          }
+        `
+            : ""
+        }
+      `}</style>
+
+      {/* Aesthetic Circle Cursor (Hanya Aktif & Muncul di Dalam Area Hero) */}
+      <div
+        className="hidden lg:block fixed pointer-events-none rounded-full"
+        style={{
+          left: `${mousePos.x}px`,
+          top: `${mousePos.y}px`,
+          width: isInHero && !cursorHovered ? "65px" : "30px",
+          height: isInHero && !cursorHovered ? "65px" : "30px",
+          border: `1px solid ${isDark ? "#FBD47B" : "#000000"}`,
+          transform: "translate(-50%, -50%)",
+          zIndex: 9999,
+          transition:
+            "width 0.3s ease, height 0.3s ease, background-color 0.3s ease, opacity 0.3s ease, border-color 0.3s ease",
+          backgroundColor: cursorHovered
+            ? "rgba(251,212,123,0.15)"
+            : isInHero
+              ? "rgba(255,255,255,0.03)"
+              : "transparent",
+          opacity: isInHero ? 1 : 0,
+        }}
+      >
+        {/* Indikator Teks Panah di Dalam Kursor Lingkaran */}
+        {isInHero && !cursorHovered && (
+          <div
+            style={{ color: isDark ? "#FBD47B" : "#000000" }}
+            className="w-full h-full flex items-center justify-center text-[8px] font-bold tracking-widest text-center"
+          >
+            {heroSide === "left" ? "‹ PREV" : "NEXT ›"}
+          </div>
+        )}
+      </div>
+
+      {/* Center Dot Cursor */}
+      <div
+        className="hidden lg:block fixed pointer-events-none w-1 h-1 rounded-full"
+        style={{
+          left: `${mousePos.x}px`,
+          top: `${mousePos.y}px`,
+          transform: "translate(-50%, -50%)",
+          zIndex: 9999,
+          backgroundColor: isDark ? "#FBD47B" : "#000000",
+          opacity: isInHero ? 1 : 0,
+        }}
+      />
+
+      {/* Background Grid Lines Minimalis */}
+      <div
+        style={{ pointerEvents: "none" }}
+        className={`absolute inset-0 flex justify-between z-0 px-6 max-w-300 mx-auto transition-opacity duration-500 ${isDark ? "opacity-[0.04]" : "opacity-[0.07]"}`}
+      >
+        <div className={`w-px h-full ${isDark ? "bg-white" : "bg-black"}`} />
+        <div
+          className={`w-px h-full hidden md:block ${isDark ? "bg-white" : "bg-black"}`}
         />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.js file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+        <div
+          className={`w-px h-full hidden md:block ${isDark ? "bg-white" : "bg-black"}`}
+        />
+        <div className={`w-px h-full ${isDark ? "bg-white" : "bg-black"}`} />
+      </div>
+
+      {/* Konten Utama Aplikasi */}
+      <div className="relative z-20">
+        <Navbar isDark={isDark} onThemeToggle={() => setIsDark((v) => !v)} />
+
+        <div
+          ref={heroRef}
+          onMouseEnter={() => setIsInHero(true)}
+          onMouseLeave={() => setIsInHero(false)}
+          onClick={triggerHeroSlide}
+          className="w-full"
+        >
+          <HeroSection isDark={isDark} />
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-39.5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/8 px-5 transition-colors hover:border-transparent hover:bg-black/4 dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-39.5"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+
+        <Footer isDark={isDark} />
+      </div>
     </div>
   );
 }
