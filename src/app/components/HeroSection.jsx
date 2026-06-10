@@ -5,14 +5,14 @@ import Image from "next/image";
 const SLIDES = [
   {
     image:
-      "https://images.unsplash.com/photo-1692736933760-8a8a9b8c1b6f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1920",
+      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1920&q=80",
     tag: "CONDOMINIUM",
     title: "A dramatic feature modern barn house",
     desc: "Experience the pinnacle of high-end living in our meticulously crafted modern spaces.",
   },
   {
     image:
-      "https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=1920&q=80",
+      "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1920&q=80",
     tag: "LUXURY VILLA",
     title: "The sanctuary of tropical paradise",
     desc: "Unwind within private luxury pools surrounded by Bali's breathtaking nature landscapes.",
