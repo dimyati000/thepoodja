@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import { Navbar } from "./components/Navbar";
 import { HeroSection } from "./components/HeroSection";
 import { WhyBookWithUs } from "./components/WhyBookWithUs";
+import { Destinations } from "./components/Destinations";
 import { Footer } from "./components/Footer";
 
 export default function App() {
@@ -164,7 +165,7 @@ export default function App() {
           <HeroSection isDark={isDark} />
         </div>
         <WhyBookWithUs isDark={isDark} />
-
+        <Destinations isDark={isDark} />
         <Footer isDark={isDark} />
       </div>
     </div>
