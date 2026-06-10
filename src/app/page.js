@@ -5,6 +5,7 @@ import { HeroSection } from "./components/HeroSection";
 import { WhyBookWithUs } from "./components/WhyBookWithUs";
 import { Destinations } from "./components/Destinations";
 import { Footer } from "./components/Footer";
+import { Testimonials } from "./components/Testimonial";
 
 export default function App() {
   const [isDark, setIsDark] = useState(true);
@@ -166,6 +167,7 @@ export default function App() {
         </div>
         <WhyBookWithUs isDark={isDark} />
         <Destinations isDark={isDark} />
+        <Testimonials isDark={isDark} />
         <Footer isDark={isDark} />
       </div>
     </div>

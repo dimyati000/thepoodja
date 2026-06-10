@@ -61,31 +61,50 @@ export function Destinations({ isDark = true }) {
       id="destinations"
       className={`${bgColor} pt-12 pb-16 md:pt-20 md:pb-24 transition-colors duration-500 overflow-hidden`}
     >
-      {/* ── HEADER TITLE (Jarak di atas dikurangi) ── */}
+      {/* Header */}
       <div
         ref={hRef}
-        style={revealStyle(hInView)}
-        className="text-center px-6 mb-10 md:mb-16"
+        style={{
+          padding: "30px 24px 72px",
+          textAlign: "center",
+          ...revealStyle(hInView),
+        }}
       >
         <p
           style={{
             fontFamily: "'Nunito Sans', sans-serif",
+            color: isDark ? "#FCD57B" : "#8B6B2E",
+            fontSize: "10px",
             letterSpacing: "0.45em",
+            fontWeight: 700,
+            marginBottom: "18px",
+            textTransform: "uppercase",
           }}
-          className="text-[10px] text-[#FBD47B] font-bold uppercase mb-3"
         >
           Explore Indonesia
         </p>
+
         <h2
           style={{
             fontFamily: "'Cormorant Garamond', serif",
+            color: isDark ? "#FFFFFF" : "#111111",
+            fontSize: "clamp(2rem, 4.5vw, 3.5rem)",
+            fontWeight: 300,
             letterSpacing: "0.08em",
           }}
-          className={`${textColor} text-3xl md:text-5xl font-light`}
         >
           DESTINATIONS
         </h2>
-        <div className="w-10 h-[1px] bg-[#FBD47B] mx-auto mt-5 opacity-75" />
+
+        <div
+          style={{
+            width: "40px",
+            height: "1px",
+            background: isDark ? "#FCD57B" : "#8B6B2E",
+            margin: "22px auto 0",
+            opacity: 0.75,
+          }}
+        />
       </div>
 
       {/* ── CARDS CONTAINER ── */}
