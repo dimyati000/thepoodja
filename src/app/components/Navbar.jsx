@@ -73,7 +73,7 @@ export function Navbar({ isDark, onThemeToggle }) {
         className="flex items-center justify-between"
       >
         <Image
-          src={isDark ? "/logo-gold1.png" : "/logo-black1.png"}
+          src={isDark ? "/logo-gold2.png" : "/logo-black2.png"}
           alt="The Poodja"
           width={400}
           height={152}
