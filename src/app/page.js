@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Navbar } from "./components/Navbar";
 import { HeroSection } from "./components/HeroSection";
 import { WhyBookWithUs } from "./components/WhyBookWithUs";
@@ -10,26 +10,57 @@ import { Footer } from "./components/Footer";
 
 export default function App() {
   const [isDark, setIsDark] = useState(true);
-  const [mousePos, setMousePos] = useState({ x: -100, y: -100 });
   const [cursorHovered, setCursorHovered] = useState(false);
-  const [isInHero, setIsInHero] = useState(false);
+  const [heroSide, setHeroSide] = useState(""); // "left", "right", atau ""
 
-  const [heroSide, setHeroSide] = useState(""); // "left" atau "right"
-  const heroRef = useRef(null);
+  const [current, setCurrent] = useState(0);
+  const [fade, setFade] = useState(true);
+
+  const handleSlideChange = useCallback(
+    (index) => {
+      if (index === current) return;
+      setFade(false);
+      setTimeout(() => {
+        setCurrent(index);
+        setFade(true);
+      }, 400);
+    },
+    [current],
+  );
 
   useEffect(() => {
     const handleMouseMove = (e) => {
-      requestAnimationFrame(() => {
-        setMousePos({ x: e.clientX, y: e.clientY });
-      });
+      document.documentElement.style.setProperty(
+        "--cursor-x",
+        `${e.clientX}px`,
+      );
+      document.documentElement.style.setProperty(
+        "--cursor-y",
+        `${e.clientY}px`,
+      );
 
-      if (isInHero) {
-        const halfWidth = window.innerWidth / 2;
-        if (e.clientX < halfWidth) {
-          setHeroSide("left");
+      const sliderEl = document.getElementById("main-slider-frame");
+      if (sliderEl) {
+        const rect = sliderEl.getBoundingClientRect();
+        const isInSliderX = e.clientX >= rect.left && e.clientX <= rect.right;
+        const isInSliderY = e.clientY >= rect.top && e.clientY <= rect.bottom;
+
+        if (isInSliderX && isInSliderY) {
+          const width = rect.width;
+          const relativeX = e.clientX - rect.left;
+
+          if (relativeX < width * 0.2) {
+            setHeroSide("left");
+          } else if (relativeX > width * 0.8) {
+            setHeroSide("right");
+          } else {
+            setHeroSide("");
+          }
         } else {
-          setHeroSide("right");
+          setHeroSide("");
         }
+      } else {
+        setHeroSide("");
       }
     };
 
@@ -40,7 +71,8 @@ export default function App() {
         e.target.tagName === "INPUT" ||
         e.target.tagName === "SELECT" ||
         e.target.closest("button") ||
-        e.target.closest("a")
+        e.target.closest("a") ||
+        e.target.closest(".info-card-container")
       ) {
         setCursorHovered(true);
       } else {
@@ -54,18 +86,22 @@ export default function App() {
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("mouseover", handleMouseOver);
     };
-  }, [isInHero]);
+  }, []);
 
   const triggerHeroSlide = () => {
-    if (!isInHero || cursorHovered) return;
-    const eventName = heroSide === "left" ? "prevHeroSlide" : "nextHeroSlide";
-    window.dispatchEvent(new Event(eventName));
+    if (cursorHovered || !heroSide) return;
+    if (heroSide === "left") {
+      handleSlideChange((current - 1 + 3) % 3);
+    } else if (heroSide === "right") {
+      handleSlideChange((current + 1) % 3);
+    }
   };
+
+  const showCustomCursor = heroSide !== "" && !cursorHovered;
 
   return (
     <div
       style={{
-        fontFamily: "'Nunito Sans', sans-serif",
         overflowX: "hidden",
         backgroundColor: isDark ? "#011434" : "#ffffff",
         color: isDark ? "#ffffff" : "#011434",
@@ -77,95 +113,72 @@ export default function App() {
       <style>{`
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        @media (max-width: 768px) {
-          .contact-grid { grid-template-columns: 1fr !important; gap: 48px !important; }
-        }
         
-        /* 🎯 SOLUSI KURSOR RIGID: Menyembunyikan kursor asli laptop secara global hanya saat berada di dalam Hero */
-        ${
-          isInHero
-            ? `
-          body, button, a, input, select, pointer {
-            cursor: none !important;
-          }
-        `
-            : ""
+        /* Sembunyikan kursor bawaan saat custom kursor aktif */
+        ${showCustomCursor ? `body { cursor: none !important; }` : ""}
+        
+        .smooth-cursor {
+          position: fixed;
+          left: 0;
+          top: 0;
+          transform: translate3d(var(--cursor-x), var(--cursor-y), 0) translate(-50%, -50%);
+          will-change: transform;
+          pointer-events: none;
+          z-index: 9999;
         }
       `}</style>
 
-      {/* Aesthetic Circle Cursor (Hanya Aktif & Muncul di Dalam Area Hero) */}
-      <div
-        className="hidden lg:block fixed pointer-events-none rounded-full"
-        style={{
-          left: `${mousePos.x}px`,
-          top: `${mousePos.y}px`,
-          width: isInHero && !cursorHovered ? "65px" : "30px",
-          height: isInHero && !cursorHovered ? "65px" : "30px",
-          border: `1px solid ${isDark ? "#FCD57B" : "#000000"}`,
-          transform: "translate(-50%, -50%)",
-          zIndex: 9999,
-          transition:
-            "width 0.3s ease, height 0.3s ease, background-color 0.3s ease, opacity 0.3s ease, border-color 0.3s ease",
-          backgroundColor: cursorHovered
-            ? "rgba(251,212,123,0.15)"
-            : isInHero
-              ? "rgba(255,255,255,0.03)"
-              : "transparent",
-          opacity: isInHero ? 1 : 0,
-        }}
-      >
-        {/* Indikator Teks Panah di Dalam Kursor Lingkaran */}
-        {isInHero && !cursorHovered && (
+      {showCustomCursor && (
+        <div className="hidden lg:flex smooth-cursor items-center justify-center pointer-events-none select-none">
           <div
-            style={{ color: isDark ? "#FCD57B" : "#000000" }}
-            className="w-full h-full flex items-center justify-center text-[8px] font-bold tracking-widest text-center"
+            style={{
+              width: "58px",
+              height: "58px",
+              borderRadius: "50%",
+              // Menggunakan warna Cream Gold cerah, ketebalan border disesuaikan ke 1.5px
+              border: "1.5px solid rgba(230, 213, 184, 0.75)",
+              backgroundColor: "rgba(230, 213, 184, 0.12)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
           >
-            {heroSide === "left" ? "‹ PREV" : "NEXT ›"}
+            {/* SVG Chevron Arrow */}
+            <svg
+              width="22"
+              height="22"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="rgba(230, 213, 184, 0.95)" // Warna cream gold solid cerah
+              strokeWidth="1.25" // Ketebalan diatur ideal, pas di tengah-tengah
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              style={{
+                transform:
+                  heroSide === "left" ? "rotate(180deg)" : "rotate(0deg)",
+                transition: "transform 0.15s ease-in-out",
+                marginLeft: heroSide === "left" ? "0px" : "2px",
+                marginRight: heroSide === "left" ? "2px" : "0px",
+              }}
+            >
+              <polyline points="9 18 15 12 9 6" />
+            </svg>
           </div>
-        )}
-      </div>
+        </div>
+      )}
 
-      {/* Center Dot Cursor */}
-      <div
-        className="hidden lg:block fixed pointer-events-none w-1 h-1 rounded-full"
-        style={{
-          left: `${mousePos.x}px`,
-          top: `${mousePos.y}px`,
-          transform: "translate(-50%, -50%)",
-          zIndex: 9999,
-          backgroundColor: isDark ? "#FCD57B" : "#000000",
-          opacity: isInHero ? 1 : 0,
-        }}
-      />
-
-      {/* Background Grid Lines Minimalis */}
-      <div
-        style={{ pointerEvents: "none" }}
-        className={`absolute inset-0 flex justify-between z-0 px-6 max-w-300 mx-auto transition-opacity duration-500 ${isDark ? "opacity-[0.04]" : "opacity-[0.07]"}`}
-      >
-        <div className={`w-px h-full ${isDark ? "bg-white" : "bg-black"}`} />
-        <div
-          className={`w-px h-full hidden md:block ${isDark ? "bg-white" : "bg-black"}`}
-        />
-        <div
-          className={`w-px h-full hidden md:block ${isDark ? "bg-white" : "bg-black"}`}
-        />
-        <div className={`w-px h-full ${isDark ? "bg-white" : "bg-black"}`} />
-      </div>
-
-      {/* Konten Utama Aplikasi */}
       <div className="relative z-20">
         <Navbar isDark={isDark} onThemeToggle={() => setIsDark((v) => !v)} />
 
-        <div
-          ref={heroRef}
-          onMouseEnter={() => setIsInHero(true)}
-          onMouseLeave={() => setIsInHero(false)}
-          onClick={triggerHeroSlide}
-          className="w-full"
-        >
-          <HeroSection isDark={isDark} />
+        <div onClick={triggerHeroSlide} className="w-full">
+          <HeroSection
+            isDark={isDark}
+            current={current}
+            fade={fade}
+            handleSlideChange={handleSlideChange}
+          />
         </div>
+
         <WhyBookWithUs isDark={isDark} />
         <Destinations isDark={isDark} />
         <Testimonials isDark={isDark} />

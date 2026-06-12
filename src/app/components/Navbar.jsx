@@ -31,20 +31,24 @@ export function Navbar({ isDark, onThemeToggle }) {
 
   const navBg = isDark
     ? scrolled
-      ? "rgba(1, 14, 34, 0.98)"
-      : "rgba(1, 14, 34, 0.75)"
+      ? "rgba(1, 14, 34, 0.75)"
+      : "transparent"
     : scrolled
-      ? "rgba(255, 255, 255, 0.98)"
-      : "rgba(255, 255, 255, 0.85)";
+      ? "rgba(255, 255, 255, 0.85)"
+      : "transparent";
 
   const linkColor = (isActive) => {
     if (isDark) return isActive ? "#FCD57B" : "rgba(255, 255, 255, 0.75)";
     return isActive ? "#000000" : "rgba(0, 0, 0, 0.55)";
   };
 
-  const borderColor = isDark
-    ? "rgba(255, 255, 255, 0.06)"
-    : "rgba(0, 0, 0, 0.08)";
+  const borderColor = scrolled
+    ? isDark
+      ? "rgba(255, 255, 255, 0.08)"
+      : "rgba(0, 0, 0, 0.08)"
+    : isDark
+      ? "rgba(255, 255, 255, 0.03)"
+      : "rgba(0, 0, 0, 0.04)";
   const mobileBg = isDark ? "#010e22" : "#ffffff";
   const hamColor = isDark ? "#FCD57B" : "#000000";
 
@@ -54,7 +58,6 @@ export function Navbar({ isDark, onThemeToggle }) {
         backgroundColor: navBg,
         backdropFilter: "blur(16px)",
         transition: "background-color 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
-        fontFamily: "'Nunito Sans', sans-serif",
         borderBottom: `1px solid ${borderColor}`,
         position: "fixed",
         top: 0,
@@ -66,11 +69,8 @@ export function Navbar({ isDark, onThemeToggle }) {
       <div
         style={{
           maxWidth: "1200px",
-          margin: "0 auto",
-          padding: "0 24px",
-          height: "76px",
         }}
-        className="flex items-center justify-between"
+        className="mx-auto px-6 flex items-center justify-between h-14 md:h-16 lg:h-[72px]"
       >
         <Image
           src={isDark ? "/logo-gold2.png" : "/logo-black2.png"}
@@ -78,30 +78,27 @@ export function Navbar({ isDark, onThemeToggle }) {
           width={400}
           height={152}
           priority
-          style={{ cursor: "pointer", height: "auto", width: "130px" }}
+          style={{ cursor: "pointer", height: "auto", width: "150px" }}
           onClick={() => handleNav("Home")}
         />
 
         {/* Desktop nav */}
-        <div style={{ gap: "36px" }} className="hidden lg:flex items-center">
+        <div className="hidden lg:flex items-center gap-9">
           {links.map((l) => (
             <button
               key={l}
               onClick={() => handleNav(l)}
               style={{
                 color: linkColor(active === l),
-                fontFamily: "'Nunito Sans', sans-serif",
                 letterSpacing: "0.15em",
                 fontWeight: active === l ? 700 : 500,
-                fontSize: "11px",
                 background: "transparent",
                 border: "none",
                 cursor: "pointer",
                 textTransform: "uppercase",
-                padding: "4px 0",
                 position: "relative",
               }}
-              className="group transition-colors duration-300 focus:outline-none"
+              className="text-[10px] md:text-xs py-1 group transition-colors duration-300 focus:outline-none"
             >
               {l}
               <span
@@ -160,7 +157,7 @@ export function Navbar({ isDark, onThemeToggle }) {
         </div>
 
         {/* Mobile hamburger */}
-        <div style={{ gap: "12px" }} className="flex items-center lg:hidden">
+        <div className="flex items-center lg:hidden gap-3">
           <button
             onClick={onThemeToggle}
             style={{
@@ -211,8 +208,8 @@ export function Navbar({ isDark, onThemeToggle }) {
               background: "transparent",
               border: "none",
               cursor: "pointer",
-              padding: "4px",
             }}
+            className="p-1"
             aria-label="Menu"
           >
             <div className="flex flex-col gap-1.25">
@@ -272,10 +269,7 @@ export function Navbar({ isDark, onThemeToggle }) {
                 display: "block",
                 width: "100%",
                 textAlign: "left",
-                padding: "14px 24px",
                 color: linkColor(active === l),
-                fontFamily: "'Nunito Sans', sans-serif",
-                fontSize: "10px",
                 letterSpacing: "0.2em",
                 textTransform: "uppercase",
                 background: "transparent",
@@ -283,6 +277,7 @@ export function Navbar({ isDark, onThemeToggle }) {
                 borderBottom: `1px solid ${borderColor}`,
                 cursor: "pointer",
               }}
+              className="py-3.5 px-6 text-xs"
             >
               {l}
             </button>

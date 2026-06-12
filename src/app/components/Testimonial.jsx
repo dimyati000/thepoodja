@@ -122,64 +122,53 @@ export function Testimonials({ isDark = true }) {
 
   const dotIdx = idx % N;
 
-  // PERBAIKAN STRUKTUR LEBAR KARTU & GAP
   const gap = isMobile ? 16 : 24;
-  // Di desktop, kita kurangi total gap dari container utama agar 3 kartu muat presisi
   const cardWidth = isMobile ? "100%" : "calc((100% - 48px) / 3)";
 
   return (
     <section
       id="testimonials"
-      className={`${bgColor} pt-8 pb-16 md:pt-20 md:pb-24 transition-colors duration-500 overflow-hidden`}
+      className={`${bgColor} pt-4 pb-24 md:pt-20 md:pb-32 lg:pb-42 transition-colors duration-500 overflow-hidden`}
     >
       {/* Header */}
       <div
         ref={sRef}
         style={{
-          padding: "30px 24px 10px",
           textAlign: "center",
           ...revealStyle(sInView),
         }}
-        className="mb-12 md:mb-16 flex flex-col items-center"
+        className="pt-8 pb-12 px-6"
       >
         <p
           style={{
-            fontFamily: "'Nunito Sans', sans-serif",
             color: isDark ? "#FCD57B" : "#8B6B2E",
-            fontSize: "10px",
-            letterSpacing: "0.45em",
-            fontWeight: 700,
-            marginBottom: "18px",
-            textTransform: "uppercase",
           }}
+          className="text-xs md:text-sm font-bold uppercase mb-[18px] tracking-[0.45em]"
         >
           Voices of Our Guests
         </p>
         <h2
           style={{
-            fontFamily: "'Cormorant Garamond', serif",
             color: isDark ? "#FFFFFF" : "#111111",
-            fontSize: "clamp(2rem, 4.5vw, 3.5rem)",
-            fontWeight: 300,
-            letterSpacing: "0.08em",
           }}
-          className="transition-colors duration-500"
+          className="font-serif text-2xl md:text-3xl lg:text-4xl font-normal tracking-[0.08em]"
         >
           WHAT OUR GUESTS SAY
         </h2>
+
         <div
           style={{
             width: "40px",
             height: "1px",
             background: isDark ? "#FCD57B" : "#8B6B2E",
-            marginTop: "22px",
             opacity: 0.75,
           }}
+          className="mt-6 mx-auto"
         />
       </div>
 
       {/* Slider Container */}
-      <div className="w-full max-w-[1200px] mx-auto relative px-4 md:px-12">
+      <div className="w-full max-w-[1200px] mx-auto relative px-4 md:px-10">
         {/* Nav Buttons */}
         <button
           onClick={handlePrev}
@@ -275,14 +264,12 @@ export function Testimonials({ isDark = true }) {
                       ))}
                     </div>
                     <div
-                      style={{ fontFamily: "'Cormorant Garamond', serif" }}
-                      className={`text-5xl h-4 select-none pointer-events-none font-light -ml-1 mb-2 ease-in-out ${isTransitioning ? "duration-500" : "duration-0"} ${focused ? "text-[#FBD47B]" : "text-[#FBD47B]/30"}`}
+                      className={`font-serif text-5xl h-4 select-none pointer-events-none font-light -ml-1 mb-2 ease-in-out ${isTransitioning ? "duration-500" : "duration-0"} ${focused ? "text-[#FBD47B]" : "text-[#FBD47B]/30"}`}
                     >
                       &ldquo;
                     </div>
                     <p
-                      style={{ fontFamily: "'Cormorant Garamond', serif" }}
-                      className={`${textColor} text-base md:text-lg font-light italic leading-relaxed mb-6 ease-in-out ${isTransitioning ? "duration-500" : "duration-0"}`}
+                      className={`font-serif ${textColor} text-base md:text-lg font-light italic leading-relaxed mb-6 ease-in-out ${isTransitioning ? "duration-500" : "duration-0"}`}
                     >
                       {t.quote}
                     </p>
@@ -304,26 +291,18 @@ export function Testimonials({ isDark = true }) {
                       </div>
                       <div className="min-w-0">
                         <h4
-                          style={{ fontFamily: "'Nunito Sans', sans-serif" }}
                           className={`${textColor} text-xs md:text-sm font-semibold tracking-wide truncate ease-in-out ${isTransitioning ? "duration-500" : "duration-0"}`}
                         >
                           {t.name}
                         </h4>
                         <p
-                          style={{
-                            fontFamily: "'Nunito Sans', sans-serif",
-                            letterSpacing: "0.12em",
-                          }}
-                          className={`${textMuted} text-[8.5px] uppercase font-medium truncate ease-in-out ${isTransitioning ? "duration-500" : "duration-0"}`}
+                          className={`${textMuted} text-[10px] md:text-xs uppercase font-medium truncate ease-in-out tracking-[0.12em] ${isTransitioning ? "duration-500" : "duration-0"}`}
                         >
                           {t.origin}
                         </p>
                       </div>
                     </div>
-                    <p
-                      style={{ fontFamily: "'Nunito Sans', sans-serif" }}
-                      className="text-[8px] tracking-wider text-[#FBD47B] font-semibold uppercase mt-3 block text-right opacity-80"
-                    >
+                    <p className="text-[10px] md:text-xs tracking-wider text-[#FBD47B] font-semibold uppercase mt-3 block text-right opacity-80">
                       {t.property.split(", ")[1] || t.property}
                     </p>
                   </div>

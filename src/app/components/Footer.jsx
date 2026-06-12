@@ -21,7 +21,6 @@ export function Footer({ isDark }) {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
   };
 
-  // Setelan warna latar belakang & teks adaptif
   const footerBg = isDark ? "#010e22" : "#ffffff";
   const titleColor = isDark ? "#FCD57B" : "#000000";
   const descColor = isDark ? "rgba(255,255,255,0.4)" : "rgba(0,0,0,0.6)";
@@ -42,11 +41,8 @@ export function Footer({ isDark }) {
       <div
         style={{
           maxWidth: "1200px",
-          margin: "0 auto",
-          padding: "72px 24px 48px",
-          gap: "48px",
         }}
-        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4"
+        className="mx-auto pt-[72px] pb-12 px-6 gap-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4"
       >
         {/* Brand Column */}
         <div>
@@ -62,13 +58,9 @@ export function Footer({ isDark }) {
           />
           <p
             style={{
-              fontFamily: "'Nunito Sans', sans-serif",
               color: descColor,
-              fontSize: "0.78rem",
-              lineHeight: 1.8,
-              fontWeight: 300,
-              marginBottom: "24px",
             }}
+            className="text-sm md:text-base font-light leading-relaxed mb-6"
           >
             Curating extraordinary luxury villa experiences across
             Indonesia&apos;s most beautiful destinations.
@@ -149,14 +141,9 @@ export function Footer({ isDark }) {
         <div>
           <h4
             style={{
-              fontFamily: "'Nunito Sans', sans-serif",
               color: titleColor,
-              fontSize: "9px",
-              letterSpacing: "0.3em",
-              fontWeight: 700,
-              marginBottom: "20px",
-              textTransform: "uppercase",
             }}
+            className="text-[10px] md:text-xs font-bold uppercase mb-5 tracking-[0.3em]"
           >
             Navigation
           </h4>
@@ -166,15 +153,12 @@ export function Footer({ isDark }) {
                 <button
                   onClick={() => scrollTo(l.id)}
                   style={{
-                    fontFamily: "'Nunito Sans', sans-serif",
-                    fontSize: "0.78rem",
-                    fontWeight: 300,
                     background: "transparent",
                     border: "none",
                     cursor: "pointer",
                     textAlign: "left",
                   }}
-                  className={`p-0 transition-colors duration-300 focus:outline-none ${linkColorClass}`}
+                  className={`text-sm font-light p-0 transition-colors duration-300 focus:outline-none ${linkColorClass}`}
                 >
                   {l.label}
                 </button>
@@ -247,26 +231,17 @@ export function Footer({ isDark }) {
               <div key={c.label}>
                 <p
                   style={{
-                    fontFamily: "'Nunito Sans', sans-serif",
                     color: labelColor,
-                    fontSize: "8px",
-                    letterSpacing: "0.2em",
-                    fontWeight: 700,
-                    marginBottom: "3px",
-                    textTransform: "uppercase",
                   }}
+                  className="text-[10px] md:text-xs font-bold uppercase mb-1 tracking-[0.2em]"
                 >
                   {c.label}
                 </p>
                 <p
                   style={{
-                    fontFamily: "'Nunito Sans', sans-serif",
                     color: valColor,
-                    fontSize: "0.76rem",
-                    fontWeight: 300,
-                    lineHeight: 1.6,
-                    whiteSpace: "pre-line",
                   }}
+                  className="text-sm md:text-base font-light leading-relaxed whitespace-pre-line"
                 >
                   {c.value}
                 </p>
@@ -287,19 +262,14 @@ export function Footer({ isDark }) {
         <div
           style={{
             maxWidth: "1200px",
-            margin: "0 auto",
-            padding: "20px 24px",
-            gap: "12px",
           }}
-          className="flex justify-between items-center flex-wrap"
+          className="mx-auto py-5 px-6 gap-3 flex justify-between items-center flex-wrap"
         >
           <p
             style={{
-              fontFamily: "'Nunito Sans', sans-serif",
               color: isDark ? "rgba(255,255,255,0.2)" : "rgba(0,0,0,0.3)",
-              fontSize: "0.7rem",
-              fontWeight: 300,
             }}
+            className="text-xs font-light"
           >
             © 2026 The Poodja. All rights reserved.
           </p>
@@ -308,14 +278,11 @@ export function Footer({ isDark }) {
               <button
                 key={l}
                 style={{
-                  fontFamily: "'Nunito Sans', sans-serif",
-                  fontSize: "0.7rem",
-                  fontWeight: 300,
                   background: "transparent",
                   border: "none",
                   cursor: "pointer",
                 }}
-                className={`p-0 transition-colors duration-300 focus:outline-none ${isDark ? "text-white/20 hover:text-white/60" : "text-black/30 hover:text-black/70"}`}
+                className={`text-[11px] md:text-xs font-light p-0 transition-colors duration-300 focus:outline-none ${isDark ? "text-white/20 hover:text-white/60" : "text-black/30 hover:text-black/70"}`}
               >
                 {l}
               </button>

@@ -65,33 +65,25 @@ export function Destinations({ isDark = true }) {
       <div
         ref={hRef}
         style={{
-          padding: "30px 24px 50px",
           textAlign: "center",
           ...revealStyle(hInView),
         }}
+        className="pt-8 pb-12 px-6"
       >
         <p
           style={{
-            fontFamily: "'Nunito Sans', sans-serif",
             color: isDark ? "#FCD57B" : "#8B6B2E",
-            fontSize: "10px",
-            letterSpacing: "0.45em",
-            fontWeight: 700,
-            marginBottom: "18px",
-            textTransform: "uppercase",
           }}
+          className="text-xs md:text-sm font-bold uppercase mb-[18px] tracking-[0.45em]"
         >
           Explore Indonesia
         </p>
 
         <h2
           style={{
-            fontFamily: "'Cormorant Garamond', serif",
             color: isDark ? "#FFFFFF" : "#111111",
-            fontSize: "clamp(2rem, 4.5vw, 3.5rem)",
-            fontWeight: 300,
-            letterSpacing: "0.08em",
           }}
+          className="font-serif text-2xl md:text-3xl lg:text-4xl font-normal tracking-[0.08em]"
         >
           DESTINATIONS
         </h2>
@@ -101,9 +93,9 @@ export function Destinations({ isDark = true }) {
             width: "40px",
             height: "1px",
             background: isDark ? "#FCD57B" : "#8B6B2E",
-            margin: "22px auto 0",
             opacity: 0.75,
           }}
+          className="mt-6 mx-auto"
         />
       </div>
 
@@ -113,7 +105,6 @@ export function Destinations({ isDark = true }) {
         style={revealStyle(cardsInView, 0.08)}
         className="w-full px-4 md:px-10 max-w-[1440px] mx-auto"
       >
-        {/* Menggunakan fixed height di mobile dan desktop agar transisi flex-grow berjalan mulus */}
         <div className="flex flex-col md:flex-row h-[650px] md:h-[600px] lg:h-[660px] gap-2 md:gap-0">
           {destinations.map((d, i) => {
             const isSelected = d.id === selectedId;
@@ -165,49 +156,32 @@ export function Destinations({ isDark = true }) {
                 >
                   <div className="flex items-center gap-3 mb-2 md:mb-3">
                     <span
-                      style={{
-                        fontFamily: "'Nunito Sans', sans-serif",
-                        letterSpacing: "0.4em",
-                      }}
-                      className="text-[10px] text-[#FBD47B] font-bold"
+                      className="text-xs text-[#FBD47B] font-bold tracking-[0.4em]"
                     >
                       {d.num}
                     </span>
                     <div className="flex-1 h-[1px] bg-[#FBD47B]/30" />
                     <span
-                      style={{
-                        fontFamily: "'Nunito Sans', sans-serif",
-                        letterSpacing: "0.25em",
-                      }}
-                      className="text-[9px] text-white/60 uppercase"
+                      className="text-[10px] md:text-xs text-white/60 uppercase tracking-[0.25em]"
                     >
                       {d.sub}
                     </span>
                   </div>
 
                   <h3
-                    style={{
-                      fontFamily: "'Cormorant Garamond', serif",
-                      letterSpacing: "0.06em",
-                    }}
-                    className="text-white text-2xl md:text-4xl font-light uppercase mb-2 md:mb-3 leading-tight"
+                    className="font-serif text-white text-2xl md:text-4xl font-light uppercase mb-2 md:mb-3 leading-tight tracking-[0.06em]"
                   >
                     {d.label}
                   </h3>
 
                   <p
-                    style={{ fontFamily: "'Nunito Sans', sans-serif" }}
                     className="text-white/70 text-xs md:text-sm font-light leading-relaxed mb-5 md:mb-6 max-w-sm md:max-w-md"
                   >
                     {d.desc}
                   </p>
 
                   <button
-                    style={{
-                      fontFamily: "'Nunito Sans', sans-serif",
-                      letterSpacing: "0.3em",
-                    }}
-                    className="self-start inline-flex items-center gap-3 text-[9px] text-[#FBD47B] font-bold uppercase bg-transparent border border-[#FBD47B]/40 px-5 py-3 transition-all duration-300 hover:bg-[#FBD47B] hover:text-[#011434] hover:border-[#FBD47B]"
+                    className="self-start inline-flex items-center gap-3 text-[10px] md:text-xs text-[#FBD47B] font-bold uppercase bg-transparent border border-[#FBD47B]/40 px-5 py-3 transition-all duration-300 hover:bg-[#FBD47B] hover:text-[#011434] hover:border-[#FBD47B] tracking-[0.3em]"
                   >
                     View Properties
                     <svg width="14" height="7" viewBox="0 0 18 7" fill="none">
@@ -249,21 +223,13 @@ export function Destinations({ isDark = true }) {
                   <div className="hidden md:flex absolute inset-0 flex-col items-center justify-end pb-8">
                     <div className="flex flex-col items-center gap-4">
                       <span
-                        style={{
-                          fontFamily: "'Nunito Sans', sans-serif",
-                          letterSpacing: "0.3em",
-                        }}
-                        className="text-[8px] text-[#FBD47B] font-bold opacity-80"
+                        className="text-[10px] md:text-xs text-[#FBD47B] font-bold opacity-80 tracking-[0.3em]"
                       >
                         {d.num}
                       </span>
                       <div className="w-[1px] h-6 bg-white/20" />
                       <h3
-                        style={{
-                          fontFamily: "'Cormorant Garamond', serif",
-                          letterSpacing: "0.12em",
-                        }}
-                        className="text-white/80 text-sm font-light uppercase tracking-widest [writing-mode:vertical-lr] rotate-180 whitespace-nowrap"
+                        className="font-serif text-white/80 text-sm font-light uppercase tracking-widest [writing-mode:vertical-lr] rotate-180 whitespace-nowrap"
                       >
                         {d.label}
                       </h3>
@@ -273,15 +239,11 @@ export function Destinations({ isDark = true }) {
                   {/* Mobile View (Dibuat jauh lebih bersih dan tipis) */}
                   <div className="md:hidden absolute inset-0 flex items-center justify-between px-6">
                     <div className="flex items-center gap-4">
-                      <span className="text-[10px] text-[#FBD47B] font-bold tracking-wider">
+                      <span className="text-xs text-[#FBD47B] font-bold tracking-wider">
                         {d.num}
                       </span>
                       <h3
-                        style={{
-                          fontFamily: "'Cormorant Garamond', serif",
-                          letterSpacing: "0.05em",
-                        }}
-                        className="text-white/80 text-base font-light uppercase"
+                        className="font-serif text-white/80 text-base font-light uppercase tracking-[0.05em]"
                       >
                         {d.label}
                       </h3>

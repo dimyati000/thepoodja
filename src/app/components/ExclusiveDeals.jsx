@@ -18,7 +18,6 @@ export function ExclusiveDeals({ isDark = true }) {
   const [submitted, setSubmitted] = useState(false);
   const { ref, inView } = useScrollReveal(0.1);
 
-  // Penyesuaian Warna Tema
   const tagColor = isDark ? "text-[#FCD57B]" : "text-[#8B6B2E]";
   const headingColor = isDark ? "text-white" : "text-[#011434]";
   const dividerBg = isDark ? "bg-[#FCD57B]/30" : "bg-[#8B6B2E]/30";
@@ -70,33 +69,19 @@ export function ExclusiveDeals({ isDark = true }) {
       >
         {/* Tag */}
         <p
-          style={{
-            fontFamily: "'Nunito Sans', sans-serif",
-            letterSpacing: "0.4em",
-          }}
-          className={`${tagColor} text-[9px] md:text-[10px] font-bold uppercase mb-4 transition-colors duration-500`}
+          className={`${tagColor} text-xs md:text-sm font-bold uppercase mb-4 transition-colors duration-500 tracking-[0.4em]`}
         >
           Members Only
         </p>
 
         {/* Heading */}
         <h2
-          style={{
-            fontFamily: "'Cormorant Garamond', serif",
-            letterSpacing: "0.04em",
-            fontSize: "clamp(2rem, 5vw, 3.5rem)",
-          }}
-          className={`${headingColor} font-light leading-tight mb-1 transition-colors duration-500`}
+          className={`font-serif ${headingColor} text-3xl md:text-4xl lg:text-5xl font-normal leading-tight mb-1 transition-colors duration-500 tracking-[0.04em]`}
         >
           Get Exclusive
         </h2>
         <h2
-          style={{
-            fontFamily: "'Cormorant Garamond', serif",
-            letterSpacing: "0.04em",
-            fontSize: "clamp(2rem, 5vw, 3.5rem)",
-          }}
-          className={`${isDark ? "text-[#FCD57B]" : "text-[#8B6B2E]"} font-light italic leading-none mb-5 transition-colors duration-500`}
+          className={`font-serif ${isDark ? "text-[#FCD57B]" : "text-[#8B6B2E]"} text-3xl md:text-4xl lg:text-5xl font-normal italic leading-none mb-5 transition-colors duration-500 tracking-[0.04em]`}
         >
           Deals
         </h2>
@@ -108,8 +93,7 @@ export function ExclusiveDeals({ isDark = true }) {
 
         {/* Description */}
         <p
-          style={{ fontFamily: "'Nunito Sans', sans-serif" }}
-          className={`${descColor} text-[11px] md:text-xs font-light leading-relaxed tracking-wide max-w-md mx-auto mb-10 transition-colors duration-500`}
+          className={`${descColor} text-sm md:text-base font-light leading-relaxed tracking-wide max-w-md mx-auto mb-10 transition-colors duration-500`}
         >
           Be the first to discover our limited-time offers, early bird rates,
           and seasonal packages — curated exclusively for our members.
@@ -124,14 +108,10 @@ export function ExclusiveDeals({ isDark = true }) {
               }}
               className="w-full p-6 md:p-8 border border-[#FCD57B]/20 rounded-sm bg-white/[0.01] backdrop-blur-sm"
             >
-              <p
-                style={{ fontFamily: "'Cormorant Garamond', serif" }}
-                className="text-[#FCD57B] text-lg md:text-xl font-normal mb-1"
-              >
+              <p className="font-serif text-[#FCD57B] text-lg md:text-xl font-normal mb-1">
                 You&apos;re on the list.
               </p>
               <p
-                style={{ fontFamily: "'Nunito Sans', sans-serif" }}
                 className={`${categoryTextColor} text-[10px] md:text-xs tracking-wide`}
               >
                 Exclusive offers will arrive in your inbox shortly.
@@ -151,16 +131,11 @@ export function ExclusiveDeals({ isDark = true }) {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                style={{ fontFamily: "'Nunito Sans', sans-serif" }}
-                className={`bg-transparent outline-none px-4 py-3.5 text-xs font-light w-full border sm:border-none rounded-sm sm:rounded-none transition-colors duration-500 ${inputBorder} ${inputBg} ${inputTextColor} ${placeholderClass}`}
+                className={`bg-transparent outline-none px-4 py-3.5 text-xs md:text-sm font-light w-full border sm:border-none rounded-sm sm:rounded-none transition-colors duration-500 ${inputBorder} ${inputBg} ${inputTextColor} ${placeholderClass}`}
               />
               <button
                 type="submit"
-                style={{
-                  fontFamily: "'Nunito Sans', sans-serif",
-                  letterSpacing: "0.2em",
-                }}
-                className={`text-[9px] font-bold uppercase px-6 py-3.5 whitespace-nowrap cursor-pointer rounded-sm sm:rounded-none transition-all duration-300 hover:brightness-95 active:scale-[0.99] flex-shrink-0 ${buttonBg} ${buttonTextColor}`}
+                className={`text-xs font-bold uppercase px-6 py-3.5 whitespace-nowrap cursor-pointer rounded-sm sm:rounded-none transition-all duration-300 hover:brightness-95 active:scale-[0.99] flex-shrink-0 tracking-[0.2em] ${buttonBg} ${buttonTextColor}`}
               >
                 Subscribe
               </button>
@@ -179,17 +154,15 @@ export function ExclusiveDeals({ isDark = true }) {
                 isDark ? "sm:border-white/10" : "sm:border-[#011434]/10"
               }`}
             >
-              <p className="text-[#FCD57B] text-[8px] font-bold mb-1 opacity-60 hidden sm:block">
+              <p
+                className={`${tagColor} text-xs font-bold mb-1 opacity-60 hidden sm:block`}
+              >
                 {d.icon}
               </p>
               <p
-                style={{
-                  fontFamily: "'Nunito Sans', sans-serif",
-                  letterSpacing: "0.15em",
-                }}
-                className={`${categoryTextColor} text-[9px] uppercase font-semibold transition-colors duration-500`}
+                className={`${categoryTextColor} text-[10px] md:text-xs uppercase font-semibold transition-colors duration-500 tracking-[0.15em]`}
               >
-                <span className="text-[#FCD57B] mr-1.5 sm:hidden">✦</span>
+                <span className={`${tagColor} mr-1.5 sm:hidden`}>✦</span>
                 {d.label}
               </p>
             </div>

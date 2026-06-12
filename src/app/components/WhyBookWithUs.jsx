@@ -106,7 +106,7 @@ export function WhyBookWithUs({ isDark }) {
       id="why-book-with-us"
       style={{
         backgroundColor: isDark ? "#011434" : "#ffffff",
-        paddingBottom: "100px",
+        paddingBottom: "80px",
       }}
       className="pt-12 md:pt-20 md:pb-24 transition-colors duration-500 select-none"
     >
@@ -115,31 +115,25 @@ export function WhyBookWithUs({ isDark }) {
         ref={hRef}
         style={{
           textAlign: "center",
-          padding: "30px 24px 50px",
           ...revealStyle(hInView),
         }}
+        className="pt-8 pb-12 px-6"
       >
         <p
           style={{
-            fontFamily: "'Nunito Sans', sans-serif",
             color: isDark ? "#FCD57B" : "#000000",
-            fontSize: "10px",
             letterSpacing: "0.45em",
-            fontWeight: 700,
-            marginBottom: "18px",
-            textTransform: "uppercase",
           }}
+          className="text-xs md:text-sm font-bold uppercase mb-[18px]"
         >
           Our Promise
         </p>
         <h2
           style={{
-            fontFamily: "'Cormorant Garamond', serif",
             color: isDark ? "#ffffff" : "#000000",
-            fontSize: "clamp(2rem, 4.5vw, 3.5rem)",
-            fontWeight: 300,
             letterSpacing: "0.08em",
           }}
+          className="font-serif text-2xl md:text-3xl lg:text-4xl font-normal"
         >
           WHY BOOK WITH US?
         </h2>
@@ -148,9 +142,9 @@ export function WhyBookWithUs({ isDark }) {
             width: "40px",
             height: "1px",
             background: isDark ? "#FCD57B" : "#000000",
-            margin: "22px auto 0",
             opacity: 0.75,
           }}
+          className="mt-6 mx-auto"
         />
       </div>
 
@@ -189,40 +183,33 @@ export function WhyBookWithUs({ isDark }) {
                 >
                   <p
                     style={{
-                      fontFamily: "'Nunito Sans', sans-serif",
                       color: isDark ? "#FCD57B" : "#000000",
-                      fontSize: "9px",
                       letterSpacing: "0.4em",
-                      fontWeight: 700,
-                      textTransform: "uppercase",
-                      marginBottom: "9px",
                     }}
+                    className="text-[10px] md:text-xs font-bold uppercase mb-2"
                   >
                     {f.num}
                   </p>
                   <h3
                     style={{
-                      fontFamily: "'Cormorant Garamond', serif",
                       color: isDark ? "#ffffff" : "#000000",
-                      fontSize: "1.15rem",
                       fontWeight: isActive ? 400 : 300,
                       letterSpacing: "0.03em",
                       lineHeight: 1.25,
                       marginBottom: "5px",
                     }}
+                    className="font-serif text-lg md:text-xl"
                   >
                     {f.title}
                   </h3>
                   <p
                     style={{
-                      fontFamily: "'Nunito Sans', sans-serif",
                       color: isDark
                         ? "rgba(255,255,255,0.38)"
                         : "rgba(0,0,0,0.4)",
-                      fontSize: "9px",
                       letterSpacing: "0.15em",
-                      textTransform: "uppercase",
                     }}
+                    className="text-[10px] uppercase"
                   >
                     {f.subtitle}
                   </p>
@@ -297,32 +284,27 @@ export function WhyBookWithUs({ isDark }) {
           <div
             key={`wb-detail-${activeIdx}`}
             style={{
-              padding: "28px 0 0",
               animation: "wbFadeIn 0.5s 0.08s cubic-bezier(0.16,1,0.3,1) both",
             }}
+            className="pt-7"
           >
             <p
               style={{
-                fontFamily: "'Nunito Sans', sans-serif",
                 color: isDark ? "rgba(255,255,255,0.35)" : "rgba(0,0,0,0.45)",
-                fontSize: "9px",
                 letterSpacing: "0.22em",
-                textTransform: "uppercase",
-                marginBottom: "7px",
               }}
+              className="text-[10px] md:text-xs uppercase mb-2"
             >
               {active.subtitle}
             </p>
             <h2
               style={{
-                fontFamily: "'Cormorant Garamond', serif",
                 color: isDark ? "#ffffff" : "#000000",
-                fontSize: "clamp(1.4rem, 2.2vw, 1.9rem)",
-                fontWeight: 300,
                 letterSpacing: "0.05em",
                 lineHeight: 1.2,
                 marginBottom: "14px",
               }}
+              className="font-serif text-2xl md:text-3xl font-light"
             >
               {active.title.toUpperCase()}
             </h2>
@@ -335,13 +317,10 @@ export function WhyBookWithUs({ isDark }) {
             />
             <p
               style={{
-                fontFamily: "'Nunito Sans', sans-serif",
                 color: isDark ? "rgba(255,255,255,0.48)" : "rgba(0,0,0,0.6)",
-                fontSize: "0.82rem",
                 lineHeight: 1.9,
-                fontWeight: 300,
               }}
-              className="max-w-xl lg:max-w-md"
+              className="text-sm md:text-base font-light max-w-xl lg:max-w-md"
             >
               {active.desc}
             </p>
@@ -394,33 +373,26 @@ export function WhyBookWithUs({ isDark }) {
                     bottom: 0,
                     left: 0,
                     right: 0,
-                    padding: "12px 14px",
                     background:
                       "linear-gradient(to top, rgba(0,0,0,0.75) 0%, transparent 100%)",
                     zIndex: 2,
                   }}
+                  className="py-3 px-3.5"
                 >
                   <p
                     style={{
-                      fontFamily: "'Nunito Sans', sans-serif",
                       color: "#FCD57B",
-                      fontSize: "7px",
                       letterSpacing: "0.3em",
-                      fontWeight: 700,
-                      textTransform: "uppercase",
-                      marginBottom: "2px",
                     }}
+                    className="text-[10px] font-bold uppercase mb-0.5"
                   >
                     {f.num}
                   </p>
                   <p
                     style={{
-                      fontFamily: "'Cormorant Garamond', serif",
                       color: "#ffffff",
-                      fontSize: "0.82rem",
-                      fontWeight: 300,
                     }}
-                    className="truncate"
+                    className="font-serif text-sm md:text-base font-light truncate"
                   >
                     {f.title}
                   </p>
