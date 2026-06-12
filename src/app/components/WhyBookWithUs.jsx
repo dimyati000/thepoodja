@@ -108,14 +108,14 @@ export function WhyBookWithUs({ isDark }) {
         backgroundColor: isDark ? "#011434" : "#ffffff",
         paddingBottom: "100px",
       }}
-      className="transition-colors duration-500 select-none"
+      className="pt-12 md:pt-20 md:pb-24 transition-colors duration-500 select-none"
     >
       {/* Header */}
       <div
         ref={hRef}
         style={{
           textAlign: "center",
-          padding: "100px 24px 72px",
+          padding: "30px 24px 50px",
           ...revealStyle(hInView),
         }}
       >

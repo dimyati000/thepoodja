@@ -72,6 +72,7 @@ export function Testimonials({ isDark = true }) {
   const [idx, setIdx] = useState(N);
   const [isTransitioning, setIsTransitioning] = useState(true);
   const lockedRef = useRef(false);
+  const trackRef = useRef(null);
   const { ref: sRef, inView: sInView } = useScrollReveal(0.1);
 
   const [isMobile, setIsMobile] = useState(false);
@@ -129,7 +130,7 @@ export function Testimonials({ isDark = true }) {
   return (
     <section
       id="testimonials"
-      className={`${bgColor} pt-12 pb-16 md:pt-20 md:pb-24 transition-colors duration-500 overflow-hidden`}
+      className={`${bgColor} pt-8 pb-16 md:pt-20 md:pb-24 transition-colors duration-500 overflow-hidden`}
     >
       {/* Header */}
       <div

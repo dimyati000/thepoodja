@@ -59,13 +59,13 @@ export function Destinations({ isDark = true }) {
   return (
     <section
       id="destinations"
-      className={`${bgColor} pt-12 pb-16 md:pt-20 md:pb-24 transition-colors duration-500 overflow-hidden`}
+      className={`${bgColor} pb-16 md:pt-20 md:pb-24 transition-colors duration-500 overflow-hidden`}
     >
       {/* Header */}
       <div
         ref={hRef}
         style={{
-          padding: "30px 24px 72px",
+          padding: "30px 24px 50px",
           textAlign: "center",
           ...revealStyle(hInView),
         }}

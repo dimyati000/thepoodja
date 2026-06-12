@@ -4,8 +4,9 @@ import { Navbar } from "./components/Navbar";
 import { HeroSection } from "./components/HeroSection";
 import { WhyBookWithUs } from "./components/WhyBookWithUs";
 import { Destinations } from "./components/Destinations";
-import { Footer } from "./components/Footer";
 import { Testimonials } from "./components/Testimonial";
+import { ExclusiveDeals } from "./components/ExclusiveDeals";
+import { Footer } from "./components/Footer";
 
 export default function App() {
   const [isDark, setIsDark] = useState(true);
@@ -168,6 +169,7 @@ export default function App() {
         <WhyBookWithUs isDark={isDark} />
         <Destinations isDark={isDark} />
         <Testimonials isDark={isDark} />
+        <ExclusiveDeals isDark={isDark} />
         <Footer isDark={isDark} />
       </div>
     </div>
