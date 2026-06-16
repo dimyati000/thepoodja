@@ -42,13 +42,13 @@ export function HeroSection({ isDark, current, fade, handleSlideChange }) {
   return (
     <section
       id="home"
-      className="relative w-full min-h-[100vh] flex flex-col justify-start select-none pt-20 md:pt-32 pb-10"
+      className="relative w-full min-h-[100vh] flex flex-col justify-start select-none pt-18 md:pt-28 pb-10"
     >
-      <div className="relative w-full max-w-[1360px] mx-auto px-4 sm:px-6 md:px-12 z-10 flex flex-col">
+      <div className="relative w-full lg:max-w-[1440px] mx-auto px-4 sm:px-6 md:px-12 z-10 flex flex-col">
         {/* FRAME UTAMA IMAGE SLIDER */}
         <div
           id="main-slider-frame"
-          className="relative w-full h-[58vh] sm:h-[60vh] md:h-[65vh] lg:h-[70vh] rounded-sm"
+          className="relative w-full h-[58vh] sm:h-[60vh] md:h-[65vh] lg:h-[80vh] rounded-sm"
         >
           <div className="absolute inset-0 rounded-sm overflow-hidden z-0">
             <div
@@ -63,27 +63,6 @@ export function HeroSection({ isDark, current, fade, handleSlideChange }) {
               />
             </div>
           </div>
-
-          <button
-            onClick={handleNextSlide}
-            className="absolute right-6 top-1/2 -translate-y-1/2 z-20 flex items-center justify-center w-14 h-14 md:w-16 md:h-16 rounded-full border border-white/30 bg-black/10 hover:bg-white/10 hover:border-white/60 transition-all duration-300 backdrop-blur-[2px] cursor-pointer group"
-          >
-            <svg
-              width="22"
-              height="22"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.2"
-              className="text-white/80 group-hover:text-white transition-colors"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M8.25 4.5l7.5 7.5-7.5 7.5"
-              />
-            </svg>
-          </button>
 
           <div
             style={{

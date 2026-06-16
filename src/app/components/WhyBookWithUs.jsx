@@ -108,7 +108,7 @@ export function WhyBookWithUs({ isDark }) {
         backgroundColor: isDark ? "#011434" : "#ffffff",
         paddingBottom: "80px",
       }}
-      className="pt-12 md:pt-20 md:pb-24 transition-colors duration-500 select-none"
+      className="pt-8 md:pt-14 md:pb-14 transition-colors duration-500 select-none"
     >
       {/* Header */}
       <div
@@ -133,7 +133,7 @@ export function WhyBookWithUs({ isDark }) {
             color: isDark ? "#ffffff" : "#000000",
             letterSpacing: "0.08em",
           }}
-          className="font-serif text-2xl md:text-3xl lg:text-4xl font-normal"
+          className="font-serif text-2xl md:text-3xl lg:text-4xl font-semibold transition-colors duration-500 tracking-[0.08em]"
         >
           WHY BOOK WITH US?
         </h2>
@@ -152,7 +152,7 @@ export function WhyBookWithUs({ isDark }) {
       <div
         ref={bodyRef}
         style={revealStyle(bodyInView, 0.08)}
-        className="max-w-300 w-full mx-auto px-6 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-0 items-start transition-all duration-500"
+        className="max-w-350 w-full mx-auto px-6 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-0 items-start transition-all duration-500"
       >
         {/* Left: Numbered List */}
         <div
@@ -193,7 +193,7 @@ export function WhyBookWithUs({ isDark }) {
                   <h3
                     style={{
                       color: isDark ? "#ffffff" : "#000000",
-                      fontWeight: isActive ? 400 : 300,
+                      fontWeight: isActive ? 600 : 400,
                       letterSpacing: "0.03em",
                       lineHeight: 1.25,
                       marginBottom: "5px",
@@ -290,7 +290,7 @@ export function WhyBookWithUs({ isDark }) {
           >
             <p
               style={{
-                color: isDark ? "rgba(255,255,255,0.35)" : "rgba(0,0,0,0.45)",
+                color: isDark ? "rgba(255,255,255,0.65)" : "rgba(0,0,0,0.45)",
                 letterSpacing: "0.22em",
               }}
               className="text-[10px] md:text-xs uppercase mb-2"
@@ -304,7 +304,7 @@ export function WhyBookWithUs({ isDark }) {
                 lineHeight: 1.2,
                 marginBottom: "14px",
               }}
-              className="font-serif text-2xl md:text-3xl font-light"
+              className="font-serif text-2xl md:text-3xl font-semibold transition-colors duration-500 tracking-[0.05em]"
             >
               {active.title.toUpperCase()}
             </h2>
@@ -317,7 +317,7 @@ export function WhyBookWithUs({ isDark }) {
             />
             <p
               style={{
-                color: isDark ? "rgba(255,255,255,0.48)" : "rgba(0,0,0,0.6)",
+                color: isDark ? "rgba(255,255,255,0.50)" : "rgba(0,0,0,0.6)",
                 lineHeight: 1.9,
               }}
               className="text-sm md:text-base font-light max-w-xl lg:max-w-md"

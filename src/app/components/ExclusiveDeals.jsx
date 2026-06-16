@@ -21,17 +21,17 @@ export function ExclusiveDeals({ isDark = true }) {
   const tagColor = isDark ? "text-[#FCD57B]" : "text-[#8B6B2E]";
   const headingColor = isDark ? "text-white" : "text-[#011434]";
   const dividerBg = isDark ? "bg-[#FCD57B]/30" : "bg-[#8B6B2E]/30";
-  const descColor = isDark ? "text-white/50" : "text-[#011434]/65";
+  const descColor = isDark ? "text-white/70" : "text-[#011434]/65";
   const inputBg = isDark ? "bg-white/[0.03]" : "bg-[#011434]/[0.02]";
   const inputBorder = isDark ? "border-white/10" : "border-[#011434]/15";
   const inputTextColor = isDark ? "text-white" : "text-[#011434]";
   const placeholderClass = isDark
-    ? "placeholder:text-white/25"
+    ? "placeholder:text-white/50"
     : "placeholder:text-[#011434]/35";
 
   const buttonBg = isDark ? "bg-[#FCD57B]" : "bg-[#8B6B2E]";
   const buttonTextColor = isDark ? "text-[#011434]" : "text-white";
-  const categoryTextColor = isDark ? "text-white/40" : "text-[#011434]/50";
+  const categoryTextColor = isDark ? "text-white/60" : "text-[#011434]/50";
 
   return (
     <section
@@ -65,7 +65,7 @@ export function ExclusiveDeals({ isDark = true }) {
           maxWidth: "680px",
           ...revealStyle(inView),
         }}
-        className="relative z-10 mx-auto text-center px-6 py-14 md:py-24 lg:py-28 transition-all duration-500"
+        className="relative z-10 mx-auto text-center px-6 pt-10 pb-10 md:pt-16 md:pb-16 transition-all duration-500"
       >
         {/* Tag */}
         <p
@@ -76,12 +76,12 @@ export function ExclusiveDeals({ isDark = true }) {
 
         {/* Heading */}
         <h2
-          className={`font-serif ${headingColor} text-3xl md:text-4xl lg:text-5xl font-normal leading-tight mb-1 transition-colors duration-500 tracking-[0.04em]`}
+          className={`font-serif ${headingColor} text-3xl md:text-4xl lg:text-5xl font-semibold leading-tight mb-1 transition-colors duration-500 tracking-[0.04em]`}
         >
           Get Exclusive
         </h2>
         <h2
-          className={`font-serif ${isDark ? "text-[#FCD57B]" : "text-[#8B6B2E]"} text-3xl md:text-4xl lg:text-5xl font-normal italic leading-none mb-5 transition-colors duration-500 tracking-[0.04em]`}
+          className={`font-serif ${isDark ? "text-[#FCD57B]" : "text-[#8B6B2E]"} text-3xl md:text-4xl lg:text-5xl font-semibold italic leading-none mb-5 transition-colors duration-500 tracking-[0.04em]`}
         >
           Deals
         </h2>
@@ -100,7 +100,7 @@ export function ExclusiveDeals({ isDark = true }) {
         </p>
 
         {/* Email Form */}
-        <div className="max-w-[460px] mx-auto mb-12">
+        <div className="max-w-[460px] mx-auto md:mb-12">
           {submitted ? (
             <div
               style={{

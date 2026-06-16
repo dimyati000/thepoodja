@@ -23,12 +23,12 @@ export function Footer({ isDark }) {
 
   const footerBg = isDark ? "#010e22" : "#ffffff";
   const titleColor = isDark ? "#FCD57B" : "#000000";
-  const descColor = isDark ? "rgba(255,255,255,0.4)" : "rgba(0,0,0,0.6)";
+  const descColor = isDark ? "rgba(255, 255, 255, 0.80)" : "rgba(0,0,0,0.6)";
   const linkColorClass = isDark
-    ? "text-white/45 hover:text-white"
-    : "text-black/50 hover:text-black";
-  const labelColor = isDark ? "rgba(255,255,255,0.25)" : "rgba(0,0,0,0.35)";
-  const valColor = isDark ? "rgba(255,255,255,0.5)" : "rgba(0,0,0,0.75)";
+    ? "text-white/80 hover:font-semibold"
+    : "text-black/70 hover:font-semibold";
+  const labelColor = isDark ? "rgba(255,255,255,0.90)" : "rgba(0,0,0,0.25)";
+  const valColor = isDark ? "rgba(255,255,255,0.65)" : "rgba(0,0,0,0.75)";
 
   return (
     <footer
@@ -40,21 +40,22 @@ export function Footer({ isDark }) {
     >
       <div
         style={{
-          maxWidth: "1200px",
+          maxWidth: "1380px",
         }}
-        className="mx-auto pt-[72px] pb-12 px-6 gap-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4"
+        className="mx-auto pt-[72px] pb-12 px-6 gap-12 lg:gap-20 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4"
       >
         {/* Brand Column */}
         <div>
           {/* LOGO ADAPTIF UNTUK FOOTER */}
           <Image
             src={isDark ? "/logo-gold2.png" : "/logo-black2.png"}
+            // src={"/logo-gold2.png"}
             alt="The Poodja"
             width={400}
             height={176}
             priority
             unoptimized
-            style={{ marginBottom: "20px", height: "auto", width: "150px" }}
+            style={{ marginBottom: "20px", height: "auto", width: "200px" }}
           />
           <p
             style={{
@@ -143,7 +144,7 @@ export function Footer({ isDark }) {
             style={{
               color: titleColor,
             }}
-            className="text-[10px] md:text-xs font-bold uppercase mb-5 tracking-[0.3em]"
+            className="text-[12px] md:text-xs font-bold uppercase mb-5 tracking-[0.3em]"
           >
             Navigation
           </h4>
@@ -171,14 +172,9 @@ export function Footer({ isDark }) {
         <div>
           <h4
             style={{
-              fontFamily: "'Nunito Sans', sans-serif",
               color: titleColor,
-              fontSize: "9px",
-              letterSpacing: "0.3em",
-              fontWeight: 700,
-              marginBottom: "20px",
-              textTransform: "uppercase",
             }}
+            className="text-[12px] md:text-xs font-bold uppercase mb-5 tracking-[0.3em]"
           >
             Destinations
           </h4>
@@ -187,15 +183,12 @@ export function Footer({ isDark }) {
               <li key={d}>
                 <button
                   style={{
-                    fontFamily: "'Nunito Sans', sans-serif",
-                    fontSize: "0.78rem",
-                    fontWeight: 300,
                     background: "transparent",
                     border: "none",
                     cursor: "pointer",
                     textAlign: "left",
                   }}
-                  className={`p-0 transition-colors duration-300 focus:outline-none ${linkColorClass}`}
+                  className={`text-sm font-light p-0 transition-colors duration-300 focus:outline-none ${linkColorClass}`}
                 >
                   {d}
                 </button>
@@ -208,14 +201,9 @@ export function Footer({ isDark }) {
         <div>
           <h4
             style={{
-              fontFamily: "'Nunito Sans', sans-serif",
               color: titleColor,
-              fontSize: "9px",
-              letterSpacing: "0.3em",
-              fontWeight: 700,
-              marginBottom: "20px",
-              textTransform: "uppercase",
             }}
+            className="text-[12px] md:text-xs font-bold uppercase mb-5 tracking-[0.3em]"
           >
             Contact
           </h4>
@@ -241,7 +229,7 @@ export function Footer({ isDark }) {
                   style={{
                     color: valColor,
                   }}
-                  className="text-sm md:text-base font-light leading-relaxed whitespace-pre-line"
+                  className="text-sm md:text-md font-light leading-relaxed whitespace-pre-line"
                 >
                   {c.value}
                 </p>
@@ -261,13 +249,13 @@ export function Footer({ isDark }) {
       >
         <div
           style={{
-            maxWidth: "1200px",
+            maxWidth: "1380px",
           }}
           className="mx-auto py-5 px-6 gap-3 flex justify-between items-center flex-wrap"
         >
           <p
             style={{
-              color: isDark ? "rgba(255,255,255,0.2)" : "rgba(0,0,0,0.3)",
+              color: isDark ? "rgba(255,255,255,0.45)" : "rgba(0,0,0,0.4)",
             }}
             className="text-xs font-light"
           >
@@ -282,7 +270,7 @@ export function Footer({ isDark }) {
                   border: "none",
                   cursor: "pointer",
                 }}
-                className={`text-[11px] md:text-xs font-light p-0 transition-colors duration-300 focus:outline-none ${isDark ? "text-white/20 hover:text-white/60" : "text-black/30 hover:text-black/70"}`}
+                className={`text-[12px] md:text-xs font-light p-0 transition-colors duration-300 focus:outline-none ${isDark ? "text-white/45 hover:text-white/70" : "text-black/40 hover:text-black/70"}`}
               >
                 {l}
               </button>

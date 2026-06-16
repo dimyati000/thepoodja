@@ -59,7 +59,7 @@ export function Destinations({ isDark = true }) {
   return (
     <section
       id="destinations"
-      className={`${bgColor} pb-16 md:pt-20 md:pb-24 transition-colors duration-500 overflow-hidden`}
+      className={`${bgColor} pb-10 md:pt-10 md:pb-18 transition-colors duration-500 overflow-hidden`}
     >
       {/* Header */}
       <div
@@ -68,7 +68,7 @@ export function Destinations({ isDark = true }) {
           textAlign: "center",
           ...revealStyle(hInView),
         }}
-        className="pt-8 pb-12 px-6"
+        className="pt-8 pb-8 md:pb-12 px-6"
       >
         <p
           style={{
@@ -83,7 +83,7 @@ export function Destinations({ isDark = true }) {
           style={{
             color: isDark ? "#FFFFFF" : "#111111",
           }}
-          className="font-serif text-2xl md:text-3xl lg:text-4xl font-normal tracking-[0.08em]"
+          className="font-serif text-2xl md:text-3xl lg:text-4xl font-semibold transition-colors duration-500 tracking-[0.08em]"
         >
           DESTINATIONS
         </h2>
@@ -236,7 +236,7 @@ export function Destinations({ isDark = true }) {
                     </div>
                   </div>
 
-                  {/* Mobile View (Dibuat jauh lebih bersih dan tipis) */}
+                  {/* Mobile View */}
                   <div className="md:hidden absolute inset-0 flex items-center justify-between px-6">
                     <div className="flex items-center gap-4">
                       <span className="text-xs text-[#FBD47B] font-bold tracking-wider">

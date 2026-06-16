@@ -44,11 +44,11 @@ export function Navbar({ isDark, onThemeToggle }) {
 
   const borderColor = scrolled
     ? isDark
-      ? "rgba(255, 255, 255, 0.08)"
-      : "rgba(0, 0, 0, 0.08)"
+      ? "rgba(252, 213, 123, 0.18)"
+      : "rgba(1, 20, 52, 0.15)"
     : isDark
-      ? "rgba(255, 255, 255, 0.03)"
-      : "rgba(0, 0, 0, 0.04)";
+      ? "rgba(252, 213, 123, 0.08)"
+      : "rgba(1, 20, 52, 0.06)";
   const mobileBg = isDark ? "#010e22" : "#ffffff";
   const hamColor = isDark ? "#FCD57B" : "#000000";
 
@@ -68,17 +68,18 @@ export function Navbar({ isDark, onThemeToggle }) {
     >
       <div
         style={{
-          maxWidth: "1200px",
+          maxWidth: "1400px",
         }}
         className="mx-auto px-6 flex items-center justify-between h-14 md:h-16 lg:h-[72px]"
       >
         <Image
           src={isDark ? "/logo-gold2.png" : "/logo-black2.png"}
+          // src={"/logo-gold2.png"}
           alt="The Poodja"
           width={400}
           height={152}
           priority
-          style={{ cursor: "pointer", height: "auto", width: "150px" }}
+          style={{ cursor: "pointer", height: "auto", width: "190px" }}
           onClick={() => handleNav("Home")}
         />
 

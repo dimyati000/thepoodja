@@ -135,7 +135,6 @@ export default function App() {
               width: "58px",
               height: "58px",
               borderRadius: "50%",
-              // Menggunakan warna Cream Gold cerah, ketebalan border disesuaikan ke 1.5px
               border: "1.5px solid rgba(230, 213, 184, 0.75)",
               backgroundColor: "rgba(230, 213, 184, 0.12)",
               display: "flex",
@@ -149,8 +148,8 @@ export default function App() {
               height="22"
               viewBox="0 0 24 24"
               fill="none"
-              stroke="rgba(230, 213, 184, 0.95)" // Warna cream gold solid cerah
-              strokeWidth="1.25" // Ketebalan diatur ideal, pas di tengah-tengah
+              stroke="rgba(230, 213, 184, 0.95)"
+              strokeWidth="1.25"
               strokeLinecap="round"
               strokeLinejoin="round"
               style={{

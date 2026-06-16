@@ -72,7 +72,6 @@ export function Testimonials({ isDark = true }) {
   const [idx, setIdx] = useState(N);
   const [isTransitioning, setIsTransitioning] = useState(true);
   const lockedRef = useRef(false);
-  const trackRef = useRef(null);
   const { ref: sRef, inView: sInView } = useScrollReveal(0.1);
 
   const [isMobile, setIsMobile] = useState(false);
@@ -122,13 +121,14 @@ export function Testimonials({ isDark = true }) {
 
   const dotIdx = idx % N;
 
+  // Di mobile, beri ruang sisa (85%) agar kartu kiri/kanan sedikit mengintip
   const gap = isMobile ? 16 : 24;
-  const cardWidth = isMobile ? "100%" : "calc((100% - 48px) / 3)";
+  const cardWidth = isMobile ? "85vw" : "calc((100% - 48px) / 3)";
 
   return (
     <section
       id="testimonials"
-      className={`${bgColor} pt-4 pb-24 md:pt-20 md:pb-32 lg:pb-42 transition-colors duration-500 overflow-hidden`}
+      className={`${bgColor} pb-10 md:pt-10 md:pb-18 transition-colors duration-500 overflow-hidden`}
     >
       {/* Header */}
       <div
@@ -137,21 +137,17 @@ export function Testimonials({ isDark = true }) {
           textAlign: "center",
           ...revealStyle(sInView),
         }}
-        className="pt-8 pb-12 px-6"
+        className="pt-8 md:pb-4 px-6"
       >
         <p
-          style={{
-            color: isDark ? "#FCD57B" : "#8B6B2E",
-          }}
+          style={{ color: isDark ? "#FCD57B" : "#8B6B2E" }}
           className="text-xs md:text-sm font-bold uppercase mb-[18px] tracking-[0.45em]"
         >
           Voices of Our Guests
         </p>
         <h2
-          style={{
-            color: isDark ? "#FFFFFF" : "#111111",
-          }}
-          className="font-serif text-2xl md:text-3xl lg:text-4xl font-normal tracking-[0.08em]"
+          style={{ color: isDark ? "#FFFFFF" : "#111111" }}
+          className="font-serif text-2xl md:text-3xl lg:text-4xl font-semibold transition-colors duration-500 tracking-[0.08em]"
         >
           WHAT OUR GUESTS SAY
         </h2>
@@ -168,8 +164,8 @@ export function Testimonials({ isDark = true }) {
       </div>
 
       {/* Slider Container */}
-      <div className="w-full max-w-[1200px] mx-auto relative px-4 md:px-10">
-        {/* Nav Buttons */}
+      <div className="w-full max-w-[1300px] mx-auto relative px-0 md:px-10">
+        {/* Nav Buttons (Desktop Only) */}
         <button
           onClick={handlePrev}
           className={`absolute left-2 lg:left-[-10px] top-1/2 -translate-y-1/2 z-20 hidden md:flex items-center justify-center w-11 h-11 rounded-full border ${border} ${navBg} hover:border-[#FBD47B] hover:text-[#FBD47B] transition-all duration-300 backdrop-blur-md shadow-lg cursor-pointer`}
@@ -209,18 +205,16 @@ export function Testimonials({ isDark = true }) {
           </svg>
         </button>
 
-        <div className="w-full overflow-hidden py-6">
+        {/* Ditambahkan padding vertikal h-full/py agar shadow tidak terpotong */}
+        <div className="w-full overflow-hidden py-10">
           <div
             className="flex"
             onTransitionEnd={handleTransitionEnd}
             style={{
               gap: `${gap}px`,
-              /* KUNCI POROS TENGAH: 
-                 Rumus di bawah menghitung pergeseran koordinat X berdasarkan lebar kartu asli (`${cardWidth}`) secara dinamis ditambah kompensasi gap, 
-                 lalu di-offset menggunakan penambahan lebar satu kartu agar kartu ke-idx selalu jatuh tepat di tengah container.
-              */
+              /* RUMUS ALIGN CENTER HP & DESKTOP */
               transform: isMobile
-                ? `translateX(calc(-${idx} * 100% - ${idx} * ${gap}px))`
+                ? `translateX(calc(50vw - (${cardWidth} / 2) - ${idx} * ${cardWidth} - ${idx} * ${gap}px))`
                 : `translateX(calc(-${idx} * ${cardWidth} - ${idx} * ${gap}px + ${cardWidth} + ${gap}px))`,
               transition: isTransitioning
                 ? "transform 600ms cubic-bezier(0.25, 1, 0.5, 1)"
@@ -246,7 +240,7 @@ export function Testimonials({ isDark = true }) {
                     ${
                       focused
                         ? `scale-[1.02] md:scale-105 ${cardActive} border-[#FBD47B] opacity-100 z-10`
-                        : `scale-[0.98] md:scale-95 ${cardInactive} ${border} opacity-25 hover:opacity-50`
+                        : `scale-[0.98] md:scale-95 ${cardInactive} ${border} opacity-30 md:opacity-25 hover:opacity-50`
                     }`}
                 >
                   <div>
@@ -269,7 +263,7 @@ export function Testimonials({ isDark = true }) {
                       &ldquo;
                     </div>
                     <p
-                      className={`font-serif ${textColor} text-base md:text-lg font-light italic leading-relaxed mb-6 ease-in-out ${isTransitioning ? "duration-500" : "duration-0"}`}
+                      className={`font-serif ${textColor} text-sm md:text-lg font-light italic leading-relaxed mb-6 ease-in-out ${isTransitioning ? "duration-500" : "duration-0"}`}
                     >
                       {t.quote}
                     </p>
@@ -313,7 +307,7 @@ export function Testimonials({ isDark = true }) {
         </div>
 
         {/* Dots */}
-        <div className="flex gap-2 items-center justify-center mt-10">
+        <div className="flex gap-2 items-center justify-center md:mt-4">
           {BASE.map((_, i) => (
             <button
               key={i}
