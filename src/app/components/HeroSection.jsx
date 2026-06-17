@@ -33,22 +33,16 @@ export function HeroSection({ isDark, current, fade, handleSlideChange }) {
   const [dates, setDates] = useState("");
   const [propType, setPropType] = useState("");
 
-  // Fungsi navigasi next otomatis melingkar untuk tombol panah besar
-  const handleNextSlide = () => {
-    const nextIdx = (current + 1) % SLIDES.length;
-    handleSlideChange(nextIdx);
-  };
-
   return (
     <section
       id="home"
-      className="relative w-full min-h-[100vh] flex flex-col justify-start select-none pt-18 md:pt-28 pb-10"
+      className="relative w-full min-h-[100vh] flex flex-col justify-start select-none pt-18 md:pt-30 pb-10"
     >
       <div className="relative w-full lg:max-w-[1440px] mx-auto px-4 sm:px-6 md:px-12 z-10 flex flex-col">
         {/* FRAME UTAMA IMAGE SLIDER */}
         <div
           id="main-slider-frame"
-          className="relative w-full h-[58vh] sm:h-[60vh] md:h-[65vh] lg:h-[80vh] rounded-sm"
+          className="relative w-full h-[58vh] sm:h-[60vh] md:h-[65vh] lg:h-[78vh] rounded-sm"
         >
           <div className="absolute inset-0 rounded-sm overflow-hidden z-0">
             <div
@@ -66,7 +60,7 @@ export function HeroSection({ isDark, current, fade, handleSlideChange }) {
 
           <div
             style={{
-              backgroundColor: isDark ? "#000e26" : "#ffffff",
+              backgroundColor: isDark ? "#011434" : "#ffffff",
               borderLeft: isDark ? "2px solid #FCD57B" : "2px solid #8B6B2E",
             }}
             className="info-card-container absolute bottom-4 left-4 right-4 md:bottom-[45px] md:right-[-35px] md:left-auto z-30 max-w-[calc(100%-32px)] sm:max-w-[420px] md:max-w-[360px] lg:max-w-[380px] py-8 px-6 md:py-10 md:px-8 shadow-[0_25px_60px_-15px_rgba(0,0,0,0.35)] text-left pointer-events-auto transition-all duration-500"
@@ -84,7 +78,7 @@ export function HeroSection({ isDark, current, fade, handleSlideChange }) {
             {/* Judul Utama */}
             <h1
               style={{
-                color: isDark ? "#ffffff" : "#011434",
+                color: isDark ? "#ffffff" : "#8B6B2E",
               }}
               className="font-serif text-2xl font-bold md:text-3xl leading-[1.35] tracking-wide mb-3 sm:mb-4 transition-colors duration-500"
             >
@@ -104,7 +98,7 @@ export function HeroSection({ isDark, current, fade, handleSlideChange }) {
             {/* Tombol Aksi */}
             <button
               style={{
-                color: isDark ? "#ffffff" : "#011434",
+                color: isDark ? "#ffffff" : "#8B6B2E",
                 letterSpacing: "0.2em",
               }}
               className="group flex items-center gap-3 text-[10px] md:text-xs font-bold uppercase bg-transparent border-none outline-none cursor-pointer transition-colors duration-500"
@@ -114,7 +108,7 @@ export function HeroSection({ isDark, current, fade, handleSlideChange }) {
               </span>
               <div
                 className={`w-5 h-5 rounded-full border flex items-center justify-center transition-all duration-300 group-hover:scale-110
-        ${isDark ? "border-white/30 text-white" : "border-[#011434]/30 text-[#011434]"}`}
+      ${isDark ? "border-white/30 text-white" : "border-[#8B6B2E]/30 text-[#8B6B2E]"}`}
               >
                 <svg
                   width="8"

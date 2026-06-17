@@ -1,5 +1,6 @@
 import { Nunito_Sans, Cormorant_Garamond } from "next/font/google";
 import "./globals.css";
+import { ThemeAndLayoutProviders } from "./components/ThemeAndLayoutProviders";
 
 const nunitoSans = Nunito_Sans({
   variable: "--font-nunito-sans",
@@ -27,7 +28,9 @@ export default function RootLayout({ children }) {
       lang="en"
       className={`${nunitoSans.variable} ${cormorantGaramond.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col font-sans">{children}</body>
+      <body className="min-h-full flex flex-col font-sans">
+        <ThemeAndLayoutProviders>{children}</ThemeAndLayoutProviders>
+      </body>
     </html>
   );
 }

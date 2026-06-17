@@ -1,19 +1,23 @@
 "use client";
 import { useState, useEffect } from "react";
 import Image from "next/image";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 
-const links = [
-  "Home",
-  "Properties",
-  "Management Enquiry",
-  "Yearly Offers",
-  "Contact Us",
+const navLinks = [
+  { name: "Home", path: "/" },
+  { name: "Properties", path: "/properties" },
+  { name: "Management Enquiry", path: "/management-enquiry" },
+  { name: "Yearly Offers", path: "/yearly-offers" },
+  { name: "Contact Us", path: "/contact-us" },
 ];
 
 export function Navbar({ isDark, onThemeToggle }) {
   const [isOpen, setIsOpen] = useState(false);
-  const [active, setActive] = useState("Home");
   const [scrolled, setScrolled] = useState(false);
+
+  const pathname = usePathname();
+  const router = useRouter();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 60);
@@ -21,12 +25,9 @@ export function Navbar({ isDark, onThemeToggle }) {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const handleNav = (link) => {
-    setActive(link);
+  // Fungsi handle navigasi mobile/desktop jika butuh behavior tambahan
+  const handleMobileClick = () => {
     setIsOpen(false);
-    const id = link.toLowerCase().replace(/\s+/g, "-");
-    const el = document.getElementById(id);
-    if (el) el.scrollIntoView({ behavior: "smooth" });
   };
 
   const navBg = isDark
@@ -67,49 +68,49 @@ export function Navbar({ isDark, onThemeToggle }) {
       }}
     >
       <div
-        style={{
-          maxWidth: "1400px",
-        }}
-        className="mx-auto px-6 flex items-center justify-between h-14 md:h-16 lg:h-[72px]"
+        style={{ maxWidth: "1400px" }}
+        className="mx-auto px-6 flex items-center justify-between h-14 md:h-16 lg:h-[80px]"
       >
-        <Image
-          src={isDark ? "/logo-gold2.png" : "/logo-black2.png"}
-          // src={"/logo-gold2.png"}
-          alt="The Poodja"
-          width={400}
-          height={152}
-          priority
-          style={{ cursor: "pointer", height: "auto", width: "190px" }}
-          onClick={() => handleNav("Home")}
-        />
+        <Link href="/">
+          <Image
+            src={isDark ? "/logo-gold2.png" : "/logo-black2.png"}
+            alt="The Poodja"
+            width={400}
+            height={152}
+            priority
+            style={{ cursor: "pointer", height: "auto", width: "190px" }}
+          />
+        </Link>
 
         {/* Desktop nav */}
         <div className="hidden lg:flex items-center gap-9">
-          {links.map((l) => (
-            <button
-              key={l}
-              onClick={() => handleNav(l)}
-              style={{
-                color: linkColor(active === l),
-                letterSpacing: "0.15em",
-                fontWeight: active === l ? 700 : 500,
-                background: "transparent",
-                border: "none",
-                cursor: "pointer",
-                textTransform: "uppercase",
-                position: "relative",
-              }}
-              className="text-[10px] md:text-xs py-1 group transition-colors duration-300 focus:outline-none"
-            >
-              {l}
-              <span
-                style={{ backgroundColor: isDark ? "#FCD57B" : "#000000" }}
-                className={`absolute bottom-0 left-0 h-px w-0 transition-all duration-300 group-hover:w-full ${active === l ? "w-full" : "w-0"}`}
-              />
-            </button>
-          ))}
+          {navLinks.map((item) => {
+            // Cek apakah link tersebut aktif berdasarkan pathname saat ini
+            const isActive = pathname === item.path;
 
-          {/* Theme toggle bulat elegan */}
+            return (
+              <Link
+                key={item.name}
+                href={item.path}
+                style={{
+                  color: linkColor(isActive),
+                  letterSpacing: "0.15em",
+                  fontWeight: isActive ? 700 : 500,
+                  textTransform: "uppercase",
+                  position: "relative",
+                }}
+                className="text-[10px] md:text-xs py-1 group transition-colors duration-300 focus:outline-none"
+              >
+                {item.name}
+                <span
+                  style={{ backgroundColor: isDark ? "#FCD57B" : "#000000" }}
+                  className={`absolute bottom-0 left-0 h-px transition-all duration-300 group-hover:w-full ${isActive ? "w-full" : "w-0"}`}
+                />
+              </Link>
+            );
+          })}
+
+          {/* Theme toggle */}
           <button
             onClick={onThemeToggle}
             className="flex items-center justify-center shrink-0 transition-all duration-300 hover:scale-110 active:scale-95 focus:outline-none"
@@ -157,7 +158,7 @@ export function Navbar({ isDark, onThemeToggle }) {
           </button>
         </div>
 
-        {/* Mobile hamburger */}
+        {/* Mobile hamburger button */}
         <div className="flex items-center lg:hidden gap-3">
           <button
             onClick={onThemeToggle}
@@ -213,7 +214,7 @@ export function Navbar({ isDark, onThemeToggle }) {
             className="p-1"
             aria-label="Menu"
           >
-            <div className="flex flex-col gap-1.25">
+            <div className="flex flex-col gap-1">
               <span
                 style={{
                   display: "block",
@@ -262,27 +263,28 @@ export function Navbar({ isDark, onThemeToggle }) {
           }}
           className="lg:hidden"
         >
-          {links.map((l) => (
-            <button
-              key={l}
-              onClick={() => handleNav(l)}
-              style={{
-                display: "block",
-                width: "100%",
-                textAlign: "left",
-                color: linkColor(active === l),
-                letterSpacing: "0.2em",
-                textTransform: "uppercase",
-                background: "transparent",
-                border: "none",
-                borderBottom: `1px solid ${borderColor}`,
-                cursor: "pointer",
-              }}
-              className="py-3.5 px-6 text-xs"
-            >
-              {l}
-            </button>
-          ))}
+          {navLinks.map((item) => {
+            const isActive = pathname === item.path;
+            return (
+              <Link
+                key={item.name}
+                href={item.path}
+                onClick={handleMobileClick}
+                style={{
+                  display: "block",
+                  width: "100%",
+                  textAlign: "left",
+                  color: linkColor(isActive),
+                  letterSpacing: "0.2em",
+                  textTransform: "uppercase",
+                  borderBottom: `1px solid ${borderColor}`,
+                }}
+                className="py-3.5 px-6 text-xs font-medium"
+              >
+                {item.name}
+              </Link>
+            );
+          })}
         </div>
       )}
     </nav>
