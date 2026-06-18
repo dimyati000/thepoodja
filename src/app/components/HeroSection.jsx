@@ -28,7 +28,13 @@ const SLIDES = [
 
 const PROP_TYPES = ["Villa", "House", "Apartment", "Resort"];
 
-export function HeroSection({ isDark, current, fade, handleSlideChange }) {
+export function HeroSection({
+  isDark,
+  current,
+  fade,
+  handleSlideChange,
+  handleHeroClick,
+}) {
   const [location, setLocation] = useState("");
   const [dates, setDates] = useState("");
   const [propType, setPropType] = useState("");
@@ -42,6 +48,7 @@ export function HeroSection({ isDark, current, fade, handleSlideChange }) {
         {/* FRAME UTAMA IMAGE SLIDER */}
         <div
           id="main-slider-frame"
+          onClick={handleHeroClick}
           className="relative w-full h-[58vh] sm:h-[60vh] md:h-[65vh] lg:h-[78vh] rounded-sm"
         >
           <div className="absolute inset-0 rounded-sm overflow-hidden z-0">

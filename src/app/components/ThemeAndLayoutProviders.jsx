@@ -67,7 +67,7 @@ export function ThemeAndLayoutProviders({ children }) {
   const showCustomCursor = heroSide !== "" && !cursorHovered;
 
   return (
-    <ThemeContext.Provider value={{ isDark, setIsDark }}>
+    <ThemeContext.Provider value={{ isDark, setIsDark, heroSide }}>
       <div
         style={{
           backgroundColor: isDark ? "#011434" : "#ffffff",

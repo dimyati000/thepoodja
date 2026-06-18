@@ -7,8 +7,10 @@ import { Destinations } from "./components/Destinations";
 import { Testimonials } from "./components/Testimonial";
 import { ExclusiveDeals } from "./components/ExclusiveDeals";
 
+const TOTAL_SLIDES = 3;
+
 export default function App() {
-  const { isDark } = useTheme();
+  const { isDark, heroSide } = useTheme(); // Tarik heroSide dari provider
   const [current, setCurrent] = useState(0);
   const [fade, setFade] = useState(true);
 
@@ -24,6 +26,17 @@ export default function App() {
     [current],
   );
 
+  // Fungsi navigasi klik area gambar
+  const handleHeroClick = () => {
+    if (heroSide === "right") {
+      const nextIndex = (current + 1) % TOTAL_SLIDES;
+      handleSlideChange(nextIndex);
+    } else if (heroSide === "left") {
+      const prevIndex = (current - 1 + TOTAL_SLIDES) % TOTAL_SLIDES;
+      handleSlideChange(prevIndex);
+    }
+  };
+
   return (
     <div className="relative w-full">
       <HeroSection
@@ -31,6 +44,7 @@ export default function App() {
         current={current}
         fade={fade}
         handleSlideChange={handleSlideChange}
+        handleHeroClick={handleHeroClick}
       />
       <WhyBookWithUs isDark={isDark} />
       <Destinations isDark={isDark} />
