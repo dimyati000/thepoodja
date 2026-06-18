@@ -100,13 +100,13 @@ export function ExclusiveDeals({ isDark = true }) {
         </p>
 
         {/* Email Form */}
-        <div className="max-w-[460px] mx-auto md:mb-12">
+        <div className="max-w-115 mx-auto md:mb-12">
           {submitted ? (
             <div
               style={{
                 animation: "fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) both",
               }}
-              className="w-full p-6 md:p-8 border border-[#FCD57B]/20 rounded-sm bg-white/[0.01] backdrop-blur-sm"
+              className="w-full p-6 md:p-8 border border-[#FCD57B]/20 rounded-sm bg-white/1 backdrop-blur-sm"
             >
               <p className="font-serif text-[#FCD57B] text-lg md:text-xl font-normal mb-1">
                 You&apos;re on the list.
@@ -135,7 +135,7 @@ export function ExclusiveDeals({ isDark = true }) {
               />
               <button
                 type="submit"
-                className={`text-xs font-bold uppercase px-6 py-3.5 whitespace-nowrap cursor-pointer rounded-sm sm:rounded-none transition-all duration-300 hover:brightness-95 active:scale-[0.99] flex-shrink-0 tracking-[0.2em] ${buttonBg} ${buttonTextColor}`}
+                className={`text-xs font-bold uppercase px-6 py-3.5 whitespace-nowrap cursor-pointer rounded-sm sm:rounded-none transition-all duration-300 hover:brightness-95 active:scale-[0.99] shrink-0 tracking-[0.2em] ${buttonBg} ${buttonTextColor}`}
               >
                 Subscribe
               </button>
