@@ -25,7 +25,6 @@ export function Navbar({ isDark, onThemeToggle }) {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Fungsi handle navigasi mobile/desktop jika butuh behavior tambahan
   const handleMobileClick = () => {
     setIsOpen(false);
   };
@@ -52,6 +51,14 @@ export function Navbar({ isDark, onThemeToggle }) {
       : "rgba(1, 20, 52, 0.06)";
   const mobileBg = isDark ? "#010e22" : "#ffffff";
   const hamColor = isDark ? "#FCD57B" : "#000000";
+
+  // helper function to check active state including child paths
+  const checkIsActive = (itemPath) => {
+    if (itemPath === "/") {
+      return pathname === "/";
+    }
+    return pathname.startsWith(itemPath);
+  };
 
   return (
     <nav
@@ -85,8 +92,8 @@ export function Navbar({ isDark, onThemeToggle }) {
         {/* Desktop nav */}
         <div className="hidden lg:flex items-center gap-9">
           {navLinks.map((item) => {
-            // Cek apakah link tersebut aktif berdasarkan pathname saat ini
-            const isActive = pathname === item.path;
+            // Memanggil fungsi cerdas checkIsActive untuk mencakup nested child pages
+            const isActive = checkIsActive(item.path);
 
             return (
               <Link
@@ -264,7 +271,8 @@ export function Navbar({ isDark, onThemeToggle }) {
           className="lg:hidden"
         >
           {navLinks.map((item) => {
-            const isActive = pathname === item.path;
+            // Samakan logika active untuk versi mobile menu
+            const isActive = checkIsActive(item.path);
             return (
               <Link
                 key={item.name}
