@@ -74,7 +74,7 @@ export function Destinations({ isDark = true }) {
           style={{
             color: isDark ? "#FCD57B" : "#8B6B2E",
           }}
-          className="text-xs md:text-sm font-bold uppercase mb-4.5 tracking-[0.45em]"
+          className="text-xs md:text-sm font-bold uppercase mb-[18px] tracking-[0.45em]"
         >
           Explore Indonesia
         </p>
