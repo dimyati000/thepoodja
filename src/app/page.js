@@ -16,6 +16,21 @@ export default function App() {
   const [current, setCurrent] = useState(0);
   const [fade, setFade] = useState(true);
 
+  useEffect(() => {
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme !== null) {
+      setIsDark(savedTheme === "dark");
+    }
+  }, []);
+
+  const toggleTheme = () => {
+    setIsDark((prev) => {
+      const next = !prev;
+      localStorage.setItem("theme", next ? "dark" : "light");
+      return next;
+    });
+  };
+
   const handleSlideChange = useCallback(
     (index) => {
       if (index === current) return;
@@ -167,7 +182,7 @@ export default function App() {
       )}
 
       <div className="relative z-20">
-        <Navbar isDark={isDark} onThemeToggle={() => setIsDark((v) => !v)} />
+        <Navbar isDark={isDark} onThemeToggle={toggleTheme} />
 
         <div onClick={triggerHeroSlide} className="w-full">
           <HeroSection
