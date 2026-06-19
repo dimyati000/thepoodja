@@ -14,8 +14,8 @@ const navLinks = [
 
 export function Navbar({ isDark, onThemeToggle }) {
   const [isOpen, setIsOpen] = useState(false);
+  const [active, setActive] = useState("Home");
   const [scrolled, setScrolled] = useState(false);
-
   const pathname = usePathname();
   const router = useRouter();
 
@@ -25,8 +25,41 @@ export function Navbar({ isDark, onThemeToggle }) {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const handleMobileClick = () => {
+  useEffect(() => {
+    if (pathname === "/properties") {
+      setActive("Properties");
+    } else {
+      setActive("Home");
+    }
+  }, [pathname]);
+
+  const handleNav = (link) => {
+    setActive(link);
     setIsOpen(false);
+
+    if (link === "Properties") {
+      if (pathname !== "/properties") {
+        router.push("/properties");
+      }
+      return;
+    }
+
+    if (pathname === "/properties") {
+      if (link === "Home") {
+        router.push("/");
+      } else {
+        const id = link.toLowerCase().replace(/\s+/g, "-");
+        router.push(`/#${id}`);
+      }
+    } else {
+      const id = link.toLowerCase().replace(/\s+/g, "-");
+      const el = document.getElementById(id);
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth" });
+      } else if (link === "Home") {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+    }
   };
 
   const navBg = isDark
