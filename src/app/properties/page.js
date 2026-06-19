@@ -221,7 +221,7 @@ export default function PropertiesPage() {
           {/* Left: Image */}
           <div className="relative h-[250px] sm:h-[350px] lg:h-[450px] w-full rounded-sm overflow-hidden group shadow-md">
             <Image
-              src="https://images.unsplash.com/photo-1506084868230-bb9d95c24759?auto=format&fit=crop&w=1200&q=80"
+              src="https://images.unsplash.com/photo-1623298317883-6b70254edf31?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
               alt="Balinese Rice Terrace Fields"
               fill
               style={{ objectFit: "cover" }}
@@ -379,7 +379,7 @@ export default function PropertiesPage() {
                       cursor: "pointer",
                       opacity: isActive ? 1 : 0.45,
                     }}
-                    className="py-5 flex flex-col transition-all duration-300 relative group"
+                    className="py-3 flex flex-col transition-all duration-300 relative group"
                   >
                     <span
                       style={{ color: accentText }}
