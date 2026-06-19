@@ -199,7 +199,7 @@ export default function PropertiesPage() {
             {/* Vertical sunset image */}
             <div className="relative h-[320px] sm:h-[400px] lg:h-[460px] w-full rounded-sm overflow-hidden group shadow-md">
               <Image
-                src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=800&q=80"
+                src="https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dmlsbGF8ZW58MHx8MHx8fDA%3D"
                 alt="Villa Pool at Sunset"
                 fill
                 style={{ objectFit: "cover" }}
