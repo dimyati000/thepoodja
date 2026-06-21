@@ -122,14 +122,6 @@ export default function PropertiesPage() {
   const [activeIdx, setActiveIdx] = useState(0);
   const [openFaqIdx, setOpenFaqIdx] = useState(null);
 
-  // Scroll Reveal elements
-  const { ref: s1Ref, inView: s1InView } = useScrollReveal(0.1);
-  const { ref: s2Ref, inView: s2InView } = useScrollReveal(0.15);
-  const { ref: s3Ref, inView: s3InView } = useScrollReveal(0.15);
-  const { ref: s4Ref, inView: s4InView } = useScrollReveal(0.1);
-  const { ref: s5Ref, inView: s5InView } = useScrollReveal(0.1);
-  const { ref: s6Ref, inView: s6InView } = useScrollReveal(0.15);
-
   const activeFeature = features[activeIdx];
   const otherFeatures = features.filter((_, i) => i !== activeIdx);
 
@@ -152,8 +144,6 @@ export default function PropertiesPage() {
 
       {/* Hero / Villas & Properties Section */}
       <section
-        ref={s1Ref}
-        style={revealStyle(s1InView)}
         className="max-w-[1380px] mx-auto px-6 pt-24 md:pt-32 pb-16"
       >
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-start">
@@ -227,8 +217,6 @@ export default function PropertiesPage() {
 
       {/* Explore By Locations */}
       <section
-        ref={s2Ref}
-        style={{ ...revealStyle(s2InView), borderColor: borderColor }}
         className="max-w-[1380px] mx-auto px-6 py-12 md:py-20 border-t"
       >
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
@@ -286,8 +274,6 @@ export default function PropertiesPage() {
 
       {/* Explore By Categories */}
       <section
-        ref={s3Ref}
-        style={{ ...revealStyle(s3InView), borderColor: borderColor }}
         className="max-w-[1380px] mx-auto px-6 py-12 md:py-20 border-t"
       >
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
@@ -344,9 +330,7 @@ export default function PropertiesPage() {
 
       {/* Why Book With Us Section */}
       <section
-        ref={s4Ref}
         style={{
-          ...revealStyle(s4InView),
           backgroundColor: sectionBg,
           borderTop: `1px solid ${borderColor}`,
           borderBottom: `1px solid ${borderColor}`,
@@ -514,8 +498,6 @@ export default function PropertiesPage() {
 
       {/* Why Stay In Poodja? (FAQ Section) */}
       <section
-        ref={s5Ref}
-        style={revealStyle(s5InView)}
         className="max-w-[840px] mx-auto px-6 py-16 md:py-24"
       >
         {/* Header */}
@@ -590,8 +572,6 @@ export default function PropertiesPage() {
 
       {/* About & SEO Description Section */}
       <section
-        ref={s6Ref}
-        style={{ ...revealStyle(s6InView), borderColor: borderColor }}
         className="max-w-[1380px] mx-auto px-6 py-16 md:py-24 border-t"
       >
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-start">
