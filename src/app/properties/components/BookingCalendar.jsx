@@ -1,5 +1,6 @@
 "use client";
 import { useState, useMemo } from "react";
+import { useParams, useRouter } from "next/navigation";
 
 const MONTH_NAMES = [
   "January",
@@ -19,7 +20,7 @@ const DAY_LABELS = ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"];
 
 function getMonthMatrix(year, month) {
   const firstDay = new Date(year, month, 1);
-  const startOffset = (firstDay.getDay() + 6) % 7; // Monday-first
+  const startOffset = (firstDay.getDay() + 6) % 7;
   const daysInMonth = new Date(year, month + 1, 0).getDate();
   const cells = [];
   for (let i = 0; i < startOffset; i++) cells.push(null);
@@ -37,7 +38,15 @@ function sameDay(a, b) {
   );
 }
 
-export function BookingCalendar({ isDark, onRangeChange }) {
+export function BookingCalendar({
+  isDark,
+  onRangeChange,
+  initialCheckIn,
+  initialCheckOut,
+}) {
+  const params = useParams();
+  const router = useRouter();
+
   const today = useMemo(() => {
     const t = new Date();
     t.setHours(0, 0, 0, 0);
@@ -46,14 +55,13 @@ export function BookingCalendar({ isDark, onRangeChange }) {
 
   const [viewMonth, setViewMonth] = useState(today.getMonth());
   const [viewYear, setViewYear] = useState(today.getFullYear());
-  const [checkIn, setCheckIn] = useState(null);
-  const [checkOut, setCheckOut] = useState(null);
+  const [checkIn, setCheckIn] = useState(initialCheckIn || null);
+  const [checkOut, setCheckOut] = useState(initialCheckOut || null);
   const [adults, setAdults] = useState(2);
   const [children, setChildren] = useState(0);
   const [promo, setPromo] = useState("");
 
   const nextMonthDate = new Date(viewYear, viewMonth + 1, 1);
-
   const accent = isDark ? "#FCD57B" : "#8B6B2E";
   const borderColor = isDark ? "rgba(255,255,255,0.1)" : "rgba(1,20,52,0.1)";
   const mutedText = isDark ? "text-neutral-500" : "text-neutral-400";
@@ -69,6 +77,7 @@ export function BookingCalendar({ isDark, onRangeChange }) {
     setViewMonth(d.getMonth());
     setViewYear(d.getFullYear());
   };
+
   const goNext = () => {
     const d = new Date(viewYear, viewMonth + 1, 1);
     setViewMonth(d.getMonth());
@@ -77,18 +86,31 @@ export function BookingCalendar({ isDark, onRangeChange }) {
 
   const handleSelect = (date) => {
     if (date < today) return;
+    let newCheckIn = checkIn;
+    let newCheckOut = checkOut;
+
     if (!checkIn || (checkIn && checkOut)) {
-      setCheckIn(date);
-      setCheckOut(null);
-      onRangeChange?.({ checkIn: date, checkOut: null });
+      newCheckIn = date;
+      newCheckOut = null;
     } else if (date > checkIn) {
-      setCheckOut(date);
-      onRangeChange?.({ checkIn, checkOut: date });
+      newCheckOut = date;
     } else {
-      setCheckIn(date);
-      setCheckOut(null);
-      onRangeChange?.({ checkIn: date, checkOut: null });
+      newCheckIn = date;
+      newCheckOut = null;
     }
+
+    setCheckIn(newCheckIn);
+    setCheckOut(newCheckOut);
+    onRangeChange?.({ checkIn: newCheckIn, checkOut: newCheckOut });
+  };
+
+  const handleBookingRedirect = () => {
+    if (!checkIn || !checkOut) return;
+    const checkInStr = checkIn.toISOString().split("T")[0];
+    const checkOutStr = checkOut.toISOString().split("T")[0];
+    router.push(
+      `/properties/${params.villaId}/${params.roomId}/booking?checkIn=${checkInStr}&checkOut=${checkOutStr}`,
+    );
   };
 
   const renderMonth = (year, month) => {
@@ -180,7 +202,6 @@ export function BookingCalendar({ isDark, onRangeChange }) {
       style={{ borderColor }}
       className={`border p-6 sm:p-10 ${isDark ? "bg-[#00102A]/40" : "bg-white"}`}
     >
-      {/* Guests + promo row */}
       <div
         className="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8 pb-8 border-b"
         style={{ borderColor }}
@@ -232,7 +253,6 @@ export function BookingCalendar({ isDark, onRangeChange }) {
         </label>
       </div>
 
-      {/* Selected range summary */}
       <div className="flex flex-wrap items-center gap-x-10 gap-y-3 mb-8">
         <div>
           <span
@@ -275,7 +295,6 @@ export function BookingCalendar({ isDark, onRangeChange }) {
         )}
       </div>
 
-      {/* Calendar grids */}
       <div className="flex items-start gap-3 mb-2">
         <button
           onClick={goPrev}
@@ -314,6 +333,7 @@ export function BookingCalendar({ isDark, onRangeChange }) {
         </div>
         <button
           disabled={!checkIn || !checkOut}
+          onClick={handleBookingRedirect}
           style={{
             backgroundColor: checkIn && checkOut ? accent : undefined,
             color:

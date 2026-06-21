@@ -8,7 +8,7 @@ const navLinks = [
   { name: "Home", path: "/" },
   { name: "Properties", path: "/properties" },
   // { name: "Management Enquiry", path: "/management-enquiry" },
-  // { name: "Yearly Offers", path: "/yearly-offers" },
+  // { name: "Monthly Offers", path: "/monthly-offers" },
   // { name: "Contact Us", path: "/contact-us" },
 ];
 
