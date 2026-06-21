@@ -2,6 +2,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { useTheme } from "@/app/components/ThemeAndLayoutProviders";
 import { HeroSection } from "@/app/components/HeroSection";
+import { useScrollReveal } from '@/hooks/useScrollReveal';
 import Image from "next/image";
 
 const features = [
