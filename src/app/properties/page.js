@@ -6,6 +6,8 @@ import Link from "next/link";
 import { useTheme } from "@/components/ThemeAndLayoutProviders";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { VILLAS_DATA } from "@/constants/villas";
+import { SectionLabel } from "@/components/SectionLabel";
+import { VillaCard } from "./components/VillaCard";
 
 const features = [
   {
@@ -91,6 +93,28 @@ export default function PropertiesPage() {
   const { isDark, heroSide } = useTheme();
   const [current, setCurrent] = useState(0);
   const [fade, setFade] = useState(true);
+
+  const [activeLocationFilter, setActiveLocationFilter] = useState("ALL");
+
+  const locations = useMemo(() => {
+    const locs = ["ALL"];
+    VILLAS_DATA.forEach((v) => {
+      if (v.location) {
+        const uppercaseLoc = v.location.toUpperCase();
+        if (!locs.includes(uppercaseLoc)) {
+          locs.push(uppercaseLoc);
+        }
+      }
+    });
+    return locs;
+  }, []);
+
+  const filteredVillas = useMemo(() => {
+    if (activeLocationFilter === "ALL") return VILLAS_DATA;
+    return VILLAS_DATA.filter(
+      (v) => v.location && v.location.toUpperCase() === activeLocationFilter
+    );
+  }, [activeLocationFilter]);
 
   const handleSlideChange = useCallback(
     (index) => {
@@ -207,141 +231,66 @@ export default function PropertiesPage() {
         </div>
       </section>
 
-      {/* 2. EXPLORE BY LOCATIONS */}
-      <section
-        className="max-w-[1380px] mx-auto px-6 py-12 md:py-20 border-t"
-      >
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
-          <div className="relative h-[250px] sm:h-[350px] lg:h-[450px] w-full rounded-sm overflow-hidden group shadow-md">
-            <Image
-              src="https://images.unsplash.com/photo-1623298317883-6b70254edf31?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-              alt="Balinese Rice Terrace Fields"
-              fill
-              style={{ objectFit: "cover" }}
-              className="transition-transform duration-700 group-hover:scale-105"
-            />
-            <div className="absolute inset-0 bg-black/10 group-hover:bg-black/5 transition-all duration-500" />
-          </div>
-
-          <div className="flex flex-col justify-center">
-            <p
-              style={{ color: accentText }}
-              className="text-xs font-bold uppercase tracking-[0.35em] mb-4"
-            >
-              Curated Escapes
-            </p>
-            <h2
-              style={{ fontFamily: "var(--font-cormorant-garamond)" }}
-              className="text-3xl md:text-4xl font-semibold mb-6 tracking-wide leading-tight uppercase"
-            >
-              Explore By Locations
+      {/* ── SECTION 2: CURATED PORTFOLIO ── */}
+      <section className="w-full max-w-[1380px] mx-auto px-6 mt-28">
+        <div
+          className={`mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6 border-b pb-6 ${
+            isDark ? "border-white/10" : "border-[#011434]/10"
+          }`}
+        >
+          <div>
+            <SectionLabel isDark={isDark} className="mb-2">
+              THE PORTFOLIO COLLECTION
+            </SectionLabel>
+            <h2 className="text-3xl sm:text-4xl font-semibold font-serif tracking-tight uppercase">
+              CURATED PROPERTIES
             </h2>
-            <p
-              style={{ color: descText }}
-              className="text-sm md:text-base font-light leading-relaxed mb-8 max-w-xl"
-            >
-              Discover our premier villas scattered across Bali&apos;s most
-              beautiful locales. Whether you wish to experience the vibrant
-              atmosphere and beachfront bars of Seminyak, the creative culture
-              and surf break vibes of Canggu, or the peaceful river ravines and
-              lush rice fields of Ubud, we have the perfect sanctuary tailored
-              for your stay.
-            </p>
-            <button
-              style={{
-                borderColor: accentText,
-                color: accentText,
-              }}
-              className="self-start inline-flex items-center gap-3 text-xs font-bold uppercase bg-transparent border px-6 py-3.5 tracking-[0.25em] transition-all duration-300 hover:bg-[#8B6B2E] hover:text-white hover:border-[#8B6B2E] active:scale-95 cursor-pointer"
-            >
-              Explore Locations
-              <svg width="14" height="7" viewBox="0 0 18 7" fill="none">
-                <line
-                  x1="0"
-                  y1="3.5"
-                  x2="14"
-                  y2="3.5"
-                  stroke="currentColor"
-                  strokeWidth="1"
-                />
-                <polyline
-                  points="10,1 14,3.5 10,6"
-                  stroke="currentColor"
-                  strokeWidth="1"
-                  fill="none"
-                />
-              </svg>
-            </button>
-          </div>
-        </div>
-      </section>
-
-      {/* 3. EXPLORE BY CATEGORIES */}
-      <section
-        className="max-w-[1380px] mx-auto px-6 py-12 md:py-20 border-t"
-      >
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
-          <div className="order-2 lg:order-1 flex flex-col justify-center">
-            <p
-              style={{ color: accentText }}
-              className="text-xs font-bold uppercase tracking-[0.35em] mb-4"
-            >
-              Custom Accommodations
-            </p>
-            <h2
-              style={{ fontFamily: "var(--font-cormorant-garamond)" }}
-              className="text-3xl md:text-4xl font-semibold mb-6 tracking-wide leading-tight uppercase"
-            >
-              Explore By Categories
-            </h2>
-            <p
-              style={{ color: descText }}
-              className="text-sm md:text-base font-light leading-relaxed mb-8 max-w-xl"
-            >
-              We categorize our properties to simplify your search for the ideal
-              escape. Find luxury beachfront estates designed for large family
-              reunions, intimate cliffside hideaways with private infinity pools
-              perfect for honeymoons, or modern architectural gems that offer
-              sleek, high-end living in the middle of nature.
-            </p>
-            <button
-              style={{
-                borderColor: accentText,
-                color: accentText,
-              }}
-              className="self-start inline-flex items-center gap-3 text-xs font-bold uppercase bg-transparent border px-6 py-3.5 tracking-[0.25em] transition-all duration-300 hover:bg-[#8B6B2E] hover:text-white hover:border-[#8B6B2E] active:scale-95 cursor-pointer"
-            >
-              Explore Categories
-              <svg width="14" height="7" viewBox="0 0 18 7" fill="none">
-                <line
-                  x1="0"
-                  y1="3.5"
-                  x2="14"
-                  y2="3.5"
-                  stroke="currentColor"
-                  strokeWidth="1"
-                />
-                <polyline
-                  points="10,1 14,3.5 10,6"
-                  stroke="currentColor"
-                  strokeWidth="1"
-                  fill="none"
-                />
-              </svg>
-            </button>
           </div>
 
-          <div className="order-1 lg:order-2 relative h-[250px] sm:h-[350px] lg:h-[450px] w-full rounded-sm overflow-hidden group shadow-md">
-            <Image
-              src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1200&q=80"
-              alt="Modern White Luxury Villa"
-              fill
-              style={{ objectFit: "cover" }}
-              className="transition-transform duration-700 group-hover:scale-105"
-            />
-            <div className="absolute inset-0 bg-black/10 group-hover:bg-black/5 transition-all duration-500" />
-          </div>
+          {locations.length > 1 && (
+            <div className="flex flex-wrap gap-2">
+              {locations.map((cat) => (
+                <button
+                  key={cat}
+                  onClick={() => setActiveLocationFilter(cat)}
+                  className={`text-[9px] font-mono tracking-widest px-4 py-2 border transition-all duration-300 ${
+                    activeLocationFilter === cat
+                      ? isDark
+                        ? "bg-[#FCD57B] text-[#011434] border-[#FCD57B] font-bold"
+                        : "bg-[#8B6B2E] text-white border-[#8B6B2E] font-bold"
+                      : isDark
+                        ? "text-neutral-400 border-white/10 bg-white/[0.02] hover:border-white/30"
+                        : "text-neutral-600 border-[#011434]/10 bg-white hover:border-[#011434]/40"
+                  }`}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
+
+        {filteredVillas.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
+            {filteredVillas.map((villa) => (
+              <VillaCard
+                key={villa.id}
+                villa={villa}
+                isDark={isDark}
+              />
+            ))}
+          </div>
+        ) : (
+          <div
+            className={`w-full py-20 text-center border border-dashed ${
+              isDark ? "border-white/10" : "border-[#011434]/20"
+            }`}
+          >
+            <p className="font-serif text-base italic text-neutral-400">
+              No villas found matching this criteria.
+            </p>
+          </div>
+        )}
       </section>
 
       {/* 4. WHY BOOK WITH US (FEATURES) */}

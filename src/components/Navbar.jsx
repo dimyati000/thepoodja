@@ -6,6 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 
 const navLinks = [
   { name: "Home", path: "/" },
+  { name: "About Us", path: "/about-us" },
   { name: "Properties", path: "/properties" },
   // { name: "Management Enquiry", path: "/management-enquiry" },
   // { name: "Monthly Offers", path: "/monthly-offers" },
