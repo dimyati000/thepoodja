@@ -2,8 +2,8 @@
 import { useParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { useTheme } from "../../../components/ThemeAndLayoutProviders";
-import { VILLAS_DATA } from "../../data";
+import { useTheme } from "../../../sections/ThemeAndLayoutProviders";
+import { VILLAS_DATA } from "../../../../constants/villas";
 
 export default function RoomDetailPage() {
   const { isDark } = useTheme();

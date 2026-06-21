@@ -1,5 +1,6 @@
 "use client";
 import Image from "next/image";
+import Link from "next/link";
 
 export function VillaCard({ villa, isDark }) {
   return (
@@ -10,7 +11,8 @@ export function VillaCard({ villa, isDark }) {
           ? "1px solid rgba(255,255,255,0.06)"
           : "1px solid rgba(0,0,0,0.05)",
       }}
-      className="group relative w-full flex flex-col justify-between overflow-hidden rounded-sm shadow-[0_15px_40px_rgba(0,0,0,0.02)] transition-all duration-500 hover:shadow-[0_30px_60px_rgba(0,0,0,0.08)] hover:-translate-y-1"
+      // Mengubah total menjadi rounded-none agar 100% senada dengan thepoodja.vercel.app__2.jpg
+      className="group relative w-full flex flex-col justify-between overflow-hidden rounded-none shadow-[0_15px_40px_rgba(0,0,0,0.02)] transition-all duration-500 hover:shadow-[0_30px_60px_rgba(0,0,0,0.15)] hover:-translate-y-1"
     >
       {/* FRAME IMAGE WRAPPER */}
       <div className="relative w-full aspect-[4/3] overflow-hidden">
@@ -26,7 +28,7 @@ export function VillaCard({ villa, isDark }) {
           {villa.features.slice(0, 2).map((feat, i) => (
             <span
               key={i}
-              className="bg-[#011434]/70 dark:bg-[#ffffff]/10 backdrop-blur-md text-[8px] text-white font-bold tracking-widest uppercase px-3 py-1 rounded-[1px]"
+              className="bg-[#011434]/80 backdrop-blur-md text-[8px] text-white font-bold tracking-widest uppercase px-3 py-1 rounded-none border border-white/5"
             >
               {feat}
             </span>
@@ -55,7 +57,7 @@ export function VillaCard({ villa, isDark }) {
             {villa.name}
           </h3>
 
-          {/* Bar Spesifikasi Arsitektur */}
+          {/* Bar Spesifikasi Arsitektur Minimalis */}
           <div
             className={`grid grid-cols-3 gap-2 py-3.5 border-y text-center text-[10px] tracking-widest font-mono ${
               isDark
@@ -89,14 +91,16 @@ export function VillaCard({ villa, isDark }) {
           </div>
         </div>
 
-        {/* Harga & CTA Explore */}
+        {/* Harga & CTA Explore dengan Link Router Aktif */}
         <div className="flex items-center justify-between mt-6 pt-1">
           <div>
             <span className="block text-[8px] uppercase tracking-widest text-neutral-400 mb-0.5">
               STARTS FROM
             </span>
             <p
-              className={`text-sm sm:text-base font-semibold tracking-wide ${isDark ? "text-[#FCD57B]" : "text-[#8B6B2E]"}`}
+              className={`text-sm sm:text-base font-semibold tracking-wide ${
+                isDark ? "text-[#FCD57B]" : "text-[#8B6B2E]"
+              }`}
             >
               {villa.price}{" "}
               <span className="text-[10px] font-light text-neutral-400">
@@ -105,7 +109,8 @@ export function VillaCard({ villa, isDark }) {
             </p>
           </div>
 
-          <button
+          <Link
+            href={`/properties/${villa.id}`}
             style={{
               color: isDark ? "#ffffff" : "#8B6B2E",
               borderColor: isDark
@@ -115,7 +120,7 @@ export function VillaCard({ villa, isDark }) {
             className="text-[9px] font-bold uppercase tracking-widest border-b pb-0.5 bg-transparent outline-none cursor-pointer transition-all duration-300 hover:border-current hover:opacity-80"
           >
             EXPLORE
-          </button>
+          </Link>
         </div>
       </div>
     </div>
