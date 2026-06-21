@@ -1,6 +1,7 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useTheme } from "@/app/components/ThemeAndLayoutProviders";
+import { HeroSection } from "@/app/components/HeroSection";
 import Image from "next/image";
 
 const features = [
@@ -81,8 +82,35 @@ const faqs = [
   },
 ];
 
+const TOTAL_SLIDES = 3;
+
 export default function PropertiesPage() {
   const { isDark, heroSide } = useTheme(); // Tarik heroSide dari provider
+  const [current, setCurrent] = useState(0);
+  const [fade, setFade] = useState(true);
+
+  const handleSlideChange = useCallback(
+    (index) => {
+      if (index === current) return;
+      setFade(false);
+      setTimeout(() => {
+        setCurrent(index);
+        setFade(true);
+      }, 400);
+    },
+    [current],
+  );
+
+  // Fungsi navigasi klik area gambar
+  const handleHeroClick = () => {
+    if (heroSide === "right") {
+      const nextIndex = (current + 1) % TOTAL_SLIDES;
+      handleSlideChange(nextIndex);
+    } else if (heroSide === "left") {
+      const prevIndex = (current - 1 + TOTAL_SLIDES) % TOTAL_SLIDES;
+      handleSlideChange(prevIndex);
+    }
+  };
 
   // Theme-dependent colors
   const accentText = isDark ? "#FCD57B" : "#8B6B2E";
@@ -93,6 +121,14 @@ export default function PropertiesPage() {
 
   const [activeIdx, setActiveIdx] = useState(0);
   const [openFaqIdx, setOpenFaqIdx] = useState(null);
+
+  // Scroll Reveal elements
+  const { ref: s1Ref, inView: s1InView } = useScrollReveal(0.1);
+  const { ref: s2Ref, inView: s2InView } = useScrollReveal(0.15);
+  const { ref: s3Ref, inView: s3InView } = useScrollReveal(0.15);
+  const { ref: s4Ref, inView: s4InView } = useScrollReveal(0.1);
+  const { ref: s5Ref, inView: s5InView } = useScrollReveal(0.1);
+  const { ref: s6Ref, inView: s6InView } = useScrollReveal(0.15);
 
   const activeFeature = features[activeIdx];
   const otherFeatures = features.filter((_, i) => i !== activeIdx);
@@ -106,8 +142,20 @@ export default function PropertiesPage() {
       }}
       className="transition-colors duration-500"
     >
+      <HeroSection
+        isDark={isDark}
+        current={current}
+        fade={fade}
+        handleSlideChange={handleSlideChange}
+        handleHeroClick={handleHeroClick}
+      />
+
       {/* Hero / Villas & Properties Section */}
-      <section className="max-w-[1380px] mx-auto px-6 pt-24 md:pt-32 pb-16">
+      <section
+        ref={s1Ref}
+        style={revealStyle(s1InView)}
+        className="max-w-[1380px] mx-auto px-6 pt-24 md:pt-32 pb-16"
+      >
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-start">
           {/* Left Column */}
           <div className="lg:col-span-7 flex flex-col justify-between h-full">
@@ -179,7 +227,8 @@ export default function PropertiesPage() {
 
       {/* Explore By Locations */}
       <section
-        style={{ borderColor: borderColor }}
+        ref={s2Ref}
+        style={{ ...revealStyle(s2InView), borderColor: borderColor }}
         className="max-w-[1380px] mx-auto px-6 py-12 md:py-20 border-t"
       >
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
@@ -237,7 +286,8 @@ export default function PropertiesPage() {
 
       {/* Explore By Categories */}
       <section
-        style={{ borderColor: borderColor }}
+        ref={s3Ref}
+        style={{ ...revealStyle(s3InView), borderColor: borderColor }}
         className="max-w-[1380px] mx-auto px-6 py-12 md:py-20 border-t"
       >
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
@@ -294,7 +344,9 @@ export default function PropertiesPage() {
 
       {/* Why Book With Us Section */}
       <section
+        ref={s4Ref}
         style={{
+          ...revealStyle(s4InView),
           backgroundColor: sectionBg,
           borderTop: `1px solid ${borderColor}`,
           borderBottom: `1px solid ${borderColor}`,
@@ -461,7 +513,11 @@ export default function PropertiesPage() {
       </section>
 
       {/* Why Stay In Poodja? (FAQ Section) */}
-      <section className="max-w-[840px] mx-auto px-6 py-16 md:py-24">
+      <section
+        ref={s5Ref}
+        style={revealStyle(s5InView)}
+        className="max-w-[840px] mx-auto px-6 py-16 md:py-24"
+      >
         {/* Header */}
         <div className="text-center mb-16">
           <p
@@ -534,7 +590,8 @@ export default function PropertiesPage() {
 
       {/* About & SEO Description Section */}
       <section
-        style={{ borderColor: borderColor }}
+        ref={s6Ref}
+        style={{ ...revealStyle(s6InView), borderColor: borderColor }}
         className="max-w-[1380px] mx-auto px-6 py-16 md:py-24 border-t"
       >
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-start">
