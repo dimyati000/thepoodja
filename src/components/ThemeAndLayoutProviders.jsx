@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect, createContext, useContext } from "react";
-import { Navbar } from "../../components/Navbar";
-import { Footer } from "../../components/Footer";
+import { Navbar } from "./Navbar";
+import { Footer } from "./Footer";
 
 const ThemeContext = createContext();
 

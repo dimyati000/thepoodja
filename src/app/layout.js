@@ -1,6 +1,6 @@
 import { Nunito_Sans, Cormorant_Garamond } from "next/font/google";
 import "./globals.css";
-import { ThemeAndLayoutProviders } from "./sections/ThemeAndLayoutProviders";
+import { ThemeAndLayoutProviders } from "../components/ThemeAndLayoutProviders";
 
 const nunitoSans = Nunito_Sans({
   variable: "--font-nunito-sans",

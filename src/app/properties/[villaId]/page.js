@@ -3,7 +3,7 @@
 import { useParams } from "next/navigation";
 import Image from "next/image";
 import { useState, useMemo } from "react";
-import { useTheme } from "../../sections/ThemeAndLayoutProviders";
+import { useTheme } from "../../../components/ThemeAndLayoutProviders";
 import { VillaAccordionSlider } from "@/components/VillaAccordionSlider";
 import { SectionLabel } from "@/components/SectionLabel";
 import { RoomCard } from "@/app/properties/components/RoomCard";

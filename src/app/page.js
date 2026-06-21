@@ -1,7 +1,7 @@
 // src/app/page.js
 "use client";
 import { useState, useCallback } from "react";
-import { useTheme } from "@/app/sections/ThemeAndLayoutProviders";
+import { useTheme } from "@/components/ThemeAndLayoutProviders";
 import { HeroSection } from "./sections/HeroSection";
 import { WhyBookWithUs } from "./sections/WhyBookWithUs";
 import { Testimonials } from "./sections/Testimonial";

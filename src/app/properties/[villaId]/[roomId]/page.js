@@ -3,7 +3,7 @@
 import { useParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { useTheme } from "../../../sections/ThemeAndLayoutProviders";
+import { useTheme } from "../../../../components/ThemeAndLayoutProviders";
 import {
   VILLAS_DATA,
   DEFAULT_AMENITIES,
