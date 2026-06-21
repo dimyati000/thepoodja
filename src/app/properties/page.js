@@ -86,7 +86,7 @@ const faqs = [
 const TOTAL_SLIDES = 3;
 
 export default function PropertiesPage() {
-  const { isDark, heroSide } = useTheme(); // Tarik heroSide dari provider
+  const { isDark, heroSide } = useTheme(); 
   const [current, setCurrent] = useState(0);
   const [fade, setFade] = useState(true);
 
@@ -102,7 +102,6 @@ export default function PropertiesPage() {
     [current],
   );
 
-  // Fungsi navigasi klik area gambar
   const handleHeroClick = () => {
     if (heroSide === "right") {
       const nextIndex = (current + 1) % TOTAL_SLIDES;
@@ -113,7 +112,6 @@ export default function PropertiesPage() {
     }
   };
 
-  // Theme-dependent colors
   const accentText = isDark ? "#FCD57B" : "#8B6B2E";
   const descText = isDark ? "rgba(255,255,255,0.65)" : "rgba(1,20,52,0.7)";
   const mainText = isDark ? "#ffffff" : "#011434";
@@ -151,14 +149,12 @@ export default function PropertiesPage() {
         handleHeroClick={handleHeroClick}
       />
 
-      {/* Hero / Villas & Properties Section */}
       <section
         ref={s1Ref}
         style={revealStyle(s1InView)}
         className="max-w-[1380px] mx-auto px-6 pt-24 md:pt-32 pb-16"
       >
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-start">
-          {/* Left Column */}
           <div className="lg:col-span-7 flex flex-col justify-between h-full">
             <div>
               <p
@@ -183,7 +179,6 @@ export default function PropertiesPage() {
               </p>
             </div>
 
-            {/* Wide landscape image */}
             <div className="relative h-[240px] sm:h-[320px] md:h-[400px] lg:h-[450px] w-full rounded-sm overflow-hidden group shadow-md mt-auto">
               <Image
                 src="https://images.unsplash.com/photo-1613977257363-707ba9348227?auto=format&fit=crop&w=1200&q=80"
@@ -197,9 +192,7 @@ export default function PropertiesPage() {
             </div>
           </div>
 
-          {/* Right Column */}
           <div className="lg:col-span-5 flex flex-col gap-6 lg:gap-8">
-            {/* Square image */}
             <div className="relative h-[240px] sm:h-[300px] lg:h-[320px] w-full rounded-sm overflow-hidden group shadow-md">
               <Image
                 src="https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?auto=format&fit=crop&w=800&q=80"
@@ -211,7 +204,6 @@ export default function PropertiesPage() {
               <div className="absolute inset-0 bg-black/10 group-hover:bg-black/5 transition-all duration-500" />
             </div>
 
-            {/* Vertical sunset image */}
             <div className="relative h-[320px] sm:h-[400px] lg:h-[460px] w-full rounded-sm overflow-hidden group shadow-md">
               <Image
                 src="https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dmlsbGF8ZW58MHx8MHx8fDA%3D"
@@ -226,14 +218,12 @@ export default function PropertiesPage() {
         </div>
       </section>
 
-      {/* Explore By Locations */}
       <section
         ref={s2Ref}
         style={{ ...revealStyle(s2InView), borderColor: borderColor }}
         className="max-w-[1380px] mx-auto px-6 py-12 md:py-20 border-t"
       >
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
-          {/* Left: Image */}
           <div className="relative h-[250px] sm:h-[350px] lg:h-[450px] w-full rounded-sm overflow-hidden group shadow-md">
             <Image
               src="https://images.unsplash.com/photo-1623298317883-6b70254edf31?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
@@ -245,7 +235,6 @@ export default function PropertiesPage() {
             <div className="absolute inset-0 bg-black/10 group-hover:bg-black/5 transition-all duration-500" />
           </div>
 
-          {/* Right: Text Content */}
           <div className="flex flex-col justify-center">
             <p
               style={{ color: accentText }}
@@ -285,14 +274,12 @@ export default function PropertiesPage() {
         </div>
       </section>
 
-      {/* Explore By Categories */}
       <section
         ref={s3Ref}
         style={{ ...revealStyle(s3InView), borderColor: borderColor }}
         className="max-w-[1380px] mx-auto px-6 py-12 md:py-20 border-t"
       >
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
-          {/* Left: Text Content (Reordered on Desktop to be first) */}
           <div className="order-2 lg:order-1 flex flex-col justify-center">
             <p
               style={{ color: accentText }}
@@ -329,7 +316,6 @@ export default function PropertiesPage() {
             </button>
           </div>
 
-          {/* Right: Image */}
           <div className="order-1 lg:order-2 relative h-[250px] sm:h-[350px] lg:h-[450px] w-full rounded-sm overflow-hidden group shadow-md">
             <Image
               src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1200&q=80"
@@ -343,7 +329,6 @@ export default function PropertiesPage() {
         </div>
       </section>
 
-      {/* Why Book With Us Section */}
       <section
         ref={s4Ref}
         style={{
@@ -355,7 +340,6 @@ export default function PropertiesPage() {
         className="py-16 md:py-24"
       >
         <div className="max-w-[1380px] mx-auto px-6">
-          {/* Header */}
           <div className="text-center mb-16">
             <p
               style={{ color: accentText }}
@@ -375,9 +359,7 @@ export default function PropertiesPage() {
             />
           </div>
 
-          {/* Body Content */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-0 items-start">
-            {/* Left: Tab Selectors */}
             <div
               style={{ borderColor: borderColor }}
               className="col-span-1 lg:col-span-4 lg:border-r lg:pr-8 flex flex-col gap-1"
@@ -415,7 +397,6 @@ export default function PropertiesPage() {
                       {f.subtitle}
                     </span>
 
-                    {/* Active line connector indicator */}
                     {isActive && (
                       <div
                         style={{
@@ -430,9 +411,7 @@ export default function PropertiesPage() {
               })}
             </div>
 
-            {/* Center: Active Details & Main Image */}
             <div className="col-span-1 lg:col-span-5 px-0 lg:px-8 flex flex-col gap-6">
-              {/* Feature Details Container */}
               <div
                 key={`details-${activeIdx}`}
                 className="flex flex-col animate-[fadeIn_0.5s_ease]"
@@ -458,7 +437,6 @@ export default function PropertiesPage() {
                 </p>
               </div>
 
-              {/* Main Active Image Frame */}
               <div
                 key={`main-img-${activeIdx}`}
                 className="relative h-[250px] sm:h-[320px] w-full rounded-sm overflow-hidden shadow-md animate-[fadeIn_0.5s_ease]"
@@ -473,7 +451,6 @@ export default function PropertiesPage() {
               </div>
             </div>
 
-            {/* Right: Vertical Image Preview Strip */}
             <div
               style={{ borderColor: borderColor }}
               className="col-span-1 lg:col-span-3 lg:border-l lg:pl-8 flex flex-row lg:flex-col gap-3 h-full lg:h-[480px] w-full"
@@ -513,13 +490,11 @@ export default function PropertiesPage() {
         </div>
       </section>
 
-      {/* Why Stay In Poodja? (FAQ Section) */}
       <section
         ref={s5Ref}
         style={revealStyle(s5InView)}
         className="max-w-[840px] mx-auto px-6 py-16 md:py-24"
       >
-        {/* Header */}
         <div className="text-center mb-16">
           <p
             style={{ color: accentText }}
@@ -539,7 +514,6 @@ export default function PropertiesPage() {
           />
         </div>
 
-        {/* Accordions */}
         <div className="flex flex-col gap-4">
           {faqs.map((faq, i) => {
             const isOpen = openFaqIdx === i;
@@ -589,14 +563,12 @@ export default function PropertiesPage() {
         </div>
       </section>
 
-      {/* About & SEO Description Section */}
       <section
         ref={s6Ref}
         style={{ ...revealStyle(s6InView), borderColor: borderColor }}
         className="max-w-[1380px] mx-auto px-6 py-16 md:py-24 border-t"
       >
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-start">
-          {/* Left: About Poodja Title */}
           <div className="lg:col-span-5 flex items-center gap-4">
             <h2
               style={{ fontFamily: "var(--font-cormorant-garamond)", color: accentText }}
@@ -609,7 +581,6 @@ export default function PropertiesPage() {
             </svg>
           </div>
 
-          {/* Right: Paragraphs */}
           <div className="lg:col-span-7 flex flex-col gap-6">
             <h3
               style={{ fontFamily: "var(--font-cormorant-garamond)" }}
@@ -637,8 +608,6 @@ export default function PropertiesPage() {
         </div>
       </section>
 
-
-      {/* Embedded Animations Styles */}
       <style>{`
         @keyframes wbLineIn {
           from { width: 0; opacity: 0; }
@@ -651,4 +620,13 @@ export default function PropertiesPage() {
       `}</style>
     </div>
   );
+}
+
+// Tambahkan helper function revealStyle di sini agar tidak error undefined
+function revealStyle(inView: boolean): React.CSSProperties {
+  return {
+    opacity: inView ? 1 : 0,
+    transform: inView ? "none" : "translateY(40px)",
+    transition: "opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1)",
+  };
 }
