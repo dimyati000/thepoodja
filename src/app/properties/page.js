@@ -1,9 +1,8 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
+import { useTheme } from "@/app/components/ThemeAndLayoutProviders";
+import { HeroSection } from "@/app/components/HeroSection";
 import Image from "next/image";
-import { Navbar } from "../components/Navbar";
-import { Footer } from "../components/Footer";
-import { useScrollReveal, revealStyle } from "../../hooks/useScrollReveal";
 
 const features = [
   {
@@ -83,8 +82,43 @@ const faqs = [
   },
 ];
 
+const TOTAL_SLIDES = 3;
+
 export default function PropertiesPage() {
-  const [isDark, setIsDark] = useState(true);
+  const { isDark, heroSide } = useTheme(); // Tarik heroSide dari provider
+  const [current, setCurrent] = useState(0);
+  const [fade, setFade] = useState(true);
+
+  const handleSlideChange = useCallback(
+    (index) => {
+      if (index === current) return;
+      setFade(false);
+      setTimeout(() => {
+        setCurrent(index);
+        setFade(true);
+      }, 400);
+    },
+    [current],
+  );
+
+  // Fungsi navigasi klik area gambar
+  const handleHeroClick = () => {
+    if (heroSide === "right") {
+      const nextIndex = (current + 1) % TOTAL_SLIDES;
+      handleSlideChange(nextIndex);
+    } else if (heroSide === "left") {
+      const prevIndex = (current - 1 + TOTAL_SLIDES) % TOTAL_SLIDES;
+      handleSlideChange(prevIndex);
+    }
+  };
+
+  // Theme-dependent colors
+  const accentText = isDark ? "#FCD57B" : "#8B6B2E";
+  const descText = isDark ? "rgba(255,255,255,0.65)" : "rgba(1,20,52,0.7)";
+  const mainText = isDark ? "#ffffff" : "#011434";
+  const sectionBg = isDark ? "#011434" : "#ffffff";
+  const borderColor = isDark ? "rgba(255,255,255,0.07)" : "rgba(0,0,0,0.08)";
+
   const [activeIdx, setActiveIdx] = useState(0);
   const [openFaqIdx, setOpenFaqIdx] = useState(null);
 
@@ -96,45 +130,25 @@ export default function PropertiesPage() {
   const { ref: s5Ref, inView: s5InView } = useScrollReveal(0.1);
   const { ref: s6Ref, inView: s6InView } = useScrollReveal(0.15);
 
-  useEffect(() => {
-    const savedTheme = localStorage.getItem("theme");
-    if (savedTheme !== null) {
-      setIsDark(savedTheme === "dark");
-    }
-  }, []);
-
-  const toggleTheme = () => {
-    setIsDark((prev) => {
-      const next = !prev;
-      localStorage.setItem("theme", next ? "dark" : "light");
-      return next;
-    });
-  };
-
   const activeFeature = features[activeIdx];
   const otherFeatures = features.filter((_, i) => i !== activeIdx);
-
-  // Styled tokens based on theme
-  const pageBg = isDark ? "#011434" : "#ffffff";
-  const sectionBg = isDark ? "rgba(255,255,255,0.02)" : "#faf8f5";
-  const mainText = isDark ? "#ffffff" : "#011434";
-  const accentText = isDark ? "#FCD57B" : "#8B6B2E";
-  const descText = isDark ? "rgba(255, 255, 255, 0.65)" : "rgba(1, 20, 52, 0.68)";
-  const borderColor = isDark ? "rgba(255,255,255,0.08)" : "rgba(1,20,52,0.08)";
-  const inputBg = isDark ? "rgba(255,255,255,0.03)" : "rgba(1,20,52,0.02)";
 
   return (
     <div
       style={{
         overflowX: "hidden",
-        backgroundColor: pageBg,
-        color: mainText,
         minHeight: "100vh",
         position: "relative",
       }}
       className="transition-colors duration-500"
     >
-      <Navbar isDark={isDark} onThemeToggle={toggleTheme} />
+      <HeroSection
+        isDark={isDark}
+        current={current}
+        fade={fade}
+        handleSlideChange={handleSlideChange}
+        handleHeroClick={handleHeroClick}
+      />
 
       {/* Hero / Villas & Properties Section */}
       <section
@@ -622,7 +636,6 @@ export default function PropertiesPage() {
         </div>
       </section>
 
-      <Footer isDark={isDark} />
 
       {/* Embedded Animations Styles */}
       <style>{`
