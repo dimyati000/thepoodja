@@ -622,8 +622,7 @@ export default function PropertiesPage() {
   );
 }
 
-// Tambahkan helper function revealStyle di sini agar tidak error undefined
-function revealStyle(inView: boolean): React.CSSProperties {
+function revealStyle(inView) {
   return {
     opacity: inView ? 1 : 0,
     transform: inView ? "none" : "translateY(40px)",
