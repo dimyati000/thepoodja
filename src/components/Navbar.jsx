@@ -7,9 +7,9 @@ import { usePathname, useRouter } from "next/navigation";
 const navLinks = [
   { name: "Home", path: "/" },
   { name: "Properties", path: "/properties" },
-  { name: "Management Enquiry", path: "/management-enquiry" },
-  { name: "Yearly Offers", path: "/yearly-offers" },
-  { name: "Contact Us", path: "/contact-us" },
+  // { name: "Management Enquiry", path: "/management-enquiry" },
+  // { name: "Yearly Offers", path: "/yearly-offers" },
+  // { name: "Contact Us", path: "/contact-us" },
 ];
 
 export function Navbar({ isDark, onThemeToggle }) {

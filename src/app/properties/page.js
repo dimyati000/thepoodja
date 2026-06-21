@@ -1,8 +1,11 @@
 "use client";
-import { useState, useEffect, useCallback } from "react";
-import { useTheme } from "@/app/components/ThemeAndLayoutProviders";
-import { HeroSection } from "@/app/components/HeroSection";
+
+import { useState, useEffect, useCallback, useMemo } from "react";
 import Image from "next/image";
+import Link from "next/link";
+import { useTheme } from "@/app/sections/ThemeAndLayoutProviders";
+import { useScrollReveal } from "@/hooks/useScrollReveal";
+import { VILLAS_DATA } from "@/constants/villas";
 
 const features = [
   {
@@ -85,7 +88,7 @@ const faqs = [
 const TOTAL_SLIDES = 3;
 
 export default function PropertiesPage() {
-  const { isDark, heroSide } = useTheme(); // Tarik heroSide dari provider
+  const { isDark, heroSide } = useTheme();
   const [current, setCurrent] = useState(0);
   const [fade, setFade] = useState(true);
 
@@ -101,7 +104,6 @@ export default function PropertiesPage() {
     [current],
   );
 
-  // Fungsi navigasi klik area gambar
   const handleHeroClick = () => {
     if (heroSide === "right") {
       const nextIndex = (current + 1) % TOTAL_SLIDES;
@@ -112,7 +114,6 @@ export default function PropertiesPage() {
     }
   };
 
-  // Theme-dependent colors
   const accentText = isDark ? "#FCD57B" : "#8B6B2E";
   const descText = isDark ? "rgba(255,255,255,0.65)" : "rgba(1,20,52,0.7)";
   const mainText = isDark ? "#ffffff" : "#011434";
@@ -134,20 +135,11 @@ export default function PropertiesPage() {
       }}
       className="transition-colors duration-500"
     >
-      <HeroSection
-        isDark={isDark}
-        current={current}
-        fade={fade}
-        handleSlideChange={handleSlideChange}
-        handleHeroClick={handleHeroClick}
-      />
-
-      {/* Hero / Villas & Properties Section */}
+      {/* 1. MAIN PORTFOLIO INTRO */}
       <section
         className="max-w-[1380px] mx-auto px-6 pt-24 md:pt-32 pb-16"
       >
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-start">
-          {/* Left Column */}
           <div className="lg:col-span-7 flex flex-col justify-between h-full">
             <div>
               <p
@@ -166,13 +158,16 @@ export default function PropertiesPage() {
                 style={{ color: descText }}
                 className="text-sm md:text-base font-light leading-relaxed max-w-2xl mb-8 lg:mb-12"
               >
-                Poodja presents an exclusive collection of luxury villas and premier residences in Bali&apos;s most coveted destinations.
-                Each property in our portfolio is meticulously selected and managed to ensure an unparalleled experience for our guests.
-                Immerse yourself in authentic Balinese charm combined with modern design elements, five-star amenities, and flawless personalized service.
+                Poodja presents an exclusive collection of luxury villas and
+                premier residences in Bali&apos;s most coveted destinations.
+                Each property in our portfolio is meticulously selected and
+                managed to ensure an unparalleled experience for our guests.
+                Immerse yourself in authentic Balinese charm combined with
+                modern design elements, five-star amenities, and flawless
+                personalized service.
               </p>
             </div>
 
-            {/* Wide landscape image */}
             <div className="relative h-[240px] sm:h-[320px] md:h-[400px] lg:h-[450px] w-full rounded-sm overflow-hidden group shadow-md mt-auto">
               <Image
                 src="https://images.unsplash.com/photo-1613977257363-707ba9348227?auto=format&fit=crop&w=1200&q=80"
@@ -186,9 +181,7 @@ export default function PropertiesPage() {
             </div>
           </div>
 
-          {/* Right Column */}
           <div className="lg:col-span-5 flex flex-col gap-6 lg:gap-8">
-            {/* Square image */}
             <div className="relative h-[240px] sm:h-[300px] lg:h-[320px] w-full rounded-sm overflow-hidden group shadow-md">
               <Image
                 src="https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?auto=format&fit=crop&w=800&q=80"
@@ -200,7 +193,6 @@ export default function PropertiesPage() {
               <div className="absolute inset-0 bg-black/10 group-hover:bg-black/5 transition-all duration-500" />
             </div>
 
-            {/* Vertical sunset image */}
             <div className="relative h-[320px] sm:h-[400px] lg:h-[460px] w-full rounded-sm overflow-hidden group shadow-md">
               <Image
                 src="https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dmlsbGF8ZW58MHx8MHx8fDA%3D"
@@ -215,12 +207,11 @@ export default function PropertiesPage() {
         </div>
       </section>
 
-      {/* Explore By Locations */}
+      {/* 2. EXPLORE BY LOCATIONS */}
       <section
         className="max-w-[1380px] mx-auto px-6 py-12 md:py-20 border-t"
       >
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
-          {/* Left: Image */}
           <div className="relative h-[250px] sm:h-[350px] lg:h-[450px] w-full rounded-sm overflow-hidden group shadow-md">
             <Image
               src="https://images.unsplash.com/photo-1623298317883-6b70254edf31?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
@@ -232,7 +223,6 @@ export default function PropertiesPage() {
             <div className="absolute inset-0 bg-black/10 group-hover:bg-black/5 transition-all duration-500" />
           </div>
 
-          {/* Right: Text Content */}
           <div className="flex flex-col justify-center">
             <p
               style={{ color: accentText }}
@@ -250,10 +240,12 @@ export default function PropertiesPage() {
               style={{ color: descText }}
               className="text-sm md:text-base font-light leading-relaxed mb-8 max-w-xl"
             >
-              Discover our premier villas scattered across Bali&apos;s most beautiful locales.
-              Whether you wish to experience the vibrant atmosphere and beachfront bars of Seminyak,
-              the creative culture and surf break vibes of Canggu, or the peaceful river ravines and lush rice fields of Ubud,
-              we have the perfect sanctuary tailored for your stay.
+              Discover our premier villas scattered across Bali&apos;s most
+              beautiful locales. Whether you wish to experience the vibrant
+              atmosphere and beachfront bars of Seminyak, the creative culture
+              and surf break vibes of Canggu, or the peaceful river ravines and
+              lush rice fields of Ubud, we have the perfect sanctuary tailored
+              for your stay.
             </p>
             <button
               style={{
@@ -264,20 +256,31 @@ export default function PropertiesPage() {
             >
               Explore Locations
               <svg width="14" height="7" viewBox="0 0 18 7" fill="none">
-                <line x1="0" y1="3.5" x2="14" y2="3.5" stroke="currentColor" strokeWidth="1" />
-                <polyline points="10,1 14,3.5 10,6" stroke="currentColor" strokeWidth="1" fill="none" />
+                <line
+                  x1="0"
+                  y1="3.5"
+                  x2="14"
+                  y2="3.5"
+                  stroke="currentColor"
+                  strokeWidth="1"
+                />
+                <polyline
+                  points="10,1 14,3.5 10,6"
+                  stroke="currentColor"
+                  strokeWidth="1"
+                  fill="none"
+                />
               </svg>
             </button>
           </div>
         </div>
       </section>
 
-      {/* Explore By Categories */}
+      {/* 3. EXPLORE BY CATEGORIES */}
       <section
         className="max-w-[1380px] mx-auto px-6 py-12 md:py-20 border-t"
       >
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
-          {/* Left: Text Content (Reordered on Desktop to be first) */}
           <div className="order-2 lg:order-1 flex flex-col justify-center">
             <p
               style={{ color: accentText }}
@@ -295,9 +298,11 @@ export default function PropertiesPage() {
               style={{ color: descText }}
               className="text-sm md:text-base font-light leading-relaxed mb-8 max-w-xl"
             >
-              We categorize our properties to simplify your search for the ideal escape.
-              Find luxury beachfront estates designed for large family reunions, intimate cliffside hideaways with private infinity pools perfect for honeymoons,
-              or modern architectural gems that offer sleek, high-end living in the middle of nature.
+              We categorize our properties to simplify your search for the ideal
+              escape. Find luxury beachfront estates designed for large family
+              reunions, intimate cliffside hideaways with private infinity pools
+              perfect for honeymoons, or modern architectural gems that offer
+              sleek, high-end living in the middle of nature.
             </p>
             <button
               style={{
@@ -308,13 +313,24 @@ export default function PropertiesPage() {
             >
               Explore Categories
               <svg width="14" height="7" viewBox="0 0 18 7" fill="none">
-                <line x1="0" y1="3.5" x2="14" y2="3.5" stroke="currentColor" strokeWidth="1" />
-                <polyline points="10,1 14,3.5 10,6" stroke="currentColor" strokeWidth="1" fill="none" />
+                <line
+                  x1="0"
+                  y1="3.5"
+                  x2="14"
+                  y2="3.5"
+                  stroke="currentColor"
+                  strokeWidth="1"
+                />
+                <polyline
+                  points="10,1 14,3.5 10,6"
+                  stroke="currentColor"
+                  strokeWidth="1"
+                  fill="none"
+                />
               </svg>
             </button>
           </div>
 
-          {/* Right: Image */}
           <div className="order-1 lg:order-2 relative h-[250px] sm:h-[350px] lg:h-[450px] w-full rounded-sm overflow-hidden group shadow-md">
             <Image
               src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1200&q=80"
@@ -328,7 +344,7 @@ export default function PropertiesPage() {
         </div>
       </section>
 
-      {/* Why Book With Us Section */}
+      {/* 4. WHY BOOK WITH US (FEATURES) */}
       <section
         style={{
           backgroundColor: sectionBg,
@@ -338,7 +354,6 @@ export default function PropertiesPage() {
         className="py-16 md:py-24"
       >
         <div className="max-w-[1380px] mx-auto px-6">
-          {/* Header */}
           <div className="text-center mb-16">
             <p
               style={{ color: accentText }}
@@ -358,9 +373,7 @@ export default function PropertiesPage() {
             />
           </div>
 
-          {/* Body Content */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-0 items-start">
-            {/* Left: Tab Selectors */}
             <div
               style={{ borderColor: borderColor }}
               className="col-span-1 lg:col-span-4 lg:border-r lg:pr-8 flex flex-col gap-1"
@@ -398,12 +411,12 @@ export default function PropertiesPage() {
                       {f.subtitle}
                     </span>
 
-                    {/* Active line connector indicator */}
                     {isActive && (
                       <div
                         style={{
                           backgroundColor: accentText,
-                          animation: "wbLineIn 0.4s cubic-bezier(0.16,1,0.3,1) forwards",
+                          animation:
+                            "wbLineIn 0.4s cubic-bezier(0.16,1,0.3,1) forwards",
                         }}
                         className="hidden lg:block absolute right-0 top-1/2 -translate-y-1/2 h-[1px] w-8 z-10"
                       />
@@ -413,9 +426,7 @@ export default function PropertiesPage() {
               })}
             </div>
 
-            {/* Center: Active Details & Main Image */}
             <div className="col-span-1 lg:col-span-5 px-0 lg:px-8 flex flex-col gap-6">
-              {/* Feature Details Container */}
               <div
                 key={`details-${activeIdx}`}
                 className="flex flex-col animate-[fadeIn_0.5s_ease]"
@@ -432,7 +443,10 @@ export default function PropertiesPage() {
                 >
                   {activeFeature.title}
                 </h2>
-                <div style={{ backgroundColor: accentText }} className="w-8 h-[1px] mb-4 opacity-50" />
+                <div
+                  style={{ backgroundColor: accentText }}
+                  className="w-8 h-[1px] mb-4 opacity-50"
+                />
                 <p
                   style={{ color: descText }}
                   className="text-sm font-light leading-relaxed"
@@ -441,7 +455,6 @@ export default function PropertiesPage() {
                 </p>
               </div>
 
-              {/* Main Active Image Frame */}
               <div
                 key={`main-img-${activeIdx}`}
                 className="relative h-[250px] sm:h-[320px] w-full rounded-sm overflow-hidden shadow-md animate-[fadeIn_0.5s_ease]"
@@ -456,13 +469,14 @@ export default function PropertiesPage() {
               </div>
             </div>
 
-            {/* Right: Vertical Image Preview Strip */}
             <div
               style={{ borderColor: borderColor }}
               className="col-span-1 lg:col-span-3 lg:border-l lg:pl-8 flex flex-row lg:flex-col gap-3 h-full lg:h-[480px] w-full"
             >
               {otherFeatures.map((f) => {
-                const globalIdx = features.findIndex((feat) => feat.id === f.id);
+                const globalIdx = features.findIndex(
+                  (feat) => feat.id === f.id,
+                );
                 return (
                   <div
                     key={f.id}
@@ -496,11 +510,10 @@ export default function PropertiesPage() {
         </div>
       </section>
 
-      {/* Why Stay In Poodja? (FAQ Section) */}
+      {/* 6. FAQ SECTION */}
       <section
         className="max-w-[840px] mx-auto px-6 py-16 md:py-24"
       >
-        {/* Header */}
         <div className="text-center mb-16">
           <p
             style={{ color: accentText }}
@@ -520,7 +533,6 @@ export default function PropertiesPage() {
           />
         </div>
 
-        {/* Accordions */}
         <div className="flex flex-col gap-4">
           {faqs.map((faq, i) => {
             const isOpen = openFaqIdx === i;
@@ -570,25 +582,38 @@ export default function PropertiesPage() {
         </div>
       </section>
 
-      {/* About & SEO Description Section */}
+      {/* 7. ABOUT SECTION */}
       <section
         className="max-w-[1380px] mx-auto px-6 py-16 md:py-24 border-t"
       >
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-start">
-          {/* Left: About Poodja Title */}
           <div className="lg:col-span-5 flex items-center gap-4">
             <h2
-              style={{ fontFamily: "var(--font-cormorant-garamond)", color: accentText }}
+              style={{
+                fontFamily: "var(--font-cormorant-garamond)",
+                color: accentText,
+              }}
               className="text-2xl sm:text-3xl font-light tracking-wide uppercase leading-tight"
             >
               About Poodja Properties
             </h2>
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" style={{ color: accentText }}>
-              <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" />
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              style={{ color: accentText }}
+            >
+              <path
+                d="M5 12h14M12 5l7 7-7 7"
+                stroke="currentColor"
+                strokeWidth="1"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
             </svg>
           </div>
 
-          {/* Right: Paragraphs */}
           <div className="lg:col-span-7 flex flex-col gap-6">
             <h3
               style={{ fontFamily: "var(--font-cormorant-garamond)" }}
@@ -600,24 +625,70 @@ export default function PropertiesPage() {
               style={{ color: descText }}
               className="text-sm font-light leading-relaxed"
             >
-              Our property management approach is built on custom hospitality, combining local authenticity with international resort standards.
-              Each villa is designed as a standalone sanctuary, complete with private pools, state-of-the-art facilities, and tropical landscaping.
-              We cater to families, couples, and groups seeking safe, high-end, and private accommodations that allow them to discover the true spirit of Indonesia.
+              Our property management approach is built on custom hospitality,
+              combining local authenticity with international resort standards.
+              Each villa is designed as a standalone sanctuary, complete with
+              private pools, state-of-the-art facilities, and tropical
+              landscaping. We cater to families, couples, and groups seeking
+              safe, high-end, and private accommodations that allow them to
+              discover the true spirit of Indonesia.
             </p>
             <p
               style={{ color: descText }}
               className="text-sm font-light leading-relaxed"
             >
-              From seminyak beachfront luxury to cliffside views in Uluwatu or the calm ricefields of Ubud,
-              Poodja ensures that every booking comes with a best-rate guarantee, professional guest relations managers,
-              complimentary amenities, and memories that will last a lifetime. Book directly with us for exclusive deals and personalized concierge itineraries.
+              From seminyak beachfront luxury to cliffside views in Uluwatu or
+              the calm ricefields of Ubud, Poodja ensures that every booking
+              comes with a best-rate guarantee, professional guest relations
+              managers, complimentary amenities, and memories that will last a
+              lifetime. Book directly with us for exclusive deals and
+              personalized concierge itineraries.
             </p>
           </div>
         </div>
       </section>
 
+      {/* ── 8. QUICK ACCESS GATEWAY (RESOLVED & INTEGRATED FROM STASH) ── */}
+      <section
+        className={`w-full max-w-[1380px] mx-auto px-6 py-12 border-t ${isDark ? "border-white/5" : "border-black/5"}`}
+      >
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+          <div>
+            <span
+              className={`text-[9px] font-bold tracking-[0.25em] uppercase block mb-1 ${isDark ? "text-[#FCD57B]" : "text-[#8B6B2E]"}`}
+            >
+              Quick Access
+            </span>
+            <p className="text-xs font-light opacity-50">
+              Quick access to dynamic estate sub-portfolios:
+            </p>
+          </div>
 
-      {/* Embedded Animations Styles */}
+          {/* List Teks Navigasi Villa */}
+          <div className="flex flex-wrap gap-x-8 gap-y-3">
+            {VILLAS_DATA.map((villa) => (
+              <Link
+                key={villa.id}
+                href={`/properties/${villa.id}`}
+                className={`group text-[10px] font-bold tracking-widest uppercase relative py-1 transition-opacity duration-300 hover:opacity-100 ${
+                  isDark
+                    ? "text-white/70 hover:text-[#FCD57B]"
+                    : "text-[#011434]/70 hover:text-[#8B6B2E]"
+                }`}
+              >
+                {villa.name.includes(" — ")
+                  ? villa.name.split(" — ")[1]
+                  : villa.name}
+                <span
+                  className={`absolute bottom-0 left-0 w-full h-[1px] transition-transform duration-500 origin-right scale-x-0 group-hover:scale-x-100 group-hover:origin-left ${isDark ? "bg-[#FCD57B]" : "bg-[#8B6B2E]"}`}
+                />
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Keyframe Styles */}
       <style>{`
         @keyframes wbLineIn {
           from { width: 0; opacity: 0; }
@@ -630,4 +701,13 @@ export default function PropertiesPage() {
       `}</style>
     </div>
   );
+}
+
+function revealStyle(inView) {
+  return {
+    opacity: inView ? 1 : 0,
+    transform: inView ? "none" : "translateY(40px)",
+    transition:
+      "opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1)",
+  };
 }
