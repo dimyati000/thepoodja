@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useTheme } from "@/app/sections/ThemeAndLayoutProviders";
+import { useTheme } from "@/components/ThemeAndLayoutProviders";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { VILLAS_DATA } from "@/constants/villas";
 
