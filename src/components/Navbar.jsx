@@ -10,7 +10,7 @@ const navLinks = [
   { name: "Properties", path: "/properties" },
   // { name: "Management Enquiry", path: "/management-enquiry" },
   // { name: "Monthly Offers", path: "/monthly-offers" },
-  // { name: "Contact Us", path: "/contact-us" },
+  { name: "Contact Us", path: "/contact-us" },
 ];
 
 export function Navbar({ isDark, onThemeToggle }) {
