@@ -5,6 +5,7 @@ const nextConfig = {
 
   // Allow loading images from Unsplash
   images: {
+    // unoptimized: true, // Gg-g-pindah ke sini (berlaku global untuk semua gambar)
     remotePatterns: [
       {
         protocol: "https",

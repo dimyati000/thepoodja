@@ -65,7 +65,7 @@ export default function ContactUs() {
   };
 
   return (
-    <div style={{ overflowX: "hidden", minHeight: "100vh", position: "relative" }}
+    <div style={{ overflowX: "clip", minHeight: "100vh", position: "relative" }}
       className="transition-colors duration-500">
 
       {/* ═══════════════════════════════════════════════════════
