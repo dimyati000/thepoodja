@@ -153,7 +153,7 @@ export default function PropertiesPage() {
   return (
     <div
       style={{
-        overflowX: "hidden",
+        overflowX: "clip",
         minHeight: "100vh",
         position: "relative",
       }}
