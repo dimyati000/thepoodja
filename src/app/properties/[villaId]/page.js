@@ -6,7 +6,7 @@ import { useState, useMemo } from "react";
 import { useTheme } from "../../../components/ThemeAndLayoutProviders";
 import { VillaAccordionSlider } from "@/components/VillaAccordionSlider";
 import { SectionLabel } from "@/components/SectionLabel";
-import { RoomCard } from "@/app/properties/components/RoomCard";
+import { RoomCard } from "@/components/properties/RoomCard";
 import { FAQAccordion } from "@/components/FAQAccordion";
 import { VILLAS_DATA } from "@/constants/villas";
 
