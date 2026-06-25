@@ -7,7 +7,7 @@ import { useTheme } from "@/components/ThemeAndLayoutProviders";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { VILLAS_DATA } from "@/constants/villas";
 import { SectionLabel } from "@/components/SectionLabel";
-import { VillaCard } from "./components/VillaCard";
+import { VillaCard } from "../../components/properties/VillaCard";
 
 const features = [
   {
@@ -112,7 +112,7 @@ export default function PropertiesPage() {
   const filteredVillas = useMemo(() => {
     if (activeLocationFilter === "ALL") return VILLAS_DATA;
     return VILLAS_DATA.filter(
-      (v) => v.location && v.location.toUpperCase() === activeLocationFilter
+      (v) => v.location && v.location.toUpperCase() === activeLocationFilter,
     );
   }, [activeLocationFilter]);
 
@@ -160,9 +160,7 @@ export default function PropertiesPage() {
       className="transition-colors duration-500"
     >
       {/* 1. MAIN PORTFOLIO INTRO */}
-      <section
-        className="max-w-[1380px] mx-auto px-6 pt-24 md:pt-32 pb-16"
-      >
+      <section className="max-w-[1380px] mx-auto px-6 pt-24 md:pt-32 pb-16">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-start">
           <div className="lg:col-span-7 flex flex-col justify-between h-full">
             <div>
@@ -273,11 +271,7 @@ export default function PropertiesPage() {
         {filteredVillas.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
             {filteredVillas.map((villa) => (
-              <VillaCard
-                key={villa.id}
-                villa={villa}
-                isDark={isDark}
-              />
+              <VillaCard key={villa.id} villa={villa} isDark={isDark} />
             ))}
           </div>
         ) : (
@@ -460,9 +454,7 @@ export default function PropertiesPage() {
       </section>
 
       {/* 6. FAQ SECTION */}
-      <section
-        className="max-w-[840px] mx-auto px-6 py-16 md:py-24"
-      >
+      <section className="max-w-[840px] mx-auto px-6 py-16 md:py-24">
         <div className="text-center mb-16">
           <p
             style={{ color: accentText }}
@@ -532,9 +524,7 @@ export default function PropertiesPage() {
       </section>
 
       {/* 7. ABOUT SECTION */}
-      <section
-        className="max-w-[1380px] mx-auto px-6 py-16 md:py-24 border-t"
-      >
+      <section className="max-w-[1380px] mx-auto px-6 py-16 md:py-24 border-t">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-start">
           <div className="lg:col-span-5 flex items-center gap-4">
             <h2

@@ -11,13 +11,13 @@ import {
   DEFAULT_REVIEWS,
 } from "@/constants/villas";
 import { SectionLabel } from "@/components/SectionLabel";
-import { RoomGallery } from "@/app/properties/components/RoomGallery";
-import { AmenityGrid } from "@/app/properties/components/AmenityGrid";
-import { BookingCalendar } from "@/app/properties/components/BookingCalendar";
-import { ThingsToKnow } from "@/app/properties/components/ThingsToKnow";
-import { ReviewCard } from "@/app/properties/components/ReviewCard";
-import { LocationPanel } from "@/app/properties/components/LocationPanel";
-import { RoomCard } from "@/app/properties/components/RoomCard";
+import { RoomGallery } from "@/components/properties/RoomGallery";
+import { AmenityGrid } from "@/components/properties/AmenityGrid";
+import { BookingCalendar } from "@/components/properties/BookingCalendar";
+import { ThingsToKnow } from "@/components/properties/ThingsToKnow";
+import { ReviewCard } from "@/components/properties/ReviewCard";
+import { LocationPanel } from "@/components/properties/LocationPanel";
+import { RoomCard } from "@/components/properties/RoomCard";
 
 export default function RoomDetailPage() {
   const { isDark } = useTheme();

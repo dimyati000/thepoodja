@@ -2,10 +2,10 @@
 "use client";
 import { useState, useCallback } from "react";
 import { useTheme } from "@/components/ThemeAndLayoutProviders";
-import { HeroSection } from "./sections/HeroSection";
-import { WhyBookWithUs } from "./sections/WhyBookWithUs";
-import { Testimonials } from "./sections/Testimonial";
-import { ExclusiveDeals } from "./sections/ExclusiveDeals";
+import { HeroSection } from "../components/home/HeroSection";
+import { WhyBookWithUs } from "../components/home/WhyBookWithUs";
+import { Testimonials } from "../components/home/Testimonial";
+import { ExclusiveDeals } from "../components/home/ExclusiveDeals";
 import { VillaAccordionSlider } from "@/components/VillaAccordionSlider";
 
 const TOTAL_SLIDES = 3;
