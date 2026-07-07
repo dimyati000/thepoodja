@@ -3,19 +3,30 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { useSettings } from "./SettingsProvider";
 
 const navLinks = [
   { name: "Home", path: "/" },
   { name: "About Us", path: "/about-us" },
-  { name: "Properties", path: "/properties" },
-  // { name: "Management Enquiry", path: "/management-enquiry" },
-  // { name: "Monthly Offers", path: "/monthly-offers" },
+  {
+    name: "Properties",
+    path: "/properties",
+    hasDropdown: true,
+    dropdownItems: [
+      { label: "Canggu", path: "/properties/all?location=Canggu" },
+      { label: "Ubud", path: "/properties/all?location=Ubud" },
+      // { label: "Seminyak", path: "/properties/all?location=Seminyak" },
+    ],
+  },
   { name: "Contact Us", path: "/contact-us" },
 ];
 
 export function Navbar({ isDark, onThemeToggle }) {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [propertiesHovered, setPropertiesHovered] = useState(false);
+
+  const { language, setLanguage, currency, setCurrency } = useSettings();
 
   const pathname = usePathname();
   const router = useRouter();
@@ -53,7 +64,6 @@ export function Navbar({ isDark, onThemeToggle }) {
   const mobileBg = isDark ? "#010e22" : "#ffffff";
   const hamColor = isDark ? "#FCD57B" : "#000000";
 
-  // helper function to check active state including child paths
   const checkIsActive = (itemPath) => {
     if (itemPath === "/") {
       return pathname === "/";
@@ -93,8 +103,84 @@ export function Navbar({ isDark, onThemeToggle }) {
         {/* Desktop nav */}
         <div className="hidden lg:flex items-center gap-9">
           {navLinks.map((item) => {
-            // Memanggil fungsi cerdas checkIsActive untuk mencakup nested child pages
             const isActive = checkIsActive(item.path);
+
+            if (item.hasDropdown) {
+              return (
+                <div
+                  key={item.name}
+                  className="relative group"
+                  onMouseEnter={() => setPropertiesHovered(true)}
+                  onMouseLeave={() => setPropertiesHovered(false)}
+                >
+                  <div className="flex items-center gap-1">
+                    <Link
+                      href={item.path}
+                      style={{
+                        color: linkColor(isActive),
+                        letterSpacing: "0.15em",
+                        fontWeight: isActive ? 700 : 500,
+                        textTransform: "uppercase",
+                      }}
+                      className="text-[10px] md:text-xs py-1 transition-colors duration-300 focus:outline-none"
+                    >
+                      {item.name}
+                    </Link>
+                    <button
+                      className="focus:outline-none py-1 transition-transform duration-300"
+                      style={{
+                        color: linkColor(isActive),
+                        transform: propertiesHovered
+                          ? "rotate(180deg)"
+                          : "rotate(0deg)",
+                      }}
+                    >
+                      <svg
+                        width="10"
+                        height="10"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                      >
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                      </svg>
+                    </button>
+                  </div>
+                  <span
+                    style={{ backgroundColor: isDark ? "#FCD57B" : "#000000" }}
+                    className={`absolute bottom-0 left-0 h-px transition-all duration-300 group-hover:w-full ${isActive ? "w-full" : "w-0"}`}
+                  />
+
+                  {/* Dropdown Menu */}
+                  <div
+                    className={`absolute top-full left-0 pt-4 w-48 transition-all duration-300 transform origin-top-left ${propertiesHovered ? "opacity-100 scale-100 pointer-events-auto" : "opacity-0 scale-95 pointer-events-none"}`}
+                  >
+                    <div
+                      className="py-2 rounded-sm shadow-lg"
+                      style={{
+                        backgroundColor: isDark ? "#010e22" : "#ffffff",
+                        border: `1px solid ${borderColor}`,
+                      }}
+                    >
+                      {item.dropdownItems.map((dropItem) => (
+                        <Link
+                          key={dropItem.label}
+                          href={dropItem.path}
+                          className={`block px-4 py-2 text-[10px] tracking-widest uppercase transition-colors ${
+                            isDark
+                              ? "text-white hover:bg-white/5 hover:text-[#FCD57B]"
+                              : "text-black hover:bg-black/5 hover:text-[#8B6B2E]"
+                          }`}
+                        >
+                          {dropItem.label}
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              );
+            }
 
             return (
               <Link
@@ -118,52 +204,79 @@ export function Navbar({ isDark, onThemeToggle }) {
             );
           })}
 
-          {/* Theme toggle */}
-          <button
-            onClick={onThemeToggle}
-            className="flex items-center justify-center shrink-0 transition-all duration-300 hover:scale-110 active:scale-95 focus:outline-none"
-            style={{
-              width: "32px",
-              height: "32px",
-              border: `1px solid ${isDark ? "rgba(251,212,123,0.35)" : "rgba(0, 0, 0, 0.15)"}`,
-              borderRadius: "50%",
-              background: "transparent",
-              color: isDark ? "#FCD57B" : "#000000",
-              cursor: "pointer",
-            }}
+          <div
+            className="flex items-center gap-4 ml-4 pl-4"
+            style={{ borderLeft: `1px solid ${borderColor}` }}
           >
-            {isDark ? (
-              <svg
-                width="14"
-                height="14"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.8"
-              >
-                <circle cx="12" cy="12" r="5" />
-                <line x1="12" y1="1" x2="12" y2="3" />
-                <line x1="12" y1="21" x2="12" y2="23" />
-                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
-                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
-                <line x1="1" y1="12" x2="3" y2="12" />
-                <line x1="21" y1="12" x2="23" y2="12" />
-                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
-                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
-              </svg>
-            ) : (
-              <svg
-                width="14"
-                height="14"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.8"
-              >
-                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
-              </svg>
-            )}
-          </button>
+            {/* Currency Toggle */}
+            <button
+              onClick={() => setCurrency(currency === "IDR" ? "USD" : "IDR")}
+              style={{
+                color: isDark ? "rgba(255,255,255,0.7)" : "rgba(0,0,0,0.6)",
+              }}
+              className="text-[10px] font-bold tracking-widest uppercase hover:text-[#FCD57B] transition-colors"
+            >
+              {currency}
+            </button>
+
+            {/* Language Toggle */}
+            <button
+              onClick={() => setLanguage(language === "ID" ? "EN" : "ID")}
+              style={{
+                color: isDark ? "rgba(255,255,255,0.7)" : "rgba(0,0,0,0.6)",
+              }}
+              className="text-[10px] font-bold tracking-widest uppercase hover:text-[#FCD57B] transition-colors"
+            >
+              {language}
+            </button>
+
+            {/* Theme toggle */}
+            <button
+              onClick={onThemeToggle}
+              className="flex items-center justify-center shrink-0 transition-all duration-300 hover:scale-110 active:scale-95 focus:outline-none ml-2"
+              style={{
+                width: "32px",
+                height: "32px",
+                border: `1px solid ${isDark ? "rgba(251,212,123,0.35)" : "rgba(0, 0, 0, 0.15)"}`,
+                borderRadius: "50%",
+                background: "transparent",
+                color: isDark ? "#FCD57B" : "#000000",
+                cursor: "pointer",
+              }}
+            >
+              {isDark ? (
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.8"
+                >
+                  <circle cx="12" cy="12" r="5" />
+                  <line x1="12" y1="1" x2="12" y2="3" />
+                  <line x1="12" y1="21" x2="12" y2="23" />
+                  <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+                  <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+                  <line x1="1" y1="12" x2="3" y2="12" />
+                  <line x1="21" y1="12" x2="23" y2="12" />
+                  <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+                  <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+                </svg>
+              ) : (
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.8"
+                >
+                  <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+                </svg>
+              )}
+            </button>
+          </div>
         </div>
 
         {/* Mobile hamburger button */}
@@ -271,27 +384,69 @@ export function Navbar({ isDark, onThemeToggle }) {
           }}
           className="lg:hidden"
         >
+          {/* Currency & Language row */}
+          <div
+            className="flex items-center justify-center gap-6 py-4 border-b"
+            style={{ borderColor }}
+          >
+            <button
+              onClick={() => setCurrency(currency === "IDR" ? "USD" : "IDR")}
+              style={{ color: linkColor(false), letterSpacing: "0.15em" }}
+              className="text-xs font-bold uppercase"
+            >
+              Currency: {currency}
+            </button>
+            <span style={{ color: borderColor }}>|</span>
+            <button
+              onClick={() => setLanguage(language === "ID" ? "EN" : "ID")}
+              style={{ color: linkColor(false), letterSpacing: "0.15em" }}
+              className="text-xs font-bold uppercase"
+            >
+              Language: {language}
+            </button>
+          </div>
           {navLinks.map((item) => {
-            // Samakan logika active untuk versi mobile menu
             const isActive = checkIsActive(item.path);
+
             return (
-              <Link
-                key={item.name}
-                href={item.path}
-                onClick={handleMobileClick}
-                style={{
-                  display: "block",
-                  width: "100%",
-                  textAlign: "left",
-                  color: linkColor(isActive),
-                  letterSpacing: "0.2em",
-                  textTransform: "uppercase",
-                  borderBottom: `1px solid ${borderColor}`,
-                }}
-                className="py-3.5 px-6 text-xs font-medium"
-              >
-                {item.name}
-              </Link>
+              <div key={item.name}>
+                <div className="flex items-center justify-between">
+                  <Link
+                    href={item.path}
+                    onClick={handleMobileClick}
+                    style={{
+                      color: linkColor(isActive),
+                      letterSpacing: "0.2em",
+                      textTransform: "uppercase",
+                    }}
+                    className="py-3.5 px-6 text-xs font-medium block w-full"
+                  >
+                    {item.name}
+                  </Link>
+                </div>
+                {item.hasDropdown && (
+                  <div
+                    className="bg-black/5 pl-10 border-t border-b"
+                    style={{ borderColor }}
+                  >
+                    {item.dropdownItems.map((drop) => (
+                      <Link
+                        key={drop.label}
+                        href={drop.path}
+                        onClick={handleMobileClick}
+                        style={{
+                          color: linkColor(false),
+                          letterSpacing: "0.15em",
+                          textTransform: "uppercase",
+                        }}
+                        className="py-3 px-6 text-[10px] font-medium block"
+                      >
+                        {drop.label}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
             );
           })}
         </div>

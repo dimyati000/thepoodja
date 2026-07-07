@@ -2,6 +2,7 @@
 import { useState, useEffect, createContext, useContext } from "react";
 import { Navbar } from "./Navbar";
 import { Footer } from "./Footer";
+import { SettingsProvider } from "./SettingsProvider";
 
 const ThemeContext = createContext();
 
@@ -67,70 +68,72 @@ export function ThemeAndLayoutProviders({ children }) {
   const showCustomCursor = heroSide !== "" && !cursorHovered;
 
   return (
-    <ThemeContext.Provider value={{ isDark, setIsDark, heroSide }}>
-      <div
-        style={{
-          backgroundColor: isDark ? "#011434" : "#ffffff",
-          color: isDark ? "#ffffff" : "#011434",
-          minHeight: "100vh",
-          display: "flex",
-          flexDirection: "column",
-          position: "relative",
-        }}
-        className="transition-colors duration-500"
-      >
-        <style>{`
-          .hide-scrollbar::-webkit-scrollbar { display: none; }
-          .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-          ${showCustomCursor ? `body { cursor: none !important; }` : ""}
-          .smooth-cursor {
-            position: fixed; left: 0; top: 0;
-            transform: translate3d(var(--cursor-x), var(--cursor-y), 0) translate(-50%, -50%);
-            will-change: transform; pointer-events: none; z-index: 9999;
-          }
-        `}</style>
+    <SettingsProvider>
+      <ThemeContext.Provider value={{ isDark, setIsDark, heroSide }}>
+        <div
+          style={{
+            backgroundColor: isDark ? "#011434" : "#ffffff",
+            color: isDark ? "#ffffff" : "#011434",
+            minHeight: "100vh",
+            display: "flex",
+            flexDirection: "column",
+            position: "relative",
+          }}
+          className="transition-colors duration-500"
+        >
+          <style>{`
+            .hide-scrollbar::-webkit-scrollbar { display: none; }
+            .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+            ${showCustomCursor ? `body { cursor: none !important; }` : ""}
+            .smooth-cursor {
+              position: fixed; left: 0; top: 0;
+              transform: translate3d(var(--cursor-x), var(--cursor-y), 0) translate(-50%, -50%);
+              will-change: transform; pointer-events: none; z-index: 9999;
+            }
+          `}</style>
 
-        {/* Custom Cursor */}
-        {showCustomCursor && (
-          <div className="hidden lg:flex smooth-cursor items-center justify-center pointer-events-none select-none">
-            <div
-              style={{
-                width: "58px",
-                height: "58px",
-                borderRadius: "50%",
-                border: "1.5px solid rgba(230, 213, 184, 0.75)",
-                backgroundColor: "rgba(230, 213, 184, 0.12)",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <svg
-                width="22"
-                height="22"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="rgba(230, 213, 184, 0.95)"
-                strokeWidth="1.25"
+          {/* Custom Cursor */}
+          {showCustomCursor && (
+            <div className="hidden lg:flex smooth-cursor items-center justify-center pointer-events-none select-none">
+              <div
                 style={{
-                  transform:
-                    heroSide === "left" ? "rotate(180deg)" : "rotate(0deg)",
-                  transition: "transform 0.15s",
+                  width: "58px",
+                  height: "58px",
+                  borderRadius: "50%",
+                  border: "1.5px solid rgba(230, 213, 184, 0.75)",
+                  backgroundColor: "rgba(230, 213, 184, 0.12)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
                 }}
               >
-                <polyline points="9 18 15 12 9 6" />
-              </svg>
+                <svg
+                  width="22"
+                  height="22"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="rgba(230, 213, 184, 0.95)"
+                  strokeWidth="1.25"
+                  style={{
+                    transform:
+                      heroSide === "left" ? "rotate(180deg)" : "rotate(0deg)",
+                    transition: "transform 0.15s",
+                  }}
+                >
+                  <polyline points="9 18 15 12 9 6" />
+                </svg>
+              </div>
             </div>
-          </div>
-        )}
+          )}
 
-        <Navbar isDark={isDark} onThemeToggle={() => setIsDark((v) => !v)} />
+          <Navbar isDark={isDark} onThemeToggle={() => setIsDark((v) => !v)} />
 
-        <div className="flex-1">{children}</div>
+          <div className="flex-1">{children}</div>
 
-        <Footer isDark={isDark} />
-      </div>
-    </ThemeContext.Provider>
+          <Footer isDark={isDark} />
+        </div>
+      </ThemeContext.Provider>
+    </SettingsProvider>
   );
 }
 
