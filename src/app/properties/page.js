@@ -177,10 +177,10 @@ export default function PropertiesPage() {
           </div>
           <Link
             href="/properties/all"
-            className={`flex items-center gap-2 text-[10px] font-bold tracking-[0.2em] uppercase border-b pb-1 transition-colors ${
+            className={`flex items-center gap-2.5 px-6 py-2.5 text-[11px] font-semibold tracking-[0.2em] uppercase rounded-full border transition-all duration-300 ${
               isDark
-                ? "text-[#FCD57B] border-[#FCD57B]/40 hover:border-[#FCD57B]"
-                : "text-[#8B6B2E] border-[#8B6B2E]/40 hover:border-[#8B6B2E]"
+                ? "text-[#FCD57B] border-[#FCD57B]/40 hover:bg-[#FCD57B] hover:text-[#011434] hover:border-[#FCD57B]"
+                : "text-[#8B6B2E] border-[#8B6B2E]/40 hover:bg-[#8B6B2E] hover:text-white hover:border-[#8B6B2E]"
             }`}
           >
             View All Properties

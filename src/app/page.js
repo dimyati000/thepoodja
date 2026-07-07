@@ -1,4 +1,3 @@
-// src/app/page.js
 "use client";
 import { useState, useCallback } from "react";
 import { useTheme } from "@/components/ThemeAndLayoutProviders";
