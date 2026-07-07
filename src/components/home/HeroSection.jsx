@@ -1,6 +1,8 @@
 "use client";
-import { useState } from "react";
+import { useRef } from "react";
 import Image from "next/image";
+import { PropertySearchBar } from "../properties/PropertySearchBar";
+import { StickySearchBar } from "../properties/StickySearchBar";
 
 const SLIDES = [
   {
@@ -26,8 +28,6 @@ const SLIDES = [
   },
 ];
 
-const PROP_TYPES = ["Villa", "House", "Apartment", "Resort"];
-
 export function HeroSection({
   isDark,
   current,
@@ -35,19 +35,20 @@ export function HeroSection({
   handleSlideChange,
   handleHeroClick,
 }) {
-  const [location, setLocation] = useState("");
-  const [dates, setDates] = useState("");
-  const [propType, setPropType] = useState("");
+  const frameRef = useRef(null);
 
   return (
     <section
       id="home"
       className="relative w-full min-h-[100vh] flex flex-col justify-start select-none pt-18 md:pt-30 pb-10"
     >
+      <StickySearchBar isDark={isDark} triggerRef={frameRef} />
+
       <div className="relative w-full lg:max-w-[1440px] mx-auto px-4 sm:px-6 md:px-12 z-10 flex flex-col">
         {/* FRAME UTAMA IMAGE SLIDER */}
         <div
           id="main-slider-frame"
+          ref={frameRef}
           onClick={handleHeroClick}
           className="relative w-full h-[58vh] sm:h-[60vh] md:h-[65vh] lg:h-[78vh] rounded-sm"
         >
@@ -160,109 +161,7 @@ export function HeroSection({
 
         {/* Search Bar Panel */}
         <div className="w-full mt-6 md:mt-10 pointer-events-auto">
-          <div
-            style={{
-              background: isDark
-                ? "rgba(1,20,52,0.85)"
-                : "rgba(255,255,255,0.95)",
-              backdropFilter: "blur(20px)",
-              border: isDark
-                ? "1px solid rgba(255,255,255,0.08)"
-                : "1px solid rgba(0,0,0,0.06)",
-            }}
-            className={`grid grid-cols-1 md:grid-cols-4 divide-y md:divide-y-0 md:divide-x ${isDark ? "divide-white/10" : "divide-black/10"} rounded-sm shadow-sm overflow-hidden`}
-          >
-            {/* Destination */}
-            <div className="p-4">
-              <p
-                style={{ letterSpacing: "0.2em" }}
-                className={`text-xs font-bold uppercase mb-1.5 ${isDark ? "text-[#FCD57B]" : "text-[#8B6B2E]"}`}
-              >
-                Destination
-              </p>
-              <input
-                type="text"
-                placeholder="Enter location or villa name"
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
-                style={{ color: isDark ? "#ffffff" : "#011434" }}
-                className="bg-transparent border-none outline-none text-xs font-light w-full placeholder:text-neutral-400"
-              />
-            </div>
-
-            {/* Check In / Out */}
-            <div className="p-4">
-              <p
-                style={{ letterSpacing: "0.2em" }}
-                className={`text-xs font-bold uppercase mb-1.5 ${isDark ? "text-[#FCD57B]" : "text-[#8B6B2E]"}`}
-              >
-                Check In — Check Out
-              </p>
-              <input
-                type="text"
-                placeholder="Select dates"
-                value={dates}
-                onFocus={(e) => (e.target.type = "date")}
-                onBlur={(e) => !e.target.value && (e.target.type = "text")}
-                onChange={(e) => setDates(e.target.value)}
-                style={{
-                  color: isDark ? "#ffffff" : "#011434",
-                  colorScheme: isDark ? "dark" : "light",
-                }}
-                className="bg-transparent border-none outline-none text-xs font-light w-full placeholder:text-neutral-400"
-              />
-            </div>
-
-            {/* Property Type */}
-            <div className="p-4">
-              <p
-                style={{ letterSpacing: "0.2em" }}
-                className={`text-xs font-bold uppercase mb-1.5 ${isDark ? "text-[#FCD57B]" : "text-[#8B6B2E]"}`}
-              >
-                Property Type
-              </p>
-              <select
-                value={propType}
-                onChange={(e) => setPropType(e.target.value)}
-                style={{
-                  color: propType
-                    ? isDark
-                      ? "#ffffff"
-                      : "#011434"
-                    : "rgba(128,128,128,0.5)",
-                }}
-                className="bg-transparent border-none outline-none text-xs font-light w-full cursor-pointer appearance-none"
-              >
-                <option
-                  value=""
-                  className={isDark ? "bg-[#011434]" : "bg-white"}
-                >
-                  Select type
-                </option>
-                {PROP_TYPES.map((t) => (
-                  <option
-                    key={t}
-                    value={t}
-                    className={isDark ? "bg-[#011434]" : "bg-white"}
-                  >
-                    {t}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {/* Search Button */}
-            <button
-              style={{
-                background: isDark ? "#FCD57B" : "#8B6B2E",
-                color: isDark ? "#011434" : "#ffffff",
-                letterSpacing: "0.25em",
-              }}
-              className="w-full h-full py-4 md:py-0 text-xs sm:text-sm font-bold uppercase transition-all duration-300 hover:brightness-95 active:scale-[0.99] cursor-pointer"
-            >
-              Search
-            </button>
-          </div>
+          <PropertySearchBar isDark={isDark} />
         </div>
       </div>
     </section>
