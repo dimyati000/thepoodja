@@ -6,10 +6,10 @@ import { usePathname, useRouter } from "next/navigation";
 import { useSettings } from "./SettingsProvider";
 
 const navLinks = [
-  { name: "Home", path: "/" },
-  { name: "About Us", path: "/about-us" },
+  { key: "home", path: "/" },
+  { key: "about", path: "/about-us" },
   {
-    name: "Properties",
+    key: "properties",
     path: "/properties",
     hasDropdown: true,
     dropdownItems: [
@@ -18,7 +18,7 @@ const navLinks = [
       // { label: "Seminyak", path: "/properties/all?location=Seminyak" },
     ],
   },
-  { name: "Contact Us", path: "/contact-us" },
+  { key: "contact", path: "/contact-us" },
 ];
 
 export function Navbar({ isDark, onThemeToggle }) {
@@ -26,10 +26,10 @@ export function Navbar({ isDark, onThemeToggle }) {
   const [scrolled, setScrolled] = useState(false);
   const [propertiesHovered, setPropertiesHovered] = useState(false);
 
-  const { language, setLanguage, currency, setCurrency } = useSettings();
+  const { language, setLanguage, currency, setCurrency, t } = useSettings();
 
   const pathname = usePathname();
-  const router = useRouter();
+  // const router = useRouter();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 60);
@@ -108,7 +108,7 @@ export function Navbar({ isDark, onThemeToggle }) {
             if (item.hasDropdown) {
               return (
                 <div
-                  key={item.name}
+                  key={item.key}
                   className="relative group"
                   onMouseEnter={() => setPropertiesHovered(true)}
                   onMouseLeave={() => setPropertiesHovered(false)}
@@ -124,7 +124,7 @@ export function Navbar({ isDark, onThemeToggle }) {
                       }}
                       className="text-[10px] md:text-xs py-1 transition-colors duration-300 focus:outline-none"
                     >
-                      {item.name}
+                      {t(`nav.${item.key}`)}
                     </Link>
                     <button
                       className="focus:outline-none py-1 transition-transform duration-300"
@@ -184,7 +184,7 @@ export function Navbar({ isDark, onThemeToggle }) {
 
             return (
               <Link
-                key={item.name}
+                key={item.key}
                 href={item.path}
                 style={{
                   color: linkColor(isActive),
@@ -195,7 +195,7 @@ export function Navbar({ isDark, onThemeToggle }) {
                 }}
                 className="text-[10px] md:text-xs py-1 group transition-colors duration-300 focus:outline-none"
               >
-                {item.name}
+                {t(`nav.${item.key}`)}
                 <span
                   style={{ backgroundColor: isDark ? "#FCD57B" : "#000000" }}
                   className={`absolute bottom-0 left-0 h-px transition-all duration-300 group-hover:w-full ${isActive ? "w-full" : "w-0"}`}
@@ -409,7 +409,7 @@ export function Navbar({ isDark, onThemeToggle }) {
             const isActive = checkIsActive(item.path);
 
             return (
-              <div key={item.name}>
+              <div key={item.key}>
                 <div className="flex items-center justify-between">
                   <Link
                     href={item.path}
@@ -421,7 +421,7 @@ export function Navbar({ isDark, onThemeToggle }) {
                     }}
                     className="py-3.5 px-6 text-xs font-medium block w-full"
                   >
-                    {item.name}
+                    {t(`nav.${item.key}`)}
                   </Link>
                 </div>
                 {item.hasDropdown && (
