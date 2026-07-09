@@ -2,77 +2,14 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useTheme } from "../../components/ThemeAndLayoutProviders";
 import { useSettings } from "../SettingsProvider";
+import { localize } from "@/lib/i18n";
+import { formatPrice } from "@/lib/currency";
+import { Icon } from "@/components/Icon";
 
-const SpecIcon = ({ type }) => {
-  switch (type) {
-    case "guests":
-      return (
-        <svg
-          width="14"
-          height="14"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.5"
-        >
-          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-          <circle cx="9" cy="7" r="4"></circle>
-          <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-          <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
-        </svg>
-      );
-    case "beds":
-      return (
-        <svg
-          width="14"
-          height="14"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.5"
-        >
-          <path d="M2 4v16M2 8h18a2 2 0 0 1 2 2v10M2 17h20M6 8v9" />
-        </svg>
-      );
-    case "baths":
-      return (
-        <svg
-          width="14"
-          height="14"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.5"
-        >
-          <path d="M9 6 6.5 3.5a1.5 1.5 0 0 0-1-.5C4.683 3 4 3.683 4 4.5V17a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-5" />
-          <line x1="10" y1="5" x2="8" y2="7" />
-          <line x1="2" y1="12" x2="22" y2="12" />
-          <line x1="7" y1="19" x2="7" y2="21" />
-          <line x1="17" y1="19" x2="17" y2="21" />
-        </svg>
-      );
-    case "size":
-      return (
-        <svg
-          width="14"
-          height="14"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="1.5"
-        >
-          <path d="M4 4h16v16H4z" />
-          <path d="M4 12h16" />
-          <path d="M12 4v16" />
-        </svg>
-      );
-    default:
-      return null;
-  }
-};
-
-export function VillaCard({ villa, groupId, groupName, isDark }) {
+export function VillaCard({ villa, groupId, groupName }) {
+  const { isDark } = useTheme();
   const [currentImg, setCurrentImg] = useState(0);
   const { currency, language } = useSettings();
 
@@ -80,15 +17,7 @@ export function VillaCard({ villa, groupId, groupName, isDark }) {
   const textColor = isDark ? "text-neutral-300" : "text-neutral-600";
   const iconColor = isDark ? "text-neutral-400" : "text-neutral-500";
 
-  const images = [villa.image, ...(villa.gallery || [])].slice(0, 4);
-
-  const formatPrice = (priceIdr) => {
-    if (currency === "USD") {
-      const priceUsd = Math.round(priceIdr / 15000);
-      return `$${priceUsd.toLocaleString()}`;
-    }
-    return `Rp ${priceIdr.toLocaleString("id-ID")}`;
-  };
+  const images = Array.isArray(villa.gallery) ? villa.gallery.slice(0, 4) : [];
 
   const nextImg = (e) => {
     e.preventDefault();
@@ -114,28 +43,34 @@ export function VillaCard({ villa, groupId, groupName, isDark }) {
       }`}
     >
       <div className="relative w-full h-[280px] overflow-hidden bg-neutral-900 group">
-        {images.map((imgUrl, i) => (
-          <div
-            key={i}
-            className={`absolute inset-0 transition-opacity duration-700 ease-in-out ${
-              i === currentImg ? "opacity-100 z-0" : "opacity-0 -z-10"
-            }`}
-          >
-            <Image
-              src={imgUrl}
-              alt={`${villa.name} - ${i}`}
-              fill
-              sizes="(max-width: 768px) 100vw, 33vw"
-              className="object-cover transition-transform duration-1000 group-hover:scale-[1.02]"
-            />
+        {images.length > 0 ? (
+          images.map((imgUrl, i) => (
+            <div
+              key={i}
+              className={`absolute inset-0 transition-opacity duration-700 ease-in-out ${
+                i === currentImg ? "opacity-100 z-0" : "opacity-0 -z-10"
+              }`}
+            >
+              <Image
+                src={imgUrl}
+                alt={`${villa.name} - ${i + 1}`}
+                fill
+                sizes="(max-width: 768px) 100vw, 33vw"
+                className="object-cover transition-transform duration-1000 group-hover:scale-[1.02]"
+              />
+            </div>
+          ))
+        ) : (
+          <div className="absolute inset-0 flex items-center justify-center bg-neutral-900 text-neutral-500 text-sm">
+            No Image
           </div>
-        ))}
+        )}
 
         <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-black/60 to-transparent pointer-events-none z-10" />
 
         <div className="absolute bottom-4 left-4 z-20 text-white">
           <p className="text-xl font-serif font-semibold tracking-wide flex items-end gap-1 font-numbers drop-shadow-sm">
-            {formatPrice(villa.price)}
+            {formatPrice(villa.price, currency, language)}
             <span className="text-xs font-sans font-light opacity-90 pb-0.5">
               / {labels.night}
             </span>
@@ -198,9 +133,8 @@ export function VillaCard({ villa, groupId, groupName, isDark }) {
             className={`flex flex-wrap items-center gap-x-4 gap-y-2 text-xs font-light ${textColor}`}
           >
             <div className="flex items-center gap-1.5 whitespace-nowrap">
-              <span className={iconColor}>
-                <SpecIcon type="guests" />
-              </span>
+              <Icon name="guests" size={15} className={iconColor} />
+
               <p>
                 <span className="font-numbers font-medium">{villa.guests}</span>{" "}
                 {language === "ID" ? "Tamu" : "Guests"}
@@ -208,9 +142,7 @@ export function VillaCard({ villa, groupId, groupName, isDark }) {
             </div>
 
             <div className="flex items-center gap-1.5 whitespace-nowrap">
-              <span className={iconColor}>
-                <SpecIcon type="beds" />
-              </span>
+              <Icon name="beds" size={15} className={iconColor} />
               <p>
                 <span className="font-numbers font-medium">{villa.beds}</span>{" "}
                 {language === "ID" ? "Kamar" : "Bedrooms"}
@@ -218,9 +150,7 @@ export function VillaCard({ villa, groupId, groupName, isDark }) {
             </div>
 
             <div className="flex items-center gap-1.5 whitespace-nowrap">
-              <span className={iconColor}>
-                <SpecIcon type="baths" />
-              </span>
+              <Icon name="baths" size={15} className={iconColor} />
               <p>
                 <span className="font-numbers font-medium">{villa.baths}</span>{" "}
                 {language === "ID" ? "K. Mandi" : "Bathrooms"}
@@ -228,9 +158,7 @@ export function VillaCard({ villa, groupId, groupName, isDark }) {
             </div>
 
             <div className="flex items-center gap-1.5 whitespace-nowrap">
-              <span className={iconColor}>
-                <SpecIcon type="size" />
-              </span>
+              <Icon name="size" size={15} className={iconColor} />
               <p>
                 <span className="font-numbers font-medium">{villa.size}</span>{" "}
                 m²
@@ -249,7 +177,9 @@ export function VillaCard({ villa, groupId, groupName, isDark }) {
                     : "border-gray-300 text-gray-600 bg-transparent"
                 }`}
               >
-                <span className="capitalize-first">{fac.label}</span>
+                <span className="capitalize-first">
+                  {localize(fac.label, language)}
+                </span>
               </div>
             ))}
           </div>
