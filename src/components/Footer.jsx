@@ -1,10 +1,11 @@
 import Image from "next/image";
+import { Icon } from "./Icon";
 
 const navLinks = [
   { label: "Home", id: "home" },
   { label: "Properties", id: "properties" },
   { label: "Management Enquiry", id: "management-enquiry" },
-  { label: "Yearly Offers", id: "yearly-offers" },
+  { label: "Monthly Offers", id: "monthly-offers" },
   { label: "Contact Us", id: "contact-us" },
 ];
 
@@ -71,50 +72,15 @@ export function Footer({ isDark }) {
             {[
               {
                 label: "Instagram",
-                icon: (
-                  <svg
-                    width="14"
-                    height="14"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                  >
-                    <rect x="2" y="2" width="20" height="20" rx="5" />
-                    <circle cx="12" cy="12" r="4" />
-                    <circle cx="17.5" cy="6.5" r="0.5" fill="currentColor" />
-                  </svg>
-                ),
+                icon: <Icon name="instagram" size={16} />,
               },
               {
                 label: "Facebook",
-                icon: (
-                  <svg
-                    width="14"
-                    height="14"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                  >
-                    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
-                  </svg>
-                ),
+                icon: <Icon name="facebook" size={16} />,
               },
               {
                 label: "WhatsApp",
-                icon: (
-                  <svg
-                    width="14"
-                    height="14"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.5"
-                  >
-                    <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
-                  </svg>
-                ),
+                icon: <Icon name="whatsapp" size={16} />,
               },
             ].map((s) => (
               <button
@@ -127,7 +93,7 @@ export function Footer({ isDark }) {
                     ? "1px solid rgba(251,212,123,0.2)"
                     : "1px solid rgba(0,0,0,0.15)",
                   background: "transparent",
-                  color: isDark ? "rgba(251,212,123,0.55)" : "#000000",
+                  color: isDark ? "rgba(251,212,123,0.85)" : "#000000",
                   cursor: "pointer",
                 }}
                 className="flex items-center justify-center transition-all duration-300 hover:scale-105 active:scale-95 focus:outline-none"

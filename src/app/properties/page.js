@@ -8,6 +8,7 @@ import { VILLAS_DATA } from "@/constants/villas";
 import { SectionLabel } from "@/components/SectionLabel";
 import { VillaCard } from "../../components/properties/VillaCard";
 import { PropertySearchBar } from "@/components/properties/PropertySearchBar";
+import { Icon } from "@/components/Icon";
 
 const features = [
   {
@@ -184,20 +185,7 @@ export default function PropertiesPage() {
             }`}
           >
             View All Properties
-            <svg
-              width="12"
-              height="12"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.5"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M8.25 4.5l7.5 7.5-7.5 7.5"
-              />
-            </svg>
+            <Icon name="chevronRight" size={14} />
           </Link>
         </div>
 
@@ -463,21 +451,7 @@ export default function PropertiesPage() {
             >
               About Poodja Properties
             </h2>
-            <svg
-              width="24"
-              height="24"
-              viewBox="0 0 24 24"
-              fill="none"
-              style={{ color: accentText }}
-            >
-              <path
-                d="M5 12h14M12 5l7 7-7 7"
-                stroke="currentColor"
-                strokeWidth="1"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
+            <Icon name="chevronRight" size={26} style={{ color: accentText }} />
           </div>
 
           <div className="lg:col-span-7 flex flex-col gap-6">
