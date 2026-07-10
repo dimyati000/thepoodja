@@ -4,7 +4,42 @@ import Image from "next/image";
 import { useScrollReveal, revealStyle } from "@/hooks/useScrollReveal";
 import { Icon } from "@/components/Icon";
 
-const features = [
+// const features = [
+//   {
+//     id: 1,
+//     num: "01",
+//     title: "Curated Properties",
+//     subtitle: "Hand-selected villas",
+//     desc: "Every property in our portfolio is personally visited and verified by our team. Only the finest 5% of listings make the cut — so you never have to compromise on quality.",
+//     img: "https://images.unsplash.com/photo-1571896349842-33c89424de2d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1200",
+//   },
+//   {
+//     id: 2,
+//     num: "02",
+//     title: "Verified & Trusted",
+//     subtitle: "Complete peace of mind",
+//     desc: "All our listings undergo rigorous in-person verification. Every amenity, every detail — confirmed. Book with complete confidence, every single time.",
+//     img: "https://images.unsplash.com/photo-1566073771259-6a8506099945?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1200",
+//   },
+//   {
+//     id: 3,
+//     num: "03",
+//     title: "Best Price Guarantee",
+//     subtitle: "Always the best rate",
+//     desc: "We guarantee the best available rates across all our properties. Find a lower price elsewhere, and we'll match it — no questions asked.",
+//     img: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1200",
+//   },
+//   {
+//     id: 4,
+//     num: "04",
+//     title: "24/7 Concierge",
+//     subtitle: "Always by your side",
+//     desc: "Our dedicated concierge team is available around the clock — from airport transfers to private dining reservations, every request handled with elegance.",
+//     img: "https://images.unsplash.com/photo-1445019980597-93fa8acb246c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1200",
+//   },
+// ];
+
+const defaultFeatures = [
   {
     id: 1,
     num: "01",
@@ -46,7 +81,18 @@ const featureIcons = {
   4: <Icon name="concierge" size={32} />,
 };
 
-export function WhyBookWithUs({ isDark }) {
+// export function WhyBookWithUs({ isDark }) {
+//   const [activeIdx, setActiveIdx] = useState(0);
+
+export function WhyBookWithUs({
+  isDark,
+  features: featuresProp,
+  labelText = "Our Promise",
+  headingText = "WHY BOOK WITH US?",
+  sectionId = "why-book-with-us",
+}) {
+  const features =
+    featuresProp && featuresProp.length ? featuresProp : defaultFeatures;
   const [activeIdx, setActiveIdx] = useState(0);
   const { ref: hRef, inView: hInView } = useScrollReveal(0.2);
   const { ref: bodyRef, inView: bodyInView } = useScrollReveal(0.06);
@@ -58,7 +104,7 @@ export function WhyBookWithUs({ isDark }) {
 
   return (
     <section
-      id="why-book-with-us"
+      id={sectionId}
       style={{
         backgroundColor: isDark ? "#011434" : "#ffffff",
         paddingBottom: "80px",
@@ -81,7 +127,7 @@ export function WhyBookWithUs({ isDark }) {
           }}
           className="text-xs md:text-sm font-bold uppercase mb-[18px]"
         >
-          Our Promise
+          {labelText}
         </p>
         <h2
           style={{
@@ -90,7 +136,7 @@ export function WhyBookWithUs({ isDark }) {
           }}
           className="font-serif text-2xl md:text-3xl lg:text-4xl font-semibold transition-colors duration-500 tracking-[0.08em]"
         >
-          WHY BOOK WITH US?
+          {headingText}
         </h2>
         <div
           style={{
