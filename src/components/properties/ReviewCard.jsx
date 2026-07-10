@@ -1,4 +1,9 @@
+"use client";
+import { useSettings } from "@/components/SettingsProvider";
+import { localize } from "@/lib/i18n";
+
 export function ReviewCard({ review, isDark }) {
+  const { language } = useSettings();
   const borderColor = isDark ? "rgba(255,255,255,0.1)" : "rgba(1,20,52,0.1)";
   const accent = isDark ? "#FCD57B" : "#8B6B2E";
 
@@ -20,7 +25,7 @@ export function ReviewCard({ review, isDark }) {
         </div>
         <span
           style={{ color: accent }}
-          className="text-xs font-bold flex items-center gap-1"
+          className="font-numbers text-xs font-bold flex items-center gap-1"
         >
           ★ {review.rating.toFixed(1)}
         </span>
@@ -30,7 +35,7 @@ export function ReviewCard({ review, isDark }) {
           isDark ? "text-neutral-300" : "text-neutral-600"
         }`}
       >
-        {review.text}
+        {localize(review.text, language)}
       </p>
     </div>
   );

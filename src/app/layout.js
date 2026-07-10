@@ -1,4 +1,4 @@
-import { Nunito_Sans, Cormorant_Garamond } from "next/font/google";
+import { Nunito_Sans, Cormorant_Garamond, Outfit } from "next/font/google";
 import "./globals.css";
 import { ThemeAndLayoutProviders } from "../components/ThemeAndLayoutProviders";
 
@@ -10,6 +10,12 @@ const nunitoSans = Nunito_Sans({
 
 const cormorantGaramond = Cormorant_Garamond({
   variable: "--font-cormorant-garamond",
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
+});
+
+const outfit = Outfit({
+  variable: "--font-outfit",
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700"],
 });
@@ -26,7 +32,7 @@ export default function RootLayout({ children }) {
   return (
     <html
       lang="en"
-      className={`${nunitoSans.variable} ${cormorantGaramond.variable} h-full antialiased`}
+      className={`${nunitoSans.variable} ${cormorantGaramond.variable} ${outfit.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col font-sans">
         <ThemeAndLayoutProviders>{children}</ThemeAndLayoutProviders>

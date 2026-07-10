@@ -1,13 +1,13 @@
 "use client";
 
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useTheme } from "@/components/ThemeAndLayoutProviders";
-import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { VILLAS_DATA } from "@/constants/villas";
 import { SectionLabel } from "@/components/SectionLabel";
-import { VillaCard } from "./components/VillaCard";
+import { VillaCard } from "../../components/properties/VillaCard";
+import { PropertySearchBar } from "@/components/properties/PropertySearchBar";
 
 const features = [
   {
@@ -87,56 +87,23 @@ const faqs = [
   },
 ];
 
-const TOTAL_SLIDES = 3;
-
 export default function PropertiesPage() {
-  const { isDark, heroSide } = useTheme();
-  const [current, setCurrent] = useState(0);
-  const [fade, setFade] = useState(true);
+  const { isDark } = useTheme();
 
-  const [activeLocationFilter, setActiveLocationFilter] = useState("ALL");
-
-  const locations = useMemo(() => {
-    const locs = ["ALL"];
-    VILLAS_DATA.forEach((v) => {
-      if (v.location) {
-        const uppercaseLoc = v.location.toUpperCase();
-        if (!locs.includes(uppercaseLoc)) {
-          locs.push(uppercaseLoc);
-        }
-      }
+  const featuredVillas = useMemo(() => {
+    const flat = [];
+    VILLAS_DATA.forEach((group) => {
+      group.rooms?.forEach((room) => {
+        flat.push({
+          ...room,
+          groupId: group.id,
+          groupName: group.name,
+          groupLocation: group.location,
+        });
+      });
     });
-    return locs;
+    return flat.slice(0, 3);
   }, []);
-
-  const filteredVillas = useMemo(() => {
-    if (activeLocationFilter === "ALL") return VILLAS_DATA;
-    return VILLAS_DATA.filter(
-      (v) => v.location && v.location.toUpperCase() === activeLocationFilter
-    );
-  }, [activeLocationFilter]);
-
-  const handleSlideChange = useCallback(
-    (index) => {
-      if (index === current) return;
-      setFade(false);
-      setTimeout(() => {
-        setCurrent(index);
-        setFade(true);
-      }, 400);
-    },
-    [current],
-  );
-
-  const handleHeroClick = () => {
-    if (heroSide === "right") {
-      const nextIndex = (current + 1) % TOTAL_SLIDES;
-      handleSlideChange(nextIndex);
-    } else if (heroSide === "left") {
-      const prevIndex = (current - 1 + TOTAL_SLIDES) % TOTAL_SLIDES;
-      handleSlideChange(prevIndex);
-    }
-  };
 
   const accentText = isDark ? "#FCD57B" : "#8B6B2E";
   const descText = isDark ? "rgba(255,255,255,0.65)" : "rgba(1,20,52,0.7)";
@@ -159,141 +126,95 @@ export default function PropertiesPage() {
       }}
       className="transition-colors duration-500"
     >
-      {/* 1. MAIN PORTFOLIO INTRO */}
-      <section
-        className="max-w-[1380px] mx-auto px-6 pt-24 md:pt-32 pb-16"
-      >
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-start">
-          <div className="lg:col-span-7 flex flex-col justify-between h-full">
-            <div>
-              <p
-                style={{ color: accentText }}
-                className="text-xs font-bold uppercase tracking-[0.35em] mb-4"
-              >
-                The Collection
-              </p>
-              <h1
-                style={{ fontFamily: "var(--font-cormorant-garamond)" }}
-                className="text-4xl md:text-5xl lg:text-6xl font-semibold mb-6 tracking-wide leading-tight uppercase"
-              >
-                Villa & Properties
-              </h1>
-              <p
-                style={{ color: descText }}
-                className="text-sm md:text-base font-light leading-relaxed max-w-2xl mb-8 lg:mb-12"
-              >
-                Poodja presents an exclusive collection of luxury villas and
-                premier residences in Bali&apos;s most coveted destinations.
-                Each property in our portfolio is meticulously selected and
-                managed to ensure an unparalleled experience for our guests.
-                Immerse yourself in authentic Balinese charm combined with
-                modern design elements, five-star amenities, and flawless
-                personalized service.
-              </p>
-            </div>
-
-            <div className="relative h-[240px] sm:h-[320px] md:h-[400px] lg:h-[450px] w-full rounded-sm overflow-hidden group shadow-md mt-auto">
-              <Image
-                src="https://images.unsplash.com/photo-1613977257363-707ba9348227?auto=format&fit=crop&w=1200&q=80"
-                alt="Tropical Villa Wide Portfolio"
-                fill
-                priority
-                style={{ objectFit: "cover" }}
-                className="transition-transform duration-700 group-hover:scale-105"
-              />
-              <div className="absolute inset-0 bg-black/10 group-hover:bg-black/5 transition-all duration-500" />
-            </div>
-          </div>
-
-          <div className="lg:col-span-5 flex flex-col gap-6 lg:gap-8">
-            <div className="relative h-[240px] sm:h-[300px] lg:h-[320px] w-full rounded-sm overflow-hidden group shadow-md">
-              <Image
-                src="https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?auto=format&fit=crop&w=800&q=80"
-                alt="Villa Pool and Deck"
-                fill
-                style={{ objectFit: "cover" }}
-                className="transition-transform duration-700 group-hover:scale-105"
-              />
-              <div className="absolute inset-0 bg-black/10 group-hover:bg-black/5 transition-all duration-500" />
-            </div>
-
-            <div className="relative h-[320px] sm:h-[400px] lg:h-[460px] w-full rounded-sm overflow-hidden group shadow-md">
-              <Image
-                src="https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dmlsbGF8ZW58MHx8MHx8fDA%3D"
-                alt="Villa Pool at Sunset"
-                fill
-                style={{ objectFit: "cover" }}
-                className="transition-transform duration-700 group-hover:scale-105"
-              />
-              <div className="absolute inset-0 bg-black/15 group-hover:bg-black/5 transition-all duration-500" />
-            </div>
-          </div>
+      {/* 1. HERO SECTION */}
+      <section className="relative w-full h-[60vh] md:h-[75vh] flex items-end pb-24 md:pb-28">
+        <Image
+          src="https://images.unsplash.com/photo-1613977257363-707ba9348227?auto=format&fit=crop&w=1800&q=80"
+          alt="Poodja Villas"
+          fill
+          priority
+          style={{ objectFit: "cover" }}
+        />
+        {isDark && (
+          <div className="absolute inset-x-0 top-0 h-36 bg-gradient-to-b from-black/80 via-black/30 to-transparent pointer-events-none transition-opacity duration-500" />
+        )}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+        <div className="relative z-10 max-w-[1380px] w-full mx-auto px-6">
+          <p
+            style={{ color: "#FCD57B" }}
+            className="text-xs font-bold uppercase tracking-[0.35em] mb-4"
+          >
+            The Collection
+          </p>
+          <h1
+            style={{ fontFamily: "var(--font-cormorant-garamond)" }}
+            className="text-white text-4xl md:text-6xl font-semibold mb-4 tracking-wide leading-tight uppercase max-w-2xl"
+          >
+            Villa & Properties
+          </h1>
+          <p className="text-white/80 text-sm md:text-base font-light leading-relaxed max-w-xl">
+            Exclusive collection of luxury villas in Bali&apos;s most coveted
+            destinations.
+          </p>
         </div>
       </section>
 
-      {/* ── SECTION 2: CURATED PORTFOLIO ── */}
-      <section className="w-full max-w-[1380px] mx-auto px-6 mt-28">
-        <div
-          className={`mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6 border-b pb-6 ${
-            isDark ? "border-white/10" : "border-[#011434]/10"
-          }`}
-        >
+      {/* Search Bar - overlap ke hero */}
+      <section className="max-w-[1380px] mx-auto px-6 -mt-12 md:-mt-16 relative z-20 mb-20 md:mb-28">
+        <PropertySearchBar isDark={isDark} />
+      </section>
+
+      {/* 2. FEATURED PROPERTIES - 4 card + View All kanan atas */}
+      <section className="w-full max-w-[1380px] mx-auto px-6 mb-28">
+        <div className="flex items-end justify-between mb-10">
           <div>
             <SectionLabel isDark={isDark} className="mb-2">
-              THE PORTFOLIO COLLECTION
+              FEATURED PROPERTIES
             </SectionLabel>
             <h2 className="text-3xl sm:text-4xl font-semibold font-serif tracking-tight uppercase">
-              CURATED PROPERTIES
+              Explore Our Villas
             </h2>
           </div>
-
-          {locations.length > 1 && (
-            <div className="flex flex-wrap gap-2">
-              {locations.map((cat) => (
-                <button
-                  key={cat}
-                  onClick={() => setActiveLocationFilter(cat)}
-                  className={`text-[9px] font-mono tracking-widest px-4 py-2 border transition-all duration-300 ${
-                    activeLocationFilter === cat
-                      ? isDark
-                        ? "bg-[#FCD57B] text-[#011434] border-[#FCD57B] font-bold"
-                        : "bg-[#8B6B2E] text-white border-[#8B6B2E] font-bold"
-                      : isDark
-                        ? "text-neutral-400 border-white/10 bg-white/[0.02] hover:border-white/30"
-                        : "text-neutral-600 border-[#011434]/10 bg-white hover:border-[#011434]/40"
-                  }`}
-                >
-                  {cat}
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {filteredVillas.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
-            {filteredVillas.map((villa) => (
-              <VillaCard
-                key={villa.id}
-                villa={villa}
-                isDark={isDark}
-              />
-            ))}
-          </div>
-        ) : (
-          <div
-            className={`w-full py-20 text-center border border-dashed ${
-              isDark ? "border-white/10" : "border-[#011434]/20"
+          <Link
+            href="/properties/all"
+            className={`flex items-center gap-2.5 px-6 py-2.5 text-[11px] font-semibold tracking-[0.2em] uppercase rounded-full border transition-all duration-300 ${
+              isDark
+                ? "text-[#FCD57B] border-[#FCD57B]/40 hover:bg-[#FCD57B] hover:text-[#011434] hover:border-[#FCD57B]"
+                : "text-[#8B6B2E] border-[#8B6B2E]/40 hover:bg-[#8B6B2E] hover:text-white hover:border-[#8B6B2E]"
             }`}
           >
-            <p className="font-serif text-base italic text-neutral-400">
-              No villas found matching this criteria.
-            </p>
-          </div>
-        )}
+            View All Properties
+            <svg
+              width="12"
+              height="12"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M8.25 4.5l7.5 7.5-7.5 7.5"
+              />
+            </svg>
+          </Link>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {featuredVillas.map((villa) => (
+            <VillaCard
+              key={`${villa.groupId}-${villa.id}`}
+              villa={villa}
+              groupId={villa.groupId}
+              groupName={villa.groupName}
+              isDark={isDark}
+            />
+          ))}
+        </div>
       </section>
 
-      {/* 4. WHY BOOK WITH US (FEATURES) */}
+      {/* 3. WHY BOOK WITH US (FEATURES) */}
       <section
         style={{
           backgroundColor: sectionBg,
@@ -459,10 +380,8 @@ export default function PropertiesPage() {
         </div>
       </section>
 
-      {/* 6. FAQ SECTION */}
-      <section
-        className="max-w-[840px] mx-auto px-6 py-16 md:py-24"
-      >
+      {/* 4. FAQ SECTION (Why Stay in Poodja) */}
+      <section className="max-w-[840px] mx-auto px-6 py-16 md:py-24">
         <div className="text-center mb-16">
           <p
             style={{ color: accentText }}
@@ -531,10 +450,8 @@ export default function PropertiesPage() {
         </div>
       </section>
 
-      {/* 7. ABOUT SECTION */}
-      <section
-        className="max-w-[1380px] mx-auto px-6 py-16 md:py-24 border-t"
-      >
+      {/* 5. ABOUT SECTION */}
+      <section className="max-w-[1380px] mx-auto px-6 py-16 md:py-24">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16 items-start">
           <div className="lg:col-span-5 flex items-center gap-4">
             <h2
@@ -597,46 +514,6 @@ export default function PropertiesPage() {
         </div>
       </section>
 
-      {/* ── 8. QUICK ACCESS GATEWAY (RESOLVED & INTEGRATED FROM STASH) ── */}
-      <section
-        className={`w-full max-w-[1380px] mx-auto px-6 py-12 border-t ${isDark ? "border-white/5" : "border-black/5"}`}
-      >
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-          <div>
-            <span
-              className={`text-[9px] font-bold tracking-[0.25em] uppercase block mb-1 ${isDark ? "text-[#FCD57B]" : "text-[#8B6B2E]"}`}
-            >
-              Quick Access
-            </span>
-            <p className="text-xs font-light opacity-50">
-              Quick access to dynamic estate sub-portfolios:
-            </p>
-          </div>
-
-          {/* List Teks Navigasi Villa */}
-          <div className="flex flex-wrap gap-x-8 gap-y-3">
-            {VILLAS_DATA.map((villa) => (
-              <Link
-                key={villa.id}
-                href={`/properties/${villa.id}`}
-                className={`group text-[10px] font-bold tracking-widest uppercase relative py-1 transition-opacity duration-300 hover:opacity-100 ${
-                  isDark
-                    ? "text-white/70 hover:text-[#FCD57B]"
-                    : "text-[#011434]/70 hover:text-[#8B6B2E]"
-                }`}
-              >
-                {villa.name.includes(" — ")
-                  ? villa.name.split(" — ")[1]
-                  : villa.name}
-                <span
-                  className={`absolute bottom-0 left-0 w-full h-[1px] transition-transform duration-500 origin-right scale-x-0 group-hover:scale-x-100 group-hover:origin-left ${isDark ? "bg-[#FCD57B]" : "bg-[#8B6B2E]"}`}
-                />
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* Keyframe Styles */}
       <style>{`
         @keyframes wbLineIn {
@@ -650,13 +527,4 @@ export default function PropertiesPage() {
       `}</style>
     </div>
   );
-}
-
-function revealStyle(inView) {
-  return {
-    opacity: inView ? 1 : 0,
-    transform: inView ? "none" : "translateY(40px)",
-    transition:
-      "opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1)",
-  };
 }

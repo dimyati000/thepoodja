@@ -1,4 +1,8 @@
+"use client";
+import { useSettings } from "@/components/SettingsProvider";
+
 export function LocationPanel({ villa, isDark }) {
+  const { t } = useSettings();
   const borderColor = isDark ? "rgba(255,255,255,0.1)" : "rgba(1,20,52,0.1)";
   const accent = isDark ? "#FCD57B" : "#8B6B2E";
   const mutedText = isDark ? "text-neutral-400" : "text-neutral-500";
@@ -27,7 +31,7 @@ export function LocationPanel({ villa, isDark }) {
           style={{ color: accent }}
           className="text-[10px] font-bold tracking-[0.4em] uppercase block mb-3"
         >
-          Destination Guide
+          {t("location.destinationGuide")}
         </span>
         <h3
           style={{ fontFamily: "var(--font-cormorant-garamond)" }}
@@ -66,7 +70,7 @@ export function LocationPanel({ villa, isDark }) {
           style={{ color: accent }}
           className="text-[10px] font-bold tracking-[0.3em] uppercase border-b w-fit pb-0.5"
         >
-          Get Direction
+          {t("location.getDirection")}
         </a>
       </div>
     </div>
