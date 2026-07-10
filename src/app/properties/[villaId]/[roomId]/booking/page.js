@@ -373,7 +373,7 @@ export default function BookingPage() {
             >
               <div className="relative w-16 h-16 rounded-sm overflow-hidden shrink-0">
                 <Image
-                  src={room.image}
+                  src={room.gallery[0]}
                   alt={room.name}
                   fill
                   className="object-cover"
