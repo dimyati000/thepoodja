@@ -3,6 +3,7 @@ import { useState, useEffect, createContext, useContext } from "react";
 import { Navbar } from "./Navbar";
 import { Footer } from "./Footer";
 import { SettingsProvider } from "./SettingsProvider";
+import { Icon } from "@/components/Icon";
 
 const ThemeContext = createContext();
 
@@ -107,21 +108,13 @@ export function ThemeAndLayoutProviders({ children }) {
                   justifyContent: "center",
                 }}
               >
-                <svg
-                  width="22"
-                  height="22"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="rgba(230, 213, 184, 0.95)"
-                  strokeWidth="1.25"
+                <Icon
+                  name={heroSide === "left" ? "chevronLeft" : "chevronRight"}
+                  size={28}
                   style={{
-                    transform:
-                      heroSide === "left" ? "rotate(180deg)" : "rotate(0deg)",
-                    transition: "transform 0.15s",
+                    color: "rgba(230, 213, 184, 0.95)",
                   }}
-                >
-                  <polyline points="9 18 15 12 9 6" />
-                </svg>
+                />
               </div>
             </div>
           )}

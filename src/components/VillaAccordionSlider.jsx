@@ -3,6 +3,7 @@ import { useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useScrollReveal, revealStyle } from "@/hooks/useScrollReveal";
+import { Icon } from "@/components/Icon";
 
 export function VillaAccordionSlider({
   data = [],
@@ -175,22 +176,7 @@ export function VillaAccordionSlider({
                     className="self-start inline-flex items-center gap-3 text-[10px] md:text-xs text-[#FBD47B] font-bold uppercase bg-transparent border border-[#FBD47B]/40 px-5 py-3 transition-all duration-300 hover:bg-[#FBD47B] hover:text-[#011434] hover:border-[#FBD47B] tracking-[0.3em]"
                   >
                     {isDest ? "View Properties" : "Explore Estate"}
-                    <svg width="14" height="7" viewBox="0 0 18 7" fill="none">
-                      <line
-                        x1="0"
-                        y1="3.5"
-                        x2="14"
-                        y2="3.5"
-                        stroke="currentColor"
-                        strokeWidth="0.8"
-                      />
-                      <polyline
-                        points="10,1 14,3.5 10,6"
-                        stroke="currentColor"
-                        strokeWidth="0.8"
-                        fill="none"
-                      />
-                    </svg>
+                    <Icon name="chevronRight" size={16} />
                   </button>
 
                   {/* Desktop Progress Line */}

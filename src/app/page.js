@@ -2,7 +2,7 @@
 import { useState, useCallback } from "react";
 import { useTheme } from "@/components/ThemeAndLayoutProviders";
 import { HeroSection } from "../components/home/HeroSection";
-import { WhyBookWithUs } from "../components/home/WhyBookWithUs";
+import { WhyBookWithUs } from "../components/WhyBookWithUs";
 import { Testimonials } from "../components/home/Testimonial";
 import { ExclusiveDeals } from "../components/home/ExclusiveDeals";
 import { VillaAccordionSlider } from "@/components/VillaAccordionSlider";

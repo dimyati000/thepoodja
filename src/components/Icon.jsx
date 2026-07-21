@@ -1,5 +1,8 @@
 "use client";
 import {
+  Sun,
+  Moon,
+  Menu,
   Waves,
   ChefHat,
   Shirt,
@@ -13,7 +16,6 @@ import {
   BedDouble,
   Bath,
   Maximize,
-  Sun,
   Flame,
   Wine,
   Coffee,
@@ -29,10 +31,26 @@ import {
   Star,
   ChevronRight,
   ChevronLeft,
+  ChevronDown,
+  Home,
+  BadgeCheck,
+  HandCoins,
+  ConciergeBell,
+  Check,
   X,
 } from "lucide-react";
 
+import {
+  FaInstagram,
+  FaFacebookF,
+  FaWhatsapp,
+  FaXTwitter,
+} from "react-icons/fa6";
+
 const ICON_MAP = {
+  sun: Sun,
+  moon: Moon,
+  menu: Menu,
   pool: Waves,
   jacuzzi: Waves,
   kitchen: ChefHat,
@@ -45,8 +63,6 @@ const ICON_MAP = {
   safetybox: Lock,
   ac: Wind,
   hairdryer: Wind,
-  terrace: Sun,
-  deck: Sun,
   garden: Trees,
   bbq: Flame,
   minibar: Wine,
@@ -70,7 +86,17 @@ const ICON_MAP = {
   size: Maximize,
   chevronRight: ChevronRight,
   chevronLeft: ChevronLeft,
+  chevronDown: ChevronDown,
+  instagram: FaInstagram,
+  facebook: FaFacebookF,
+  whatsapp: FaWhatsapp,
+  xTwitter: FaXTwitter,
   close: X,
+  home: Home,
+  verified: BadgeCheck,
+  price: HandCoins,
+  concierge: ConciergeBell,
+  success: Check,
   default: Star,
 };
 
