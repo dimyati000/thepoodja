@@ -3,6 +3,28 @@ const router = express.Router();
 const prisma = require('../prisma');
 const bcrypt = require('bcryptjs');
 
+// GET dashboard stats
+router.get('/stats', async (req, res) => {
+  try {
+    const totalUsers = await prisma.user.count();
+    const totalVillas = await prisma.villa.count();
+    const activeSliders = await prisma.slider.count();
+    const pendingBookings = await prisma.booking.count({
+      where: { status: 'PENDING' }
+    });
+
+    res.json({
+      totalUsers,
+      totalVillas,
+      activeSliders,
+      pendingBookings
+    });
+  } catch (error) {
+    console.error("Failed to fetch admin stats:", error);
+    res.status(500).json({ error: 'Failed to fetch stats' });
+  }
+});
+
 // GET all admins
 router.get('/', async (req, res) => {
   try {
