@@ -3,6 +3,11 @@ import { NextResponse } from 'next/server';
 import prisma from '@/lib/prisma';
 
 export async function GET() {
+  // Cegah error saat Next.js build / prerender
+  if (process.env.NEXT_PHASE === 'phase-production-build') {
+    return NextResponse.json({ message: 'Build phase skip' });
+  }
+
   try {
     const totalUsers = await prisma.user.count();
     const totalVillas = await prisma.villa.count();
