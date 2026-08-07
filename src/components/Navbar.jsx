@@ -52,10 +52,17 @@ export function Navbar({ isDark, onThemeToggle }) {
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
+    } = supabase.auth.onAuthStateChange((event, session) => {
       setSession(session);
-      if (session) syncUser(session.user);
-      else setUserProfile(null);
+      if (session) {
+        syncUser(session.user);
+        // Clean up the ugly URL hash fragment that Supabase leaves behind
+        if (typeof window !== "undefined" && window.location.hash.includes("access_token")) {
+          window.history.replaceState(null, "", window.location.pathname);
+        }
+      } else {
+        setUserProfile(null);
+      }
     });
 
     return () => subscription.unsubscribe();
