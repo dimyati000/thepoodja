@@ -5,7 +5,7 @@ import axios from "axios";
 import { Icon } from "@/components/Icon";
 import { Modal } from "@/components/admin/Modal";
 
-const API_URL = "http://localhost:5001/api/admins";
+const API_URL = "/api/admins";
 
 export default function AdminsAdmin() {
   const [admins, setAdmins] = useState([]);

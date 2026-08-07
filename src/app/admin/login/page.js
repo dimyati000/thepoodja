@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { supabase } from "@/lib/supabaseClient";
+import { supabaseAdmin } from "@/lib/supabaseClient";
 import { Icon } from "@/components/Icon";
 import axios from "axios";
 import { useRouter } from "next/navigation";
@@ -19,7 +19,7 @@ export default function AdminLogin() {
     setLoading(true);
     setErrorMsg("");
     try {
-      const res = await axios.post("http://localhost:5001/api/auth/login", { email, password });
+      const res = await axios.post("/api/auth/login", { email, password });
       if (res.data.success) {
         localStorage.setItem("admin_token", res.data.token);
         localStorage.setItem("admin_email", res.data.email);
@@ -37,7 +37,7 @@ export default function AdminLogin() {
     setLoading(true);
     setErrorMsg("");
     try {
-      const { data, error } = await supabase.auth.signInWithOAuth({
+      const { data, error } = await supabaseAdmin.auth.signInWithOAuth({
         provider: 'google',
         options: {
           redirectTo: `${window.location.origin}/admin`

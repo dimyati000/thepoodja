@@ -62,7 +62,7 @@ export default function App() {
   useEffect(() => {
     const fetchSlides = async () => {
       try {
-        const res = await axios.get("http://localhost:5001/api/sliders");
+        const res = await axios.get('/api/sliders');
         if (res.data) {
           setSlides(res.data);
         }

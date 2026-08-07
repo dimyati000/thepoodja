@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { Icon } from "@/components/Icon";
 
-const API_URL = "http://localhost:5001/api/bookings";
+const API_URL = "/api/bookings";
 
 export default function BookingsAdmin() {
   const [bookings, setBookings] = useState([]);

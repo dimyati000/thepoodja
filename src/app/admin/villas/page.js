@@ -5,7 +5,7 @@ import axios from "axios";
 import { Icon } from "@/components/Icon";
 import { Modal } from "@/components/admin/Modal";
 
-const API_URL = "http://localhost:5001/api/villas";
+const API_URL = "/api/villas";
 
 export default function VillasAdmin() {
   const [villas, setVillas] = useState([]);

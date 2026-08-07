@@ -17,7 +17,7 @@ export default function StaysPage() {
       const { data: { session } } = await supabase.auth.getSession();
       if (session) {
         try {
-          const res = await axios.get(`http://localhost:5001/api/bookings/user/${session.user.email}`);
+          const res = await axios.get(`/api/bookings/user/${session.user.email}`);
           setBookings(res.data);
         } catch (err) {
           console.error("Failed to fetch bookings");

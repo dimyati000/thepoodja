@@ -15,7 +15,7 @@ export default function OverviewPage() {
     const fetchUser = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (session) {
-        const res = await axios.get(`http://localhost:5001/api/users/${session.user.email}`);
+        const res = await axios.get(`/api/users/${session.user.email}`);
         setUserProfile(res.data);
       }
       setLoading(false);

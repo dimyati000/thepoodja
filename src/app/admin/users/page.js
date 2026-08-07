@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { Icon } from "@/components/Icon";
 
-const API_URL = "http://localhost:5001/api/users";
+const API_URL = "/api/users";
 
 export default function UsersAdmin() {
   const [users, setUsers] = useState([]);

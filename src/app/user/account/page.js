@@ -22,7 +22,7 @@ export default function AccountPage() {
     const fetchUser = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (session) {
-        const res = await axios.get(`http://localhost:5001/api/users/${session.user.email}`);
+        const res = await axios.get(`/api/users/${session.user.email}`);
         setUserProfile(res.data);
         setFormData({
           firstName: res.data.firstName || "",
@@ -44,7 +44,7 @@ export default function AccountPage() {
   const handleSave = async () => {
     setLoading(true);
     try {
-      await axios.put(`http://localhost:5001/api/users/${userProfile.email}`, formData);
+      await axios.put(`/api/users/${userProfile.email}`, formData);
       alert("Profile updated successfully!");
     } catch (err) {
       console.error(err);
