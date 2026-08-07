@@ -63,7 +63,7 @@ export function Navbar({ isDark, onThemeToggle }) {
 
   const syncUser = async (user) => {
     try {
-      const res = await axios.post("http://localhost:5001/api/users/sync", {
+      const res = await axios.post("/api/users/sync", {
         email: user.email,
         firstName: user.user_metadata?.full_name?.split(' ')[0] || "",
         lastName: user.user_metadata?.full_name?.split(' ').slice(1).join(' ') || "",

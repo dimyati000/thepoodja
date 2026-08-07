@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Icon } from "@/components/Icon";
-import { supabase } from "@/lib/supabaseClient";
+import { supabaseAdmin } from "@/lib/supabaseClient";
 import axios from "axios";
 
 const NAV_ITEMS = [
@@ -43,7 +43,7 @@ export default function AdminLayout({ children }) {
       if (currentSession) {
         // Intercept: Verify with backend
         try {
-          await axios.post("http://localhost:5001/api/auth/verify-google", { 
+          await axios.post("/api/auth/verify-google", { 
             email: currentSession.user.email 
           });
           setSession(currentSession);
@@ -52,8 +52,9 @@ export default function AdminLayout({ children }) {
           if (isLoginPage) router.push('/admin');
         } catch (err) {
           // Unauthorized email
-          alert("This Google account is not registered as an Admin.");
-          await supabase.auth.signOut();
+          console.error("This Google account is not registered as an Admin.");
+          // We can safely sign out here now because supabaseAdmin uses a separate storageKey!
+          await supabaseAdmin.auth.signOut();
           setSession(null);
           setLoading(false);
           if (!isLoginPage) router.push('/admin/login');
@@ -73,13 +74,13 @@ export default function AdminLayout({ children }) {
 
   useEffect(() => {
     // Initial check
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    supabaseAdmin.auth.getSession().then(({ data: { session } }) => {
       checkAuth(session);
     });
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
+    } = supabaseAdmin.auth.onAuthStateChange((_event, session) => {
       checkAuth(session);
     });
 
@@ -89,7 +90,7 @@ export default function AdminLayout({ children }) {
   const handleLogout = async () => {
     localStorage.removeItem("admin_token");
     localStorage.removeItem("admin_email");
-    await supabase.auth.signOut();
+    await supabaseAdmin.auth.signOut();
     setSession(null);
     router.push('/admin/login');
   };
