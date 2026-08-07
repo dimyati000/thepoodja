@@ -42,6 +42,8 @@ import {
   Calendar,
   Gift,
   Luggage,
+  Image as ImageIcon,
+  Plus,
 } from "lucide-react";
 
 import {
@@ -105,9 +107,12 @@ const ICON_MAP = {
   lock: Lock,
   star: Star,
   user: User,
+  users: Users,
   calendar: Calendar,
   gift: Gift,
   briefcase: Luggage,
+  image: ImageIcon,
+  plus: Plus,
   default: Star,
 };
 

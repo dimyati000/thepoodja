@@ -140,6 +140,7 @@ export default function AdminLayout({ children }) {
                     : "text-gray-500 hover:bg-gray-50 hover:text-gray-900"
                 }`}
               >
+                <Icon name={item.icon} size={18} />
                 <span>{item.label}</span>
               </Link>
             );
