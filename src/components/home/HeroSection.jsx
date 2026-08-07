@@ -5,38 +5,17 @@ import { PropertySearchBar } from "../properties/PropertySearchBar";
 import { StickySearchBar } from "../properties/StickySearchBar";
 import { Icon } from "@/components/Icon";
 
-const SLIDES = [
-  {
-    image:
-      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1920&q=80",
-    tag: "CONDOMINIUM",
-    title: "Find your own self in vintage lake house",
-    price: "Rp 11.250.000.000",
-  },
-  {
-    image:
-      "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1920&q=80",
-    tag: "LUXURY VILLA",
-    title: "The sanctuary of tropical paradise",
-    price: "Rp 14.500.000.000",
-  },
-  {
-    image:
-      "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1920&q=80",
-    tag: "EXCLUSIVE RESIDENCE",
-    title: "Timeless aesthetics meet nature",
-    price: "Rp 18.200.000.000",
-  },
-];
-
 export function HeroSection({
   isDark,
   current,
   fade,
   handleSlideChange,
   handleHeroClick,
+  slides,
 }) {
   const frameRef = useRef(null);
+
+  if (!slides || slides.length === 0) return null;
 
   return (
     <section
@@ -58,8 +37,8 @@ export function HeroSection({
               className={`absolute inset-0 transition-all duration-750 ease-in-out ${fade ? "opacity-100 scale-100" : "opacity-0 scale-[0.99]"}`}
             >
               <Image
-                src={SLIDES[current].image}
-                alt="Luxury Estate"
+                src={slides[current]?.imageUrl || slides[current]?.image}
+                alt={slides[current]?.title || "Luxury Estate"}
                 fill
                 priority
                 style={{ objectFit: "cover", objectPosition: "center" }}
@@ -81,7 +60,7 @@ export function HeroSection({
               }}
               className="block text-[10px] md:text-xs font-normal uppercase mb-2.5 sm:mb-3"
             >
-              {SLIDES[current].tag}
+              {slides[current]?.tag}
             </span>
 
             {/* Judul Utama */}
@@ -91,7 +70,7 @@ export function HeroSection({
               }}
               className="font-serif text-2xl font-bold md:text-3xl leading-[1.35] tracking-wide mb-3 sm:mb-4 transition-colors duration-500"
             >
-              {SLIDES[current].title}
+              {slides[current]?.title}
             </h1>
 
             {/* Harga */}
@@ -101,7 +80,7 @@ export function HeroSection({
               }}
               className="text-xs md:text-sm font-semibold tracking-wide mb-6 sm:mb-8"
             >
-              {SLIDES[current].price}
+              {slides[current]?.price}
             </p>
 
             {/* Tombol Aksi */}
@@ -127,7 +106,7 @@ export function HeroSection({
         {/* Slider Indicators */}
         <div className="w-full flex items-center gap-6 mt-4 md:mt-4 px-1 z-20">
           <div className="flex gap-2">
-            {SLIDES.map((_, idx) => (
+            {slides.map((_, idx) => (
               <button
                 key={idx}
                 onClick={() => handleSlideChange(idx)}
@@ -142,7 +121,7 @@ export function HeroSection({
           <span
             className={`text-xs tracking-widest font-mono font-medium ${isDark ? "text-white/40" : "text-black/40"}`}
           >
-            0{current + 1} / 0{SLIDES.length}
+            0{current + 1} / 0{slides.length}
           </span>
         </div>
 
