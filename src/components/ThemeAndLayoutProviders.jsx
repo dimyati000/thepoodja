@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect, createContext, useContext } from "react";
+import { usePathname } from "next/navigation";
 import { Navbar } from "./Navbar";
 import { Footer } from "./Footer";
 import { SettingsProvider } from "./SettingsProvider";
@@ -8,6 +9,9 @@ import { Icon } from "@/components/Icon";
 const ThemeContext = createContext();
 
 export function ThemeAndLayoutProviders({ children }) {
+  const pathname = usePathname();
+  const isAdmin = pathname.startsWith('/admin');
+
   const [isDark, setIsDark] = useState(true);
   const [cursorHovered, setCursorHovered] = useState(false);
   const [heroSide, setHeroSide] = useState("");
@@ -119,11 +123,11 @@ export function ThemeAndLayoutProviders({ children }) {
             </div>
           )}
 
-          <Navbar isDark={isDark} onThemeToggle={() => setIsDark((v) => !v)} />
+          {!isAdmin && <Navbar isDark={isDark} onThemeToggle={() => setIsDark((v) => !v)} />}
 
           <div className="flex-1">{children}</div>
 
-          <Footer isDark={isDark} />
+          {!isAdmin && <Footer isDark={isDark} />}
         </div>
       </ThemeContext.Provider>
     </SettingsProvider>
