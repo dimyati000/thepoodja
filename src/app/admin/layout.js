@@ -9,6 +9,8 @@ import axios from "axios";
 
 const NAV_ITEMS = [
   { label: "Dashboard", href: "/admin", icon: "home" },
+  { label: "Master Users", href: "/admin/users", icon: "users" },
+  { label: "Master Bookings", href: "/admin/bookings", icon: "calendar" },
   { label: "Master Admins", href: "/admin/admins", icon: "users" },
   { label: "Master Villas", href: "/admin/villas", icon: "home" },
   { label: "Master Sliders", href: "/admin/sliders", icon: "image" },
