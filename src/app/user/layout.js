@@ -27,7 +27,7 @@ export default function UserLayout({ children }) {
 
   const fetchProfile = async (email) => {
     try {
-      const res = await axios.get(`http://localhost:5001/api/users/${email}`);
+      const res = await axios.get(`/api/users/${email}`);
       setUserProfile(res.data);
     } catch (err) {
       console.error("Failed to fetch user profile", err);
