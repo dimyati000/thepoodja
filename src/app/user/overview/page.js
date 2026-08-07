@@ -43,7 +43,7 @@ export default function OverviewPage() {
         <div className="flex justify-between items-start relative z-10">
           <div>
             <p className="text-[10px] tracking-widest uppercase text-white/70 mb-1">MEMBER NUMBER</p>
-            <h2 className="text-2xl tracking-widest font-mono mb-4 text-[#FCD57B]">NKL-{userProfile.id.substring(0,8).toUpperCase()}</h2>
+            <h2 className="text-2xl tracking-widest font-mono mb-4 text-[#FCD57B]">PDJ-{userProfile.id.substring(0,8).toUpperCase()}</h2>
             <div className="flex items-center gap-2">
               <span className="w-1.5 h-1.5 rounded-full bg-[#FCD57B]" />
               <span className="text-xs">{userProfile.tier}</span>
