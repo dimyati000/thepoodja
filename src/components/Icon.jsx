@@ -38,6 +38,10 @@ import {
   ConciergeBell,
   Check,
   X,
+  User,
+  Calendar,
+  Gift,
+  Luggage,
 } from "lucide-react";
 
 import {
@@ -97,6 +101,13 @@ const ICON_MAP = {
   price: HandCoins,
   concierge: ConciergeBell,
   success: Check,
+  check: Check,
+  lock: Lock,
+  star: Star,
+  user: User,
+  calendar: Calendar,
+  gift: Gift,
+  briefcase: Luggage,
   default: Star,
 };
 

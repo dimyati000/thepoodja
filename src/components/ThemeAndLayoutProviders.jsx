@@ -11,6 +11,7 @@ const ThemeContext = createContext();
 export function ThemeAndLayoutProviders({ children }) {
   const pathname = usePathname();
   const isAdmin = pathname.startsWith('/admin');
+  const isUser = pathname.startsWith('/user');
 
   const [isDark, setIsDark] = useState(true);
   const [cursorHovered, setCursorHovered] = useState(false);
@@ -77,7 +78,7 @@ export function ThemeAndLayoutProviders({ children }) {
       <ThemeContext.Provider value={{ isDark, setIsDark, heroSide }}>
         <div
           style={{
-            backgroundColor: isDark ? "#011434" : "#ffffff",
+            backgroundColor: isDark ? "#011434" : (isUser ? "#F9F8F6" : "#ffffff"),
             color: isDark ? "#ffffff" : "#011434",
             minHeight: "100vh",
             display: "flex",
@@ -98,7 +99,7 @@ export function ThemeAndLayoutProviders({ children }) {
           `}</style>
 
           {/* Custom Cursor */}
-          {showCustomCursor && (
+          {showCustomCursor && !isUser && (
             <div className="hidden lg:flex smooth-cursor items-center justify-center pointer-events-none select-none">
               <div
                 style={{

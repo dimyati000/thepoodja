@@ -5,6 +5,8 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useSettings } from "./SettingsProvider";
 import { Icon } from "./Icon";
+import { supabase } from "@/lib/supabaseClient";
+import axios from "axios";
 
 const navLinks = [
   { key: "home", path: "/" },
@@ -26,6 +28,10 @@ export function Navbar({ isDark, onThemeToggle }) {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [propertiesHovered, setPropertiesHovered] = useState(false);
+  const [userDropdownOpen, setUserDropdownOpen] = useState(false);
+  
+  const [session, setSession] = useState(null);
+  const [userProfile, setUserProfile] = useState(null);
 
   const { language, setLanguage, currency, setCurrency, t } = useSettings();
 
@@ -38,9 +44,57 @@ export function Navbar({ isDark, onThemeToggle }) {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      if (session) syncUser(session.user);
+    });
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+      if (session) syncUser(session.user);
+      else setUserProfile(null);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const syncUser = async (user) => {
+    try {
+      const res = await axios.post("http://localhost:5001/api/users/sync", {
+        email: user.email,
+        firstName: user.user_metadata?.full_name?.split(' ')[0] || "",
+        lastName: user.user_metadata?.full_name?.split(' ').slice(1).join(' ') || "",
+        avatarUrl: user.user_metadata?.picture || user.user_metadata?.avatar_url || "",
+      });
+      setUserProfile(res.data);
+    } catch (error) {
+      console.error("Failed to sync user", error);
+    }
+  };
+
   const handleMobileClick = () => {
     setIsOpen(false);
+    setUserDropdownOpen(false);
   };
+
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
+    setSession(null);
+    setUserProfile(null);
+    setUserDropdownOpen(false);
+    window.location.href = "/";
+  };
+
+  const USER_MENU_ITEMS = [
+    { label: "Home", href: "/user/overview", icon: "home" },
+    { label: "My Stays", href: "/user/stays", icon: "briefcase" },
+    { label: "Rewards", href: "/user/rewards", icon: "gift" },
+    { label: "My Account", href: "/user/account", icon: "user" },
+    { label: "Book a Stay", href: "/user/book", icon: "calendar" },
+  ];
 
   const navBg = isDark
     ? scrolled
@@ -128,7 +182,7 @@ export function Navbar({ isDark, onThemeToggle }) {
                       {t(`nav.${item.key}`)}
                     </Link>
                     <button
-                      className="focus:outline-none py-1 transition-transform duration-300"
+                      className="focus:outline-none py-1 transition-transform duration-300 cursor-pointer"
                       style={{
                         color: linkColor(isActive),
                         transform: propertiesHovered
@@ -206,7 +260,7 @@ export function Navbar({ isDark, onThemeToggle }) {
               style={{
                 color: isDark ? "rgba(255,255,255,0.7)" : "rgba(0,0,0,0.6)",
               }}
-              className="text-[10px] font-bold tracking-widest uppercase hover:text-[#FCD57B] transition-colors"
+              className="text-[10px] font-bold tracking-widest uppercase hover:text-[#FCD57B] transition-colors cursor-pointer"
             >
               {currency}
             </button>
@@ -217,7 +271,7 @@ export function Navbar({ isDark, onThemeToggle }) {
               style={{
                 color: isDark ? "rgba(255,255,255,0.7)" : "rgba(0,0,0,0.6)",
               }}
-              className="text-[10px] font-bold tracking-widest uppercase hover:text-[#FCD57B] transition-colors"
+              className="text-[10px] font-bold tracking-widest uppercase hover:text-[#FCD57B] transition-colors cursor-pointer"
             >
               {language}
             </button>
@@ -242,6 +296,126 @@ export function Navbar({ isDark, onThemeToggle }) {
                 <Icon name="moon" size={14} />
               )}
             </button>
+            
+            <div className="ml-2 pl-4 border-l relative" style={{ borderColor }}>
+              {session ? (
+                <div className="relative">
+                  <button 
+                    onClick={() => setUserDropdownOpen(!userDropdownOpen)}
+                    className="flex items-center gap-2 p-1 pr-2 rounded-full border transition-colors cursor-pointer hover:bg-black/5"
+                    style={{
+                      borderColor: isDark ? "#FCD57B" : "#8B6B2E",
+                    }}
+                  >
+                    {userProfile?.avatarUrl ? (
+                      <img src={userProfile.avatarUrl} alt="Avatar" className="w-7 h-7 rounded-full object-cover" referrerPolicy="no-referrer" />
+                    ) : (
+                      <div className="w-7 h-7 rounded-full flex items-center justify-center text-[10px]" style={{ backgroundColor: isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.05)", color: isDark ? "#FCD57B" : "#000000" }}>
+                        <Icon name="user" size={12} />
+                      </div>
+                    )}
+                    <div 
+                      className="px-2 py-0.5 rounded-full flex items-center justify-center"
+                      style={{
+                        backgroundColor: isDark ? "rgba(252, 213, 123, 0.15)" : "#EAE4D9",
+                      }}
+                    >
+                      <span 
+                        className="text-[9px] font-bold tracking-widest uppercase"
+                        style={{ color: isDark ? "#FCD57B" : "#8B6B2E" }}
+                      >
+                        {userProfile ? `${userProfile.bookings?.length || 0} Night` : "..."}
+                      </span>
+                    </div>
+                  </button>
+
+                  {/* Dropdown Menu */}
+                  <div
+                    className={`absolute top-full right-0 mt-4 w-72 transition-all duration-300 transform origin-top-right ${
+                      userDropdownOpen ? "opacity-100 scale-100 pointer-events-auto" : "opacity-0 scale-95 pointer-events-none"
+                    }`}
+                  >
+                    <div
+                      className="rounded-2xl shadow-xl overflow-hidden border"
+                      style={{
+                        backgroundColor: isDark ? "#011434" : "#ffffff",
+                        borderColor: isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.1)",
+                      }}
+                    >
+                      <div className="p-5 border-b" style={{ borderColor: isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.05)" }}>
+                        <h3 className="font-bold text-sm font-serif" style={{ color: isDark ? "#ffffff" : "#000000" }}>
+                          {userProfile?.firstName} {userProfile?.lastName}
+                        </h3>
+                        <div className="grid grid-cols-2 gap-4 mt-4 p-3 rounded-lg border" style={{ borderColor: isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.05)", backgroundColor: isDark ? "rgba(0,0,0,0.2)" : "rgba(0,0,0,0.02)" }}>
+                          <div>
+                            <p className="text-[8px] font-bold tracking-widest uppercase mb-1" style={{ color: isDark ? "rgba(255,255,255,0.5)" : "rgba(0,0,0,0.4)" }}>Membership</p>
+                            <p className="text-xs font-bold" style={{ color: "#8B6B2E" }}>{userProfile?.tier || "Silver"}</p>
+                          </div>
+                          <div className="border-l pl-4" style={{ borderColor: isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.1)" }}>
+                            <p className="text-[8px] font-bold tracking-widest uppercase mb-1" style={{ color: isDark ? "rgba(255,255,255,0.5)" : "rgba(0,0,0,0.4)" }}>Total Night</p>
+                            <p className="text-xs font-bold" style={{ color: isDark ? "#ffffff" : "#000000" }}>{userProfile?.bookings?.length || 0}</p>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div className="p-3 flex flex-col gap-1">
+                        {USER_MENU_ITEMS.map((item) => (
+                          <Link
+                            key={item.label}
+                            href={item.href}
+                            onClick={() => setUserDropdownOpen(false)}
+                            className="flex items-center gap-3 px-4 py-2.5 rounded-lg text-xs font-medium transition-colors cursor-pointer"
+                            style={{ color: isDark ? "rgba(255,255,255,0.7)" : "rgba(0,0,0,0.7)" }}
+                            onMouseOver={(e) => {
+                              e.currentTarget.style.backgroundColor = isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.03)";
+                              e.currentTarget.style.color = isDark ? "#ffffff" : "#000000";
+                            }}
+                            onMouseOut={(e) => {
+                              e.currentTarget.style.backgroundColor = "transparent";
+                              e.currentTarget.style.color = isDark ? "rgba(255,255,255,0.7)" : "rgba(0,0,0,0.7)";
+                            }}
+                          >
+                            <Icon name={item.icon} size={14} />
+                            {item.label}
+                          </Link>
+                        ))}
+                        
+                        <div className="h-px w-full my-2" style={{ backgroundColor: isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.05)" }} />
+                        
+                        <button
+                          onClick={handleSignOut}
+                          className="flex items-center gap-3 px-4 py-2.5 rounded-lg text-xs font-medium transition-colors cursor-pointer text-red-500 hover:bg-red-50 hover:text-red-600 w-full text-left"
+                          style={{
+                            color: isDark ? "#ff6b6b" : "#ef4444",
+                          }}
+                          onMouseOver={(e) => {
+                            e.currentTarget.style.backgroundColor = isDark ? "rgba(239,68,68,0.1)" : "rgba(239,68,68,0.05)";
+                          }}
+                          onMouseOut={(e) => {
+                            e.currentTarget.style.backgroundColor = "transparent";
+                          }}
+                        >
+                          <Icon name="home" size={14} /> {/* Logout icon can be added to mapping later, using home as placeholder or close */}
+                          Sign Out
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <Link
+                  href="/login"
+                  className="px-4 py-1.5 rounded-full border text-[10px] font-bold tracking-widest uppercase transition-all hover:opacity-80 cursor-pointer"
+                  style={{
+                    borderColor: isDark ? "rgba(251,212,123,0.35)" : "rgba(0, 0, 0, 0.15)",
+                    color: isDark ? "#FCD57B" : "#000000",
+                    backgroundColor: isDark ? "rgba(251,212,123,0.05)" : "rgba(0, 0, 0, 0.03)",
+                  }}
+                >
+                  Login
+                </Link>
+              )}
+            </div>
           </div>
         </div>
 
@@ -391,6 +565,50 @@ export function Navbar({ isDark, onThemeToggle }) {
               </div>
             );
           })}
+          
+          <div className="p-6 pt-4 border-t" style={{ borderColor }}>
+            {session ? (
+              <Link
+                href="/user/overview"
+                onClick={handleMobileClick}
+                className="w-full flex justify-between items-center px-4 py-3 rounded-full border shadow-sm hover:opacity-80 transition-colors"
+                style={{
+                  borderColor: linkColor(false),
+                  color: linkColor(false),
+                  backgroundColor: "rgba(0, 0, 0, 0.03)"
+                }}
+              >
+                <div className="flex items-center gap-3">
+                  {userProfile?.avatarUrl ? (
+                    <img src={userProfile.avatarUrl} alt="Avatar" className="w-6 h-6 rounded-full object-cover" referrerPolicy="no-referrer" />
+                  ) : (
+                    <Icon name="user" size={16} />
+                  )}
+                  <span className="text-xs font-bold tracking-wider">
+                    My Dashboard
+                  </span>
+                </div>
+                <div className="px-2 py-0.5 rounded-full bg-black/10">
+                  <span className="text-[9px] font-bold tracking-widest uppercase">
+                    {userProfile ? `${userProfile.bookings?.length || 0} Night` : "..."}
+                  </span>
+                </div>
+              </Link>
+            ) : (
+              <Link
+                href="/login"
+                onClick={handleMobileClick}
+                className="w-full py-3 rounded-full border text-xs font-bold tracking-widest uppercase transition-all flex items-center justify-center gap-2 hover:opacity-80 cursor-pointer"
+                style={{
+                  borderColor: linkColor(false),
+                  color: linkColor(false),
+                  backgroundColor: "rgba(0, 0, 0, 0.03)"
+                }}
+              >
+                Sign In / Register
+              </Link>
+            )}
+          </div>
         </div>
       )}
     </nav>
