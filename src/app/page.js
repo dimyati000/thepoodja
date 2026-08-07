@@ -8,26 +8,7 @@ import { Testimonials } from "../components/home/Testimonial";
 import { ExclusiveDeals } from "../components/home/ExclusiveDeals";
 import { VillaAccordionSlider } from "@/components/VillaAccordionSlider";
 
-const DEFAULT_SLIDES = [
-  {
-    imageUrl: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1920&q=80",
-    tag: "CONDOMINIUM",
-    title: "Find your own self in vintage lake house",
-    price: "Rp 11.250.000.000",
-  },
-  {
-    imageUrl: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1920&q=80",
-    tag: "LUXURY VILLA",
-    title: "The sanctuary of tropical paradise",
-    price: "Rp 14.500.000.000",
-  },
-  {
-    imageUrl: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1920&q=80",
-    tag: "EXCLUSIVE RESIDENCE",
-    title: "Timeless aesthetics meet nature",
-    price: "Rp 18.200.000.000",
-  },
-];
+
 
 const DESTINATIONS_DATA = [
   {
@@ -76,17 +57,17 @@ export default function App() {
   const { isDark, heroSide } = useTheme();
   const [current, setCurrent] = useState(0);
   const [fade, setFade] = useState(true);
-  const [slides, setSlides] = useState(DEFAULT_SLIDES);
+  const [slides, setSlides] = useState([]);
 
   useEffect(() => {
     const fetchSlides = async () => {
       try {
         const res = await axios.get("http://localhost:5001/api/sliders");
-        if (res.data && res.data.length > 0) {
+        if (res.data) {
           setSlides(res.data);
         }
       } catch (err) {
-        console.log("Could not fetch dynamic sliders, using defaults.");
+        console.error("Could not fetch dynamic sliders", err);
       }
     };
     fetchSlides();
