@@ -32,9 +32,10 @@ export default function RootLayout({ children }) {
   return (
     <html
       lang="en"
+      suppressHydrationWarning
       className={`${nunitoSans.variable} ${cormorantGaramond.variable} ${outfit.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col font-sans">
+      <body className="min-h-full flex flex-col font-sans" suppressHydrationWarning>
         <ThemeAndLayoutProviders>{children}</ThemeAndLayoutProviders>
       </body>
     </html>

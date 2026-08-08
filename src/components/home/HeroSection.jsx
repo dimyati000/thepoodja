@@ -5,6 +5,30 @@ import { PropertySearchBar } from "../properties/PropertySearchBar";
 import { StickySearchBar } from "../properties/StickySearchBar";
 import { Icon } from "@/components/Icon";
 
+const DEFAULT_SLIDES = [
+  {
+    id: 1,
+    title: "Poodja Master Villa - Seminyak",
+    tag: "Beachfront Sanctuaries",
+    price: "From IDR 4,500,000 / night",
+    imageUrl: "https://images.unsplash.com/photo-1540541338287-41700207dee6?auto=format&fit=crop&w=1600&q=80",
+  },
+  {
+    id: 2,
+    title: "Poodja Sanctuary - Ubud",
+    tag: "Tropical Haven",
+    price: "From IDR 3,800,000 / night",
+    imageUrl: "https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?auto=format&fit=crop&w=1600&q=80",
+  },
+  {
+    id: 3,
+    title: "Poodja Oasis - Canggu",
+    tag: "Chic Modern Living",
+    price: "From IDR 5,200,000 / night",
+    imageUrl: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1600&q=80",
+  },
+];
+
 export function HeroSection({
   isDark,
   current,
@@ -14,8 +38,8 @@ export function HeroSection({
   slides,
 }) {
   const frameRef = useRef(null);
-
-  if (!slides || slides.length === 0) return null;
+  const activeSlides = (slides && slides.length > 0) ? slides : DEFAULT_SLIDES;
+  const safeCurrent = current % activeSlides.length;
 
   return (
     <section
@@ -30,15 +54,15 @@ export function HeroSection({
           id="main-slider-frame"
           ref={frameRef}
           onClick={handleHeroClick}
-          className="relative w-full h-[58vh] sm:h-[60vh] md:h-[65vh] lg:h-[78vh] rounded-sm"
+          className="relative w-full h-[58vh] sm:h-[60vh] md:h-[65vh] lg:h-[78vh] rounded-sm cursor-pointer"
         >
           <div className="absolute inset-0 rounded-sm overflow-hidden z-0">
             <div
               className={`absolute inset-0 transition-all duration-750 ease-in-out ${fade ? "opacity-100 scale-100" : "opacity-0 scale-[0.99]"}`}
             >
               <Image
-                src={slides[current]?.imageUrl || slides[current]?.image}
-                alt={slides[current]?.title || "Luxury Estate"}
+                src={activeSlides[safeCurrent]?.imageUrl || activeSlides[safeCurrent]?.image || DEFAULT_SLIDES[0].imageUrl}
+                alt={activeSlides[safeCurrent]?.title || "Luxury Estate"}
                 fill
                 priority
                 style={{ objectFit: "cover", objectPosition: "center" }}
@@ -60,7 +84,7 @@ export function HeroSection({
               }}
               className="block text-[10px] md:text-xs font-normal uppercase mb-2.5 sm:mb-3"
             >
-              {slides[current]?.tag}
+              {activeSlides[safeCurrent]?.tag}
             </span>
 
             {/* Judul Utama */}
@@ -70,7 +94,7 @@ export function HeroSection({
               }}
               className="font-serif text-2xl font-bold md:text-3xl leading-[1.35] tracking-wide mb-3 sm:mb-4 transition-colors duration-500"
             >
-              {slides[current]?.title}
+              {activeSlides[safeCurrent]?.title}
             </h1>
 
             {/* Harga */}
@@ -80,7 +104,7 @@ export function HeroSection({
               }}
               className="text-xs md:text-sm font-semibold tracking-wide mb-6 sm:mb-8"
             >
-              {slides[current]?.price}
+              {activeSlides[safeCurrent]?.price}
             </p>
 
             {/* Tombol Aksi */}
@@ -106,14 +130,14 @@ export function HeroSection({
         {/* Slider Indicators */}
         <div className="w-full flex items-center gap-6 mt-4 md:mt-4 px-1 z-20">
           <div className="flex gap-2">
-            {slides.map((_, idx) => (
+            {activeSlides.map((_, idx) => (
               <button
                 key={idx}
                 onClick={() => handleSlideChange(idx)}
                 className="py-2 focus:outline-none pointer-events-auto cursor-pointer"
               >
                 <div
-                  className={`h-[2px] transition-all duration-500 ${current === idx ? `w-8 ${isDark ? "bg-[#FCD57B]" : "bg-[#8B6B2E]"}` : `w-3 ${isDark ? "bg-white/20" : "bg-black/20"}`}`}
+                  className={`h-[2px] transition-all duration-500 ${safeCurrent === idx ? `w-8 ${isDark ? "bg-[#FCD57B]" : "bg-[#8B6B2E]"}` : `w-3 ${isDark ? "bg-white/20" : "bg-black/20"}`}`}
                 />
               </button>
             ))}
@@ -121,7 +145,7 @@ export function HeroSection({
           <span
             className={`text-xs tracking-widest font-mono font-medium ${isDark ? "text-white/40" : "text-black/40"}`}
           >
-            0{current + 1} / 0{slides.length}
+            0{safeCurrent + 1} / 0{activeSlides.length}
           </span>
         </div>
 

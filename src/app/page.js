@@ -86,12 +86,12 @@ export default function App() {
   );
 
   const handleHeroClick = () => {
-    if (slides.length === 0) return;
+    const slideCount = slides.length > 0 ? slides.length : 3;
     if (heroSide === "right") {
-      const nextIndex = (current + 1) % slides.length;
+      const nextIndex = (current + 1) % slideCount;
       handleSlideChange(nextIndex);
     } else if (heroSide === "left") {
-      const prevIndex = (current - 1 + slides.length) % slides.length;
+      const prevIndex = (current - 1 + slideCount) % slideCount;
       handleSlideChange(prevIndex);
     }
   };
