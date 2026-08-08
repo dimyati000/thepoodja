@@ -1,10 +1,14 @@
 "use client";
+
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
+import axios from "axios";
+
 import { useSettings } from "./SettingsProvider";
 import { Icon } from "./Icon";
+import { supabase } from "@/lib/supabaseClient";
 
 const navLinks = [
   { key: "home", path: "/" },
@@ -31,24 +35,125 @@ const navLinks = [
   { key: "contact", path: "/contact-us" },
 ];
 
+const USER_MENU_ITEMS = [
+  { label: "Home", href: "/user/overview", icon: "home" },
+  { label: "My Stays", href: "/user/stays", icon: "briefcase" },
+  { label: "Rewards", href: "/user/rewards", icon: "gift" },
+  { label: "My Account", href: "/user/account", icon: "user" },
+  { label: "Book a Stay", href: "/user/book", icon: "calendar" },
+];
+
 export function Navbar({ isDark, onThemeToggle }) {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+
+  // Handles all desktop navigation dropdowns
   const [hoveredItemKey, setHoveredItemKey] = useState(null);
 
-  const { language, setLanguage, currency, setCurrency, t } = useSettings();
+  // User/account dropdown
+  const [userDropdownOpen, setUserDropdownOpen] = useState(false);
+
+  // Supabase authentication
+  const [session, setSession] = useState(null);
+  const [userProfile, setUserProfile] = useState(null);
+
+  const {
+    language,
+    setLanguage,
+    currency,
+    setCurrency,
+    t,
+  } = useSettings();
 
   const pathname = usePathname();
-  // const router = useRouter();
 
+  // Navbar scroll effect
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 60);
+    const onScroll = () => {
+      setScrolled(window.scrollY > 60);
+    };
+
     window.addEventListener("scroll", onScroll);
-    return () => window.removeEventListener("scroll", onScroll);
+
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+    };
+  }, []);
+
+  // Sync Supabase user with local API
+  const syncUser = async (user) => {
+    try {
+      const fullName = user.user_metadata?.full_name || "";
+      const nameParts = fullName.split(" ");
+
+      const res = await axios.post("/api/users/sync", {
+        email: user.email,
+        firstName: nameParts[0] || "",
+        lastName: nameParts.slice(1).join(" ") || "",
+        avatarUrl:
+          user.user_metadata?.picture ||
+          user.user_metadata?.avatar_url ||
+          "",
+      });
+
+      setUserProfile(res.data);
+    } catch (error) {
+      console.error("Failed to sync user", error);
+    }
+  };
+
+  // Supabase session listener
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+
+      if (session) {
+        syncUser(session.user);
+      }
+    });
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event, session) => {
+      setSession(session);
+
+      if (session) {
+        syncUser(session.user);
+
+        // Remove Supabase access token hash from URL
+        if (
+          typeof window !== "undefined" &&
+          window.location.hash.includes("access_token")
+        ) {
+          window.history.replaceState(
+            null,
+            "",
+            window.location.pathname
+          );
+        }
+      } else {
+        setUserProfile(null);
+      }
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
   }, []);
 
   const handleMobileClick = () => {
     setIsOpen(false);
+    setUserDropdownOpen(false);
+  };
+
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
+
+    setSession(null);
+    setUserProfile(null);
+    setUserDropdownOpen(false);
+
+    window.location.href = "/";
   };
 
   const navBg = isDark
@@ -60,8 +165,15 @@ export function Navbar({ isDark, onThemeToggle }) {
       : "transparent";
 
   const linkColor = (isActive) => {
-    if (isDark) return isActive ? "#FCD57B" : "rgba(255, 255, 255, 0.75)";
-    return isActive ? "#000000" : "rgba(0, 0, 0, 0.55)";
+    if (isDark) {
+      return isActive
+        ? "#FCD57B"
+        : "rgba(255, 255, 255, 0.75)";
+    }
+
+    return isActive
+      ? "#000000"
+      : "rgba(0, 0, 0, 0.55)";
   };
 
   const borderColor = scrolled
@@ -71,6 +183,7 @@ export function Navbar({ isDark, onThemeToggle }) {
     : isDark
       ? "rgba(252, 213, 123, 0.08)"
       : "rgba(1, 20, 52, 0.06)";
+
   const mobileBg = isDark ? "#010e22" : "#ffffff";
   const hamColor = isDark ? "#FCD57B" : "#000000";
 
@@ -78,6 +191,7 @@ export function Navbar({ isDark, onThemeToggle }) {
     if (itemPath === "/") {
       return pathname === "/";
     }
+
     return pathname.startsWith(itemPath);
   };
 
@@ -86,7 +200,8 @@ export function Navbar({ isDark, onThemeToggle }) {
       style={{
         backgroundColor: navBg,
         backdropFilter: "blur(16px)",
-        transition: "background-color 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
+        transition:
+          "background-color 0.4s cubic-bezier(0.16, 1, 0.3, 1)",
         borderBottom: `1px solid ${borderColor}`,
         position: "fixed",
         top: 0,
@@ -96,33 +211,51 @@ export function Navbar({ isDark, onThemeToggle }) {
       }}
     >
       <div
-        style={{ maxWidth: "1400px" }}
+        style={{
+          maxWidth: "1400px",
+        }}
         className="mx-auto px-6 flex items-center justify-between h-14 md:h-16 lg:h-[80px]"
       >
+        {/* Logo */}
         <Link href="/">
           <Image
-            src={isDark ? "/logo-gold2.png" : "/logo-black2.png"}
+            src={
+              isDark
+                ? "/logo-gold2.png"
+                : "/logo-black2.png"
+            }
             alt="The Poodja"
             width={400}
             height={152}
             priority
-            style={{ cursor: "pointer", height: "auto", width: "190px" }}
+            style={{
+              cursor: "pointer",
+              height: "auto",
+              width: "190px",
+            }}
           />
         </Link>
 
-        {/* Desktop nav */}
+        {/* =========================================================
+            DESKTOP NAVIGATION
+        ========================================================= */}
         <div className="hidden lg:flex items-center gap-9">
           {navLinks.map((item) => {
             const isActive = checkIsActive(item.path);
-            const isHovered = hoveredItemKey === item.key;
+            const isHovered =
+              hoveredItemKey === item.key;
 
             if (item.hasDropdown) {
               return (
                 <div
                   key={item.key}
                   className="relative group"
-                  onMouseEnter={() => setHoveredItemKey(item.key)}
-                  onMouseLeave={() => setHoveredItemKey(null)}
+                  onMouseEnter={() =>
+                    setHoveredItemKey(item.key)
+                  }
+                  onMouseLeave={() =>
+                    setHoveredItemKey(null)
+                  }
                 >
                   <div className="flex items-center gap-1">
                     <Link
@@ -130,15 +263,20 @@ export function Navbar({ isDark, onThemeToggle }) {
                       style={{
                         color: linkColor(isActive),
                         letterSpacing: "0.15em",
-                        fontWeight: isActive ? 700 : 500,
+                        fontWeight: isActive
+                          ? 700
+                          : 500,
                         textTransform: "uppercase",
                       }}
                       className="text-[10px] md:text-xs py-1 transition-colors duration-300 focus:outline-none"
                     >
                       {t(`nav.${item.key}`)}
                     </Link>
+
                     <button
-                      className="focus:outline-none py-1 transition-transform duration-300"
+                      type="button"
+                      aria-label={`Open ${item.key} menu`}
+                      className="focus:outline-none py-1 transition-transform duration-300 cursor-pointer"
                       style={{
                         color: linkColor(isActive),
                         transform: isHovered
@@ -146,38 +284,59 @@ export function Navbar({ isDark, onThemeToggle }) {
                           : "rotate(0deg)",
                       }}
                     >
-                      <Icon name="chevronDown" size={16} />
+                      <Icon
+                        name="chevronDown"
+                        size={16}
+                      />
                     </button>
                   </div>
+
+                  {/* Active / hover underline */}
                   <span
-                    style={{ backgroundColor: isDark ? "#FCD57B" : "#000000" }}
-                    className={`absolute bottom-0 left-0 h-px transition-all duration-300 group-hover:w-full ${isActive ? "w-full" : "w-0"}`}
+                    style={{
+                      backgroundColor: isDark
+                        ? "#FCD57B"
+                        : "#000000",
+                    }}
+                    className={`absolute bottom-0 left-0 h-px transition-all duration-300 group-hover:w-full ${
+                      isActive
+                        ? "w-full"
+                        : "w-0"
+                    }`}
                   />
 
-                  {/* Dropdown Menu */}
+                  {/* Navigation Dropdown */}
                   <div
-                    className={`absolute top-full left-0 pt-4 w-52 transition-all duration-300 transform origin-top-left ${isHovered ? "opacity-100 scale-100 pointer-events-auto" : "opacity-0 scale-95 pointer-events-none"}`}
+                    className={`absolute top-full left-0 pt-4 w-52 transition-all duration-300 transform origin-top-left ${
+                      isHovered
+                        ? "opacity-100 scale-100 pointer-events-auto"
+                        : "opacity-0 scale-95 pointer-events-none"
+                    }`}
                   >
                     <div
                       className="py-2 rounded-sm shadow-lg"
                       style={{
-                        backgroundColor: isDark ? "#010e22" : "#ffffff",
+                        backgroundColor: isDark
+                          ? "#010e22"
+                          : "#ffffff",
                         border: `1px solid ${borderColor}`,
                       }}
                     >
-                      {item.dropdownItems.map((dropItem) => (
-                        <Link
-                          key={dropItem.label}
-                          href={dropItem.path}
-                          className={`block px-4 py-2 text-[10px] tracking-widest uppercase transition-colors ${
-                            isDark
-                              ? "text-white hover:bg-white/5 hover:text-[#FCD57B]"
-                              : "text-black hover:bg-black/5 hover:text-[#8B6B2E]"
-                          }`}
-                        >
-                          {dropItem.label}
-                        </Link>
-                      ))}
+                      {item.dropdownItems.map(
+                        (dropItem) => (
+                          <Link
+                            key={dropItem.label}
+                            href={dropItem.path}
+                            className={`block px-4 py-2 text-[10px] tracking-widest uppercase transition-colors ${
+                              isDark
+                                ? "text-white hover:bg-white/5 hover:text-[#FCD57B]"
+                                : "text-black hover:bg-black/5 hover:text-[#8B6B2E]"
+                            }`}
+                          >
+                            {dropItem.label}
+                          </Link>
+                        )
+                      )}
                     </div>
                   </div>
                 </div>
@@ -191,94 +350,490 @@ export function Navbar({ isDark, onThemeToggle }) {
                 style={{
                   color: linkColor(isActive),
                   letterSpacing: "0.15em",
-                  fontWeight: isActive ? 700 : 500,
+                  fontWeight: isActive
+                    ? 700
+                    : 500,
                   textTransform: "uppercase",
                   position: "relative",
                 }}
                 className="text-[10px] md:text-xs py-1 group transition-colors duration-300 focus:outline-none"
               >
                 {t(`nav.${item.key}`)}
+
                 <span
-                  style={{ backgroundColor: isDark ? "#FCD57B" : "#000000" }}
-                  className={`absolute bottom-0 left-0 h-px transition-all duration-300 group-hover:w-full ${isActive ? "w-full" : "w-0"}`}
+                  style={{
+                    backgroundColor: isDark
+                      ? "#FCD57B"
+                      : "#000000",
+                  }}
+                  className={`absolute bottom-0 left-0 h-px transition-all duration-300 group-hover:w-full ${
+                    isActive
+                      ? "w-full"
+                      : "w-0"
+                  }`}
                 />
               </Link>
             );
           })}
 
+          {/* =========================================================
+              DESKTOP SETTINGS
+          ========================================================= */}
           <div
             className="flex items-center gap-4 ml-4 pl-4"
-            style={{ borderLeft: `1px solid ${borderColor}` }}
+            style={{
+              borderLeft: `1px solid ${borderColor}`,
+            }}
           >
-            {/* Currency Toggle */}
+            {/* Currency */}
             <button
-              onClick={() => setCurrency(currency === "IDR" ? "USD" : "IDR")}
+              type="button"
+              onClick={() =>
+                setCurrency(
+                  currency === "IDR"
+                    ? "USD"
+                    : "IDR"
+                )
+              }
               style={{
-                color: isDark ? "rgba(255,255,255,0.7)" : "rgba(0,0,0,0.6)",
+                color: isDark
+                  ? "rgba(255,255,255,0.7)"
+                  : "rgba(0,0,0,0.6)",
               }}
-              className="text-[10px] font-bold tracking-widest uppercase hover:text-[#FCD57B] transition-colors"
+              className="text-[10px] font-bold tracking-widest uppercase hover:text-[#FCD57B] transition-colors cursor-pointer"
             >
               {currency}
             </button>
 
-            {/* Language Toggle */}
+            {/* Language */}
             <button
-              onClick={() => setLanguage(language === "ID" ? "EN" : "ID")}
+              type="button"
+              onClick={() =>
+                setLanguage(
+                  language === "ID"
+                    ? "EN"
+                    : "ID"
+                )
+              }
               style={{
-                color: isDark ? "rgba(255,255,255,0.7)" : "rgba(0,0,0,0.6)",
+                color: isDark
+                  ? "rgba(255,255,255,0.7)"
+                  : "rgba(0,0,0,0.6)",
               }}
-              className="text-[10px] font-bold tracking-widest uppercase hover:text-[#FCD57B] transition-colors"
+              className="text-[10px] font-bold tracking-widest uppercase hover:text-[#FCD57B] transition-colors cursor-pointer"
             >
               {language}
             </button>
 
-            {/* Theme toggle */}
+            {/* Theme */}
             <button
+              type="button"
               onClick={onThemeToggle}
+              aria-label="Toggle theme"
               className="flex items-center justify-center shrink-0 transition-all duration-300 hover:scale-110 active:scale-95 focus:outline-none ml-2"
               style={{
                 width: "32px",
                 height: "32px",
-                border: `1px solid ${isDark ? "rgba(251,212,123,0.35)" : "rgba(0, 0, 0, 0.15)"}`,
+                border: `1px solid ${
+                  isDark
+                    ? "rgba(251,212,123,0.35)"
+                    : "rgba(0, 0, 0, 0.15)"
+                }`,
                 borderRadius: "50%",
                 background: "transparent",
-                color: isDark ? "#FCD57B" : "#000000",
+                color: isDark
+                  ? "#FCD57B"
+                  : "#000000",
                 cursor: "pointer",
               }}
             >
               {isDark ? (
-                <Icon name="sun" size={14} />
+                <Icon
+                  name="sun"
+                  size={14}
+                />
               ) : (
-                <Icon name="moon" size={14} />
+                <Icon
+                  name="moon"
+                  size={14}
+                />
               )}
             </button>
+
+            {/* =====================================================
+                USER AUTHENTICATION
+            ===================================================== */}
+            <div
+              className="ml-2 pl-4 border-l relative"
+              style={{
+                borderColor,
+              }}
+            >
+              {session ? (
+                <div className="relative">
+                  {/* User button */}
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setUserDropdownOpen(
+                        (prev) => !prev
+                      )
+                    }
+                    className="flex items-center gap-2 p-1 pr-2 rounded-full border transition-colors cursor-pointer hover:bg-black/5"
+                    style={{
+                      borderColor: isDark
+                        ? "#FCD57B"
+                        : "#8B6B2E",
+                    }}
+                  >
+                    {userProfile?.avatarUrl ? (
+                      <img
+                        src={
+                          userProfile.avatarUrl
+                        }
+                        alt="Avatar"
+                        className="w-7 h-7 rounded-full object-cover"
+                        referrerPolicy="no-referrer"
+                      />
+                    ) : (
+                      <div
+                        className="w-7 h-7 rounded-full flex items-center justify-center text-[10px]"
+                        style={{
+                          backgroundColor:
+                            isDark
+                              ? "rgba(255,255,255,0.1)"
+                              : "rgba(0,0,0,0.05)",
+                          color: isDark
+                            ? "#FCD57B"
+                            : "#000000",
+                        }}
+                      >
+                        <Icon
+                          name="user"
+                          size={12}
+                        />
+                      </div>
+                    )}
+
+                    <div
+                      className="px-2 py-0.5 rounded-full flex items-center justify-center"
+                      style={{
+                        backgroundColor:
+                          isDark
+                            ? "rgba(252, 213, 123, 0.15)"
+                            : "#EAE4D9",
+                      }}
+                    >
+                      <span
+                        className="text-[9px] font-bold tracking-widest uppercase"
+                        style={{
+                          color: isDark
+                            ? "#FCD57B"
+                            : "#8B6B2E",
+                        }}
+                      >
+                        {userProfile
+                          ? `${
+                              userProfile
+                                .bookings
+                                ?.length || 0
+                            } Night`
+                          : "..."}
+                      </span>
+                    </div>
+                  </button>
+
+                  {/* User Dropdown */}
+                  <div
+                    className={`absolute top-full right-0 mt-4 w-72 transition-all duration-300 transform origin-top-right ${
+                      userDropdownOpen
+                        ? "opacity-100 scale-100 pointer-events-auto"
+                        : "opacity-0 scale-95 pointer-events-none"
+                    }`}
+                  >
+                    <div
+                      className="rounded-2xl shadow-xl overflow-hidden border"
+                      style={{
+                        backgroundColor:
+                          isDark
+                            ? "#011434"
+                            : "#ffffff",
+                        borderColor: isDark
+                          ? "rgba(255,255,255,0.1)"
+                          : "rgba(0,0,0,0.1)",
+                      }}
+                    >
+                      {/* User Header */}
+                      <div
+                        className="p-5 border-b"
+                        style={{
+                          borderColor:
+                            isDark
+                              ? "rgba(255,255,255,0.1)"
+                              : "rgba(0,0,0,0.05)",
+                        }}
+                      >
+                        <h3
+                          className="font-bold text-sm font-serif"
+                          style={{
+                            color: isDark
+                              ? "#ffffff"
+                              : "#000000",
+                          }}
+                        >
+                          {
+                            userProfile?.firstName
+                          }{" "}
+                          {
+                            userProfile?.lastName
+                          }
+                        </h3>
+
+                        <div
+                          className="grid grid-cols-2 gap-4 mt-4 p-3 rounded-lg border"
+                          style={{
+                            borderColor:
+                              isDark
+                                ? "rgba(255,255,255,0.1)"
+                                : "rgba(0,0,0,0.05)",
+                            backgroundColor:
+                              isDark
+                                ? "rgba(0,0,0,0.2)"
+                                : "rgba(0,0,0,0.02)",
+                          }}
+                        >
+                          <div>
+                            <p
+                              className="text-[8px] font-bold tracking-widest uppercase mb-1"
+                              style={{
+                                color:
+                                  isDark
+                                    ? "rgba(255,255,255,0.5)"
+                                    : "rgba(0,0,0,0.4)",
+                              }}
+                            >
+                              Membership
+                            </p>
+
+                            <p
+                              className="text-xs font-bold"
+                              style={{
+                                color:
+                                  "#8B6B2E",
+                              }}
+                            >
+                              {userProfile?.tier ||
+                                "Silver"}
+                            </p>
+                          </div>
+
+                          <div
+                            className="border-l pl-4"
+                            style={{
+                              borderColor:
+                                isDark
+                                  ? "rgba(255,255,255,0.1)"
+                                  : "rgba(0,0,0,0.1)",
+                            }}
+                          >
+                            <p
+                              className="text-[8px] font-bold tracking-widest uppercase mb-1"
+                              style={{
+                                color:
+                                  isDark
+                                    ? "rgba(255,255,255,0.5)"
+                                    : "rgba(0,0,0,0.4)",
+                              }}
+                            >
+                              Total Night
+                            </p>
+
+                            <p
+                              className="text-xs font-bold"
+                              style={{
+                                color:
+                                  isDark
+                                    ? "#ffffff"
+                                    : "#000000",
+                              }}
+                            >
+                              {userProfile
+                                ?.bookings
+                                ?.length || 0}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* User Menu */}
+                      <div className="p-3 flex flex-col gap-1">
+                        {USER_MENU_ITEMS.map(
+                          (item) => (
+                            <Link
+                              key={item.label}
+                              href={item.href}
+                              onClick={() =>
+                                setUserDropdownOpen(
+                                  false
+                                )
+                              }
+                              className="flex items-center gap-3 px-4 py-2.5 rounded-lg text-xs font-medium transition-colors cursor-pointer"
+                              style={{
+                                color: isDark
+                                  ? "rgba(255,255,255,0.7)"
+                                  : "rgba(0,0,0,0.7)",
+                              }}
+                              onMouseOver={(
+                                e
+                              ) => {
+                                e.currentTarget.style.backgroundColor =
+                                  isDark
+                                    ? "rgba(255,255,255,0.05)"
+                                    : "rgba(0,0,0,0.03)";
+
+                                e.currentTarget.style.color =
+                                  isDark
+                                    ? "#ffffff"
+                                    : "#000000";
+                              }}
+                              onMouseOut={(
+                                e
+                              ) => {
+                                e.currentTarget.style.backgroundColor =
+                                  "transparent";
+
+                                e.currentTarget.style.color =
+                                  isDark
+                                    ? "rgba(255,255,255,0.7)"
+                                    : "rgba(0,0,0,0.7)";
+                              }}
+                            >
+                              <Icon
+                                name={
+                                  item.icon
+                                }
+                                size={14}
+                              />
+
+                              {item.label}
+                            </Link>
+                          )
+                        )}
+
+                        <div
+                          className="h-px w-full my-2"
+                          style={{
+                            backgroundColor:
+                              isDark
+                                ? "rgba(255,255,255,0.1)"
+                                : "rgba(0,0,0,0.05)",
+                          }}
+                        />
+
+                        {/* Logout */}
+                        <button
+                          type="button"
+                          onClick={
+                            handleSignOut
+                          }
+                          className="flex items-center gap-3 px-4 py-2.5 rounded-lg text-xs font-medium transition-colors cursor-pointer text-red-500 hover:bg-red-50 hover:text-red-600 w-full text-left"
+                          style={{
+                            color: isDark
+                              ? "#ff6b6b"
+                              : "#ef4444",
+                          }}
+                          onMouseOver={(e) => {
+                            e.currentTarget.style.backgroundColor =
+                              isDark
+                                ? "rgba(239,68,68,0.1)"
+                                : "rgba(239,68,68,0.05)";
+                          }}
+                          onMouseOut={(e) => {
+                            e.currentTarget.style.backgroundColor =
+                              "transparent";
+                          }}
+                        >
+                          <Icon
+                            name="home"
+                            size={14}
+                          />
+
+                          Sign Out
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                /* Login */
+                <Link
+                  href="/login"
+                  className="px-4 py-1.5 rounded-full border text-[10px] font-bold tracking-widest uppercase transition-all hover:opacity-80 cursor-pointer"
+                  style={{
+                    borderColor: isDark
+                      ? "rgba(251,212,123,0.35)"
+                      : "rgba(0, 0, 0, 0.15)",
+                    color: isDark
+                      ? "#FCD57B"
+                      : "#000000",
+                    backgroundColor:
+                      isDark
+                        ? "rgba(251,212,123,0.05)"
+                        : "rgba(0, 0, 0, 0.03)",
+                  }}
+                >
+                  Login
+                </Link>
+              )}
+            </div>
           </div>
         </div>
 
-        {/* Mobile hamburger button */}
+        {/* =========================================================
+            MOBILE NAVBAR CONTROLS
+        ========================================================= */}
         <div className="flex items-center lg:hidden gap-3">
+          {/* Theme Toggle */}
           <button
+            type="button"
             onClick={onThemeToggle}
+            aria-label="Toggle theme"
             style={{
               width: "28px",
               height: "28px",
-              border: `1px solid ${isDark ? "rgba(251,212,123,0.3)" : "rgba(0, 0, 0, 0.12)"}`,
+              border: `1px solid ${
+                isDark
+                  ? "rgba(251,212,123,0.3)"
+                  : "rgba(0, 0, 0, 0.12)"
+              }`,
               borderRadius: "50%",
               background: "transparent",
-              color: isDark ? "#FCD57B" : "#000000",
+              color: isDark
+                ? "#FCD57B"
+                : "#000000",
               cursor: "pointer",
             }}
             className="flex items-center justify-center"
           >
             {isDark ? (
-              <Icon name="sun" size={12} />
+              <Icon
+                name="sun"
+                size={12}
+              />
             ) : (
-              <Icon name="moon" size={12} />
+              <Icon
+                name="moon"
+                size={12}
+              />
             )}
           </button>
 
+          {/* Hamburger */}
           <button
-            onClick={() => setIsOpen(!isOpen)}
+            type="button"
+            onClick={() =>
+              setIsOpen((prev) => !prev)
+            }
             style={{
               background: "transparent",
               border: "none",
@@ -297,9 +852,11 @@ export function Navbar({ isDark, onThemeToggle }) {
                   transform: isOpen
                     ? "rotate(45deg) translate(4px, 4px)"
                     : "none",
-                  transition: "transform 0.25s",
+                  transition:
+                    "transform 0.25s",
                 }}
               />
+
               <span
                 style={{
                   display: "block",
@@ -307,9 +864,11 @@ export function Navbar({ isDark, onThemeToggle }) {
                   height: "1px",
                   background: hamColor,
                   opacity: isOpen ? 0 : 1,
-                  transition: "opacity 0.25s",
+                  transition:
+                    "opacity 0.25s",
                 }}
               />
+
               <span
                 style={{
                   display: "block",
@@ -319,7 +878,8 @@ export function Navbar({ isDark, onThemeToggle }) {
                   transform: isOpen
                     ? "rotate(-45deg) translate(4px, -4px)"
                     : "none",
-                  transition: "transform 0.25s",
+                  transition:
+                    "transform 0.25s",
                 }}
               />
             </div>
@@ -327,7 +887,9 @@ export function Navbar({ isDark, onThemeToggle }) {
         </div>
       </div>
 
-      {/* Mobile menu */}
+      {/* =========================================================
+          MOBILE MENU
+      ========================================================= */}
       {isOpen && (
         <div
           style={{
@@ -336,71 +898,202 @@ export function Navbar({ isDark, onThemeToggle }) {
           }}
           className="lg:hidden"
         >
-          {/* Currency & Language row */}
+          {/* Currency / Language */}
           <div
             className="flex items-center justify-center gap-6 py-4 border-b"
-            style={{ borderColor }}
+            style={{
+              borderColor,
+            }}
           >
             <button
-              onClick={() => setCurrency(currency === "IDR" ? "USD" : "IDR")}
-              style={{ color: linkColor(false), letterSpacing: "0.15em" }}
+              type="button"
+              onClick={() =>
+                setCurrency(
+                  currency === "IDR"
+                    ? "USD"
+                    : "IDR"
+                )
+              }
+              style={{
+                color: linkColor(false),
+                letterSpacing: "0.15em",
+              }}
               className="text-xs font-bold uppercase"
             >
               Currency: {currency}
             </button>
-            <span style={{ color: borderColor }}>|</span>
+
+            <span
+              style={{
+                color: borderColor,
+              }}
+            >
+              |
+            </span>
+
             <button
-              onClick={() => setLanguage(language === "ID" ? "EN" : "ID")}
-              style={{ color: linkColor(false), letterSpacing: "0.15em" }}
+              type="button"
+              onClick={() =>
+                setLanguage(
+                  language === "ID"
+                    ? "EN"
+                    : "ID"
+                )
+              }
+              style={{
+                color: linkColor(false),
+                letterSpacing: "0.15em",
+              }}
               className="text-xs font-bold uppercase"
             >
               Language: {language}
             </button>
           </div>
+
+          {/* Mobile Navigation */}
           {navLinks.map((item) => {
-            const isActive = checkIsActive(item.path);
+            const isActive =
+              checkIsActive(item.path);
 
             return (
               <div key={item.key}>
                 <div className="flex items-center justify-between">
                   <Link
                     href={item.path}
-                    onClick={handleMobileClick}
+                    onClick={
+                      handleMobileClick
+                    }
                     style={{
-                      color: linkColor(isActive),
+                      color:
+                        linkColor(isActive),
                       letterSpacing: "0.2em",
-                      textTransform: "uppercase",
+                      textTransform:
+                        "uppercase",
                     }}
                     className="py-3.5 px-6 text-xs font-medium block w-full"
                   >
-                    {t(`nav.${item.key}`)}
+                    {t(
+                      `nav.${item.key}`
+                    )}
                   </Link>
                 </div>
+
                 {item.hasDropdown && (
                   <div
                     className="bg-black/5 pl-10 border-t border-b"
-                    style={{ borderColor }}
+                    style={{
+                      borderColor,
+                    }}
                   >
-                    {item.dropdownItems.map((drop) => (
-                      <Link
-                        key={drop.label}
-                        href={drop.path}
-                        onClick={handleMobileClick}
-                        style={{
-                          color: linkColor(false),
-                          letterSpacing: "0.15em",
-                          textTransform: "uppercase",
-                        }}
-                        className="py-3 px-6 text-[10px] font-medium block"
-                      >
-                        {drop.label}
-                      </Link>
-                    ))}
+                    {item.dropdownItems.map(
+                      (drop) => (
+                        <Link
+                          key={
+                            drop.label
+                          }
+                          href={
+                            drop.path
+                          }
+                          onClick={
+                            handleMobileClick
+                          }
+                          style={{
+                            color:
+                              linkColor(
+                                false
+                              ),
+                            letterSpacing:
+                              "0.15em",
+                            textTransform:
+                              "uppercase",
+                          }}
+                          className="py-3 px-6 text-[10px] font-medium block"
+                        >
+                          {
+                            drop.label
+                          }
+                        </Link>
+                      )
+                    )}
                   </div>
                 )}
               </div>
             );
           })}
+
+          {/* Mobile User Account */}
+          <div
+            className="p-6 pt-4 border-t"
+            style={{
+              borderColor,
+            }}
+          >
+            {session ? (
+              <Link
+                href="/user/overview"
+                onClick={handleMobileClick}
+                className="w-full flex justify-between items-center px-4 py-3 rounded-full border shadow-sm hover:opacity-80 transition-colors"
+                style={{
+                  borderColor:
+                    linkColor(false),
+                  color:
+                    linkColor(false),
+                  backgroundColor:
+                    "rgba(0, 0, 0, 0.03)",
+                }}
+              >
+                <div className="flex items-center gap-3">
+                  {userProfile?.avatarUrl ? (
+                    <img
+                      src={
+                        userProfile.avatarUrl
+                      }
+                      alt="Avatar"
+                      className="w-6 h-6 rounded-full object-cover"
+                      referrerPolicy="no-referrer"
+                    />
+                  ) : (
+                    <Icon
+                      name="user"
+                      size={16}
+                    />
+                  )}
+
+                  <span className="text-xs font-bold tracking-wider">
+                    My Dashboard
+                  </span>
+                </div>
+
+                <div className="px-2 py-0.5 rounded-full bg-black/10">
+                  <span className="text-[9px] font-bold tracking-widest uppercase">
+                    {userProfile
+                      ? `${
+                          userProfile
+                            .bookings
+                            ?.length || 0
+                        } Night`
+                      : "..."}
+                  </span>
+                </div>
+              </Link>
+            ) : (
+              <Link
+                href="/login"
+                onClick={handleMobileClick}
+                className="w-full py-3 rounded-full border text-xs font-bold tracking-widest uppercase transition-all flex items-center justify-center gap-2 hover:opacity-80 cursor-pointer"
+                style={{
+                  borderColor:
+                    linkColor(false),
+                  color:
+                    linkColor(false),
+                  backgroundColor:
+                    "rgba(0, 0, 0, 0.03)",
+                }}
+              >
+                Sign In / Register
+              </Link>
+            )}
+          </div>
         </div>
       )}
     </nav>

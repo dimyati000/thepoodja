@@ -1,5 +1,6 @@
 "use client";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
+import axios from "axios";
 import { useTheme } from "@/components/ThemeAndLayoutProviders";
 import { HeroSection } from "../components/home/HeroSection";
 import { WhyBookWithUs } from "../components/WhyBookWithUs";
@@ -7,7 +8,7 @@ import { Testimonials } from "../components/home/Testimonial";
 import { ExclusiveDeals } from "../components/home/ExclusiveDeals";
 import { VillaAccordionSlider } from "@/components/VillaAccordionSlider";
 
-const TOTAL_SLIDES = 3;
+
 
 const DESTINATIONS_DATA = [
   {
@@ -56,6 +57,21 @@ export default function App() {
   const { isDark, heroSide } = useTheme();
   const [current, setCurrent] = useState(0);
   const [fade, setFade] = useState(true);
+  const [slides, setSlides] = useState([]);
+
+  useEffect(() => {
+    const fetchSlides = async () => {
+      try {
+        const res = await axios.get('/api/sliders');
+        if (res.data) {
+          setSlides(res.data);
+        }
+      } catch (err) {
+        console.error("Could not fetch dynamic sliders", err);
+      }
+    };
+    fetchSlides();
+  }, []);
 
   const handleSlideChange = useCallback(
     (index) => {
@@ -70,11 +86,12 @@ export default function App() {
   );
 
   const handleHeroClick = () => {
+    if (slides.length === 0) return;
     if (heroSide === "right") {
-      const nextIndex = (current + 1) % TOTAL_SLIDES;
+      const nextIndex = (current + 1) % slides.length;
       handleSlideChange(nextIndex);
     } else if (heroSide === "left") {
-      const prevIndex = (current - 1 + TOTAL_SLIDES) % TOTAL_SLIDES;
+      const prevIndex = (current - 1 + slides.length) % slides.length;
       handleSlideChange(prevIndex);
     }
   };
@@ -87,10 +104,10 @@ export default function App() {
         fade={fade}
         handleSlideChange={handleSlideChange}
         handleHeroClick={handleHeroClick}
+        slides={slides}
       />
       <WhyBookWithUs isDark={isDark} />
 
-      {/* COMPONENT REUSABLE DENGAN MODE 'DESTINATION' */}
       <VillaAccordionSlider
         data={DESTINATIONS_DATA}
         variant="destination"

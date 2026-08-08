@@ -1,15 +1,17 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  /* config options here */
   reactCompiler: true,
 
-  // Allow loading images from Unsplash and Marriott cache
+  // Allow loading images from external URLs
   images: {
-    // unoptimized: true, // Gg-g-pindah ke sini (berlaku global untuk semua gambar)
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "images.unsplash.com",
+        hostname: "**",
+      },
+      {
+        protocol: "http",
+        hostname: "**",
       },
       {
         protocol: "https",
