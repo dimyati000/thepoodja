@@ -4,6 +4,7 @@ export const translations = {
       home: "Beranda",
       about: "Tentang Kami",
       properties: "Properti",
+      gallery: "Galeri",
       contact: "Kontak Kami",
     },
     common: {
@@ -46,6 +47,21 @@ export const translations = {
       faq: "Faq",
       whyStay: "Kenapa Menginap di Poodja?",
       aboutTitle: "Tentang Poodja Properties",
+    },
+    galleryPage: {
+      collection: "PORTOFOLIO VISUAL",
+      title: "Galeri Foto & Sanctuary",
+      heroDesc:
+        "Jelajahi keindahan visual villa mewah, fasilitas kelas dunia, restoran beachfront, dan momen pernikahan tak terlupakan di Bali.",
+      exploreTitle: "Jelajahi Portofolio Foto",
+      photosCount: "Foto",
+      ourPromise: "Janji Kami",
+      whyBook: "Kenapa Pesan Bersama Kami?",
+      faq: "FAQ Galeri",
+      whyStay: "Informasi & Pertanyaan Galeri",
+      aboutTitle: "Tentang Galeri Poodja",
+      modalClose: "Tutup",
+      modalCategory: "Kategori",
     },
     roomDetail: {
       estimationRate: "Estimasi Harga",
@@ -165,6 +181,7 @@ export const translations = {
       home: "Home",
       about: "About Us",
       properties: "Properties",
+      gallery: "Gallery",
       contact: "Contact Us",
     },
     common: {
@@ -207,6 +224,21 @@ export const translations = {
       faq: "Faq",
       whyStay: "Why Stay In Poodja?",
       aboutTitle: "About Poodja Properties",
+    },
+    galleryPage: {
+      collection: "VISUAL PORTFOLIO",
+      title: "Photo Gallery & Sanctuary",
+      heroDesc:
+        "Explore the visual beauty of our luxury villas, world-class amenities, beachfront dining, and unforgettable wedding moments in Bali.",
+      exploreTitle: "Explore Photo Portfolio",
+      photosCount: "Photos",
+      ourPromise: "Our Promise",
+      whyBook: "Why Book With Us?",
+      faq: "Gallery FAQ",
+      whyStay: "Gallery Information & Questions",
+      aboutTitle: "About Poodja Gallery",
+      modalClose: "Close",
+      modalCategory: "Category",
     },
     roomDetail: {
       estimationRate: "Estimation Rate",

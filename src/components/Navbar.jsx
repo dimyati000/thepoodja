@@ -19,13 +19,22 @@ const navLinks = [
       // { label: "Seminyak", path: "/properties/all?location=Seminyak" },
     ],
   },
+  {
+    key: "gallery",
+    path: "/gallery",
+    hasDropdown: true,
+    dropdownItems: [
+      { label: "Gallery V1 (Filter)", path: "/gallery-v1" },
+      { label: "Gallery V2 (Section)", path: "/gallery-v2" },
+    ],
+  },
   { key: "contact", path: "/contact-us" },
 ];
 
 export function Navbar({ isDark, onThemeToggle }) {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [propertiesHovered, setPropertiesHovered] = useState(false);
+  const [hoveredItemKey, setHoveredItemKey] = useState(null);
 
   const { language, setLanguage, currency, setCurrency, t } = useSettings();
 
@@ -105,14 +114,15 @@ export function Navbar({ isDark, onThemeToggle }) {
         <div className="hidden lg:flex items-center gap-9">
           {navLinks.map((item) => {
             const isActive = checkIsActive(item.path);
+            const isHovered = hoveredItemKey === item.key;
 
             if (item.hasDropdown) {
               return (
                 <div
                   key={item.key}
                   className="relative group"
-                  onMouseEnter={() => setPropertiesHovered(true)}
-                  onMouseLeave={() => setPropertiesHovered(false)}
+                  onMouseEnter={() => setHoveredItemKey(item.key)}
+                  onMouseLeave={() => setHoveredItemKey(null)}
                 >
                   <div className="flex items-center gap-1">
                     <Link
@@ -131,7 +141,7 @@ export function Navbar({ isDark, onThemeToggle }) {
                       className="focus:outline-none py-1 transition-transform duration-300"
                       style={{
                         color: linkColor(isActive),
-                        transform: propertiesHovered
+                        transform: isHovered
                           ? "rotate(180deg)"
                           : "rotate(0deg)",
                       }}
@@ -146,7 +156,7 @@ export function Navbar({ isDark, onThemeToggle }) {
 
                   {/* Dropdown Menu */}
                   <div
-                    className={`absolute top-full left-0 pt-4 w-48 transition-all duration-300 transform origin-top-left ${propertiesHovered ? "opacity-100 scale-100 pointer-events-auto" : "opacity-0 scale-95 pointer-events-none"}`}
+                    className={`absolute top-full left-0 pt-4 w-52 transition-all duration-300 transform origin-top-left ${isHovered ? "opacity-100 scale-100 pointer-events-auto" : "opacity-0 scale-95 pointer-events-none"}`}
                   >
                     <div
                       className="py-2 rounded-sm shadow-lg"
