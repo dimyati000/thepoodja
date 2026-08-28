@@ -1,41 +1,64 @@
 "use client";
 import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { PropertySearchBar } from "./PropertySearchBar";
 
-export function StickySearchBar({ isDark, triggerRef }) {
+export function StickySearchBar({
+  isDark,
+  triggerRef,
+  onVisibilityChange,
+}) {
   const [visible, setVisible] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
-      if (window.innerWidth < 768) {
-        setVisible(false);
+      if (triggerRef?.current) {
+        const triggerBottom =
+          triggerRef.current.getBoundingClientRect().bottom;
+        const navbarClearance = window.innerWidth >= 1024 ? 96 : 72;
+        setVisible(triggerBottom <= navbarClearance);
         return;
       }
-      const threshold = triggerRef?.current
-        ? triggerRef.current.offsetTop + triggerRef.current.offsetHeight - 100
-        : window.innerHeight * 0.7;
-      setVisible(window.scrollY > threshold);
+
+      setVisible(
+        window.scrollY > Math.max(320, window.innerHeight * 0.55),
+      );
     };
-    window.addEventListener("scroll", handleScroll);
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
     window.addEventListener("resize", handleScroll);
     handleScroll();
+
     return () => {
       window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("resize", handleScroll);
     };
   }, [triggerRef]);
 
-  return (
+  useEffect(() => {
+    onVisibilityChange?.(visible);
+  }, [visible, onVisibilityChange]);
+
+  if (!mounted) return null;
+
+  return createPortal(
     <div
-      className={`hidden md:block fixed top-16 lg:top-[80px] left-0 right-0 z-40 px-4 md:px-12 transition-all duration-400 ease-out ${
+      aria-hidden={!visible}
+      className={`fixed bottom-0 left-0 right-0 z-[9990] px-3 pb-3 transition-all duration-500 ease-out sm:px-5 sm:pb-5 md:px-8 ${
         visible
           ? "opacity-100 translate-y-0 pointer-events-auto"
-          : "opacity-0 -translate-y-3 pointer-events-none"
+          : "pointer-events-none translate-y-8 opacity-0"
       }`}
     >
-      <div className="max-w-[1200px] mx-auto py-2">
-        <PropertySearchBar isDark={isDark} compact />
+      <div className="mx-auto max-w-[980px]">
+        <PropertySearchBar isDark={isDark} compact popupDirection="up" />
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }

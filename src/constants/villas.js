@@ -661,8 +661,8 @@ export const VILLAS_DATA = [
     coords: { lat: -8.6534, lng: 115.1312 },
     rooms: [
       {
-        id: "b1-akara",
-        name: "B1 - Akara Villa",
+        id: "akara",
+        name: "Akara Villa",
         price: 3500000,
         guests: 6,
         beds: 3,
@@ -762,8 +762,8 @@ export const VILLAS_DATA = [
         ],
       },
       {
-        id: "b7-alana",
-        name: "B7 - Alana Villa",
+        id: "alana",
+        name: "Alana Villa",
         price: 3500000,
         guests: 6,
         beds: 3,
@@ -863,8 +863,8 @@ export const VILLAS_DATA = [
         ],
       },
       {
-        id: "b9-amara",
-        name: "B9 - Amara Villa",
+        id: "amara",
+        name: "Amara Villa",
         price: 3600000,
         guests: 6,
         beds: 3,
@@ -967,8 +967,8 @@ export const VILLAS_DATA = [
         ],
       },
       {
-        id: "b11-anaya",
-        name: "B11 - Anaya Villa",
+        id: "anaya",
+        name: "Anaya Villa",
         price: 7800000,
         guests: 10,
         beds: 5,

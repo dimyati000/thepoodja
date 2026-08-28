@@ -26,7 +26,7 @@ const navLinks = [
   {
     key: "gallery",
     path: "/gallery",
-    hasDropdown: true,
+    hasDropdown: false,
     dropdownItems: [
       { label: "Gallery V1 (Filter)", path: "/gallery-v1" },
       { label: "Gallery V2 (Section)", path: "/gallery-v2" },
