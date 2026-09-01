@@ -5,6 +5,27 @@ import Image from "next/image";
 import Link from "next/link";
 import { useTheme } from "@/components/ThemeAndLayoutProviders";
 import { Icon } from "@/components/Icon";
+import {
+  createGoogleMapsDirectionsUrl,
+  createOpenStreetMapEmbedUrl,
+} from "@/lib/maps";
+
+const CONTACT_LOCATIONS = [
+  {
+    id: "canggu",
+    label: "Canggu",
+    address: "Canggu, Bali 80361 — Indonesia",
+    lat: -8.6506,
+    lng: 115.1349,
+  },
+  {
+    id: "ubud",
+    label: "Ubud",
+    address: "Jalan Sayan, Ubud, Bali 80571 — Indonesia",
+    lat: -8.5188,
+    lng: 115.2425,
+  },
+];
 
 /* ── Simple scroll-reveal hook ── */
 function useReveal() {
@@ -39,6 +60,14 @@ export default function ContactUs() {
   const [message, setMessage] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [activeLocationId, setActiveLocationId] = useState("canggu");
+  const activeLocation =
+    CONTACT_LOCATIONS.find((location) => location.id === activeLocationId) ||
+    CONTACT_LOCATIONS[0];
+  const contactMapSrc = createOpenStreetMapEmbedUrl(
+    activeLocation.lat,
+    activeLocation.lng,
+  );
 
   /* scroll-reveal refs */
   const [touchRef, touchVis] = useReveal();
@@ -539,9 +568,36 @@ export default function ContactUs() {
               style={{ color: descText }}
               className="text-sm font-light leading-relaxed mb-8"
             >
-              If you prefer to enquire or consult a property offline, we are
-              available to meet at our office.
+              Explore our locations in Canggu and Ubud, or choose a destination
+              to open its exact area on the map.
             </p>
+
+            <div className="flex flex-wrap gap-2 mb-8">
+              {CONTACT_LOCATIONS.map((location) => {
+                const isActive = activeLocation.id === location.id;
+
+                return (
+                  <button
+                    key={location.id}
+                    type="button"
+                    onClick={() => setActiveLocationId(location.id)}
+                    aria-pressed={isActive}
+                    className="px-4 py-2 text-[9px] font-bold uppercase tracking-[0.22em] border transition-colors duration-300 cursor-pointer"
+                    style={{
+                      color: isActive
+                        ? isDark
+                          ? "#011434"
+                          : "#ffffff"
+                        : mainText,
+                      backgroundColor: isActive ? accentText : "transparent",
+                      borderColor: isActive ? accentText : borderColor,
+                    }}
+                  >
+                    {location.label}
+                  </button>
+                );
+              })}
+            </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
               <div>
@@ -555,9 +611,7 @@ export default function ContactUs() {
                   style={{ color: mainText }}
                   className="text-sm font-light leading-relaxed"
                 >
-                  Jalan Raya Seminyak No. 88, Legian,
-                  <br />
-                  Kuta, Bali, 80361 — Indonesia
+                  {activeLocation.address}
                 </p>
               </div>
               <div>
@@ -577,19 +631,31 @@ export default function ContactUs() {
                 </p>
               </div>
             </div>
+
+            <a
+              href={createGoogleMapsDirectionsUrl(
+                activeLocation.lat,
+                activeLocation.lng,
+              )}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ color: accentText }}
+              className="mt-7 text-[10px] font-bold tracking-[0.3em] uppercase border-b w-fit pb-0.5"
+            >
+              Get Direction
+            </a>
           </div>
 
           {/* Right: Themed map */}
           <div className="lg:col-span-7 relative h-[320px] md:h-[420px] rounded-sm overflow-hidden shadow-md">
             <iframe
-              src="https://www.openstreetmap.org/export/embed.html?bbox=115.1500%2C-8.7050%2C115.1800%2C-8.6800&amp;layer=mapnik&amp;marker=-8.6925%2C115.1650"
+              title={`Map of ${activeLocation.label}`}
+              src={contactMapSrc}
               width="100%"
               height="100%"
               style={{
                 border: 0,
-                filter: isDark
-                  ? "grayscale(1) invert(0.88) hue-rotate(180deg)"
-                  : "none",
+                filter: "grayscale(0.15)",
                 transition: "filter 0.5s ease",
               }}
               allowFullScreen

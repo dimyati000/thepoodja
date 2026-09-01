@@ -23,6 +23,7 @@ const navLinks = [
       // { label: "Seminyak", path: "/properties/all?location=Seminyak" },
     ],
   },
+  { key: "monthly", path: "/monthly" },
   {
     key: "gallery",
     path: "/gallery",

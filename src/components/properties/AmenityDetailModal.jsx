@@ -27,7 +27,7 @@ export function AmenityDetailModal({ isOpen, onClose, details, isDark }) {
   const renderItem = (item, i) => (
     <div
       key={i}
-      className={`flex items-start gap-3 p-3.5 rounded-sm ${cardBg}`}
+      className={`flex items-center gap-3 p-3.5 rounded-sm ${cardBg}`}
     >
       <span
         style={{
@@ -36,7 +36,7 @@ export function AmenityDetailModal({ isOpen, onClose, details, isDark }) {
             ? "rgba(252,213,123,0.1)"
             : "rgba(139,107,46,0.08)",
         }}
-        className="mt-0.5 shrink-0 w-8 h-8 rounded-full flex items-center justify-center"
+        className="shrink-0 w-8 h-8 rounded-full flex items-center justify-center"
       >
         <Icon name={item.icon} size={16} />
       </span>
@@ -67,7 +67,7 @@ export function AmenityDetailModal({ isOpen, onClose, details, isDark }) {
       <div
         onClick={(e) => e.stopPropagation()}
         style={{ backgroundColor: isDark ? "#010e22" : "#ffffff" }}
-        className="w-full max-w-2xl max-h-[85vh] overflow-y-auto rounded-md shadow-2xl animate-[slideUp_0.25s_ease-out]"
+        className="hide-scrollbar w-full max-w-2xl max-h-[85vh] overflow-y-auto overscroll-contain rounded-md shadow-2xl animate-[slideUp_0.25s_ease-out]"
       >
         <div
           style={{

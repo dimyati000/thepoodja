@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams, usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import { useTheme } from "../../../../components/ThemeAndLayoutProviders";
 import { useSettings } from "@/components/SettingsProvider";
@@ -12,9 +12,15 @@ import {
   DEFAULT_REVIEWS,
 } from "@/constants/villas";
 import { DEFAULT_AMENITY_DETAILS } from "@/constants/amenityDetails";
+import { ROOM_GALLERY_IMAGES } from "@/constants/galleryData";
+import {
+  getMonthlyGallery,
+  getMonthlyPrice,
+} from "@/constants/monthlyProperties";
 import { SectionLabel } from "@/components/SectionLabel";
 import { Icon } from "@/components/Icon";
 import { RoomGallery } from "@/components/properties/RoomGallery";
+import { MonthlyDetailGallery } from "@/components/properties/MonthlyDetailGallery";
 import { RoomDescription } from "@/components/properties/RoomDescription";
 import { SleepingSlider } from "@/components/properties/SleepingSlider";
 import { AmenityGrid } from "@/components/properties/AmenityGrid";
@@ -27,6 +33,34 @@ import { ReviewCard } from "@/components/properties/ReviewCard";
 import { LocationPanel } from "@/components/properties/LocationPanel";
 import { VillaCard } from "@/components/properties/VillaCard";
 import { formatPrice } from "@/lib/currency";
+
+const ROOM_GALLERY_CATEGORY_CONFIG = {
+  villas: {
+    slug: "indoor",
+    label: { id: "Indoor", en: "Indoor" },
+    sortOrder: 10,
+  },
+  dining: {
+    slug: "kitchen",
+    label: { id: "Dapur & Ruang Makan", en: "Kitchen & Dining" },
+    sortOrder: 20,
+  },
+  spa: {
+    slug: "spa",
+    label: { id: "Spa & Wellness", en: "Spa & Wellness" },
+    sortOrder: 30,
+  },
+  recreation: {
+    slug: "outdoor",
+    label: { id: "Outdoor & Rekreasi", en: "Outdoor & Recreation" },
+    sortOrder: 40,
+  },
+  weddings: {
+    slug: "weddings",
+    label: { id: "Acara", en: "Events" },
+    sortOrder: 50,
+  },
+};
 
 export default function RoomDetailPage() {
   const { isDark } = useTheme();
@@ -42,6 +76,8 @@ export default function RoomDetailPage() {
   } = useSettings();
   const { villaId, roomId } = useParams();
   const router = useRouter();
+  const pathname = usePathname();
+  const isMonthly = pathname.startsWith("/monthly/");
   const [amenityModalOpen, setAmenityModalOpen] = useState(false);
 
   const villa = VILLAS_DATA.find((v) => v.id === villaId);
@@ -68,8 +104,35 @@ export default function RoomDetailPage() {
   const cardBg = isDark ? "bg-[#00102A]/40" : "bg-[#fcfcfc] shadow-sm";
   const iconColor = isDark ? "text-neutral-400" : "text-neutral-500";
 
-  const gallery =
-    Array.isArray(room.gallery) && room.gallery.length > 0 ? room.gallery : [];
+  const gallery = isMonthly
+    ? getMonthlyGallery(villaId, roomId)
+    : Array.isArray(room.gallery) && room.gallery.length > 0
+      ? room.gallery
+      : [];
+  const lightboxGallery = [
+    ...gallery.map((src, index) => ({
+      src,
+      category:
+        index === 0
+          ? ROOM_GALLERY_CATEGORY_CONFIG.villas
+          : ROOM_GALLERY_CATEGORY_CONFIG.recreation,
+      sortOrder: index,
+    })),
+    ...ROOM_GALLERY_IMAGES.map((image) => {
+      const category = ROOM_GALLERY_CATEGORY_CONFIG[image.category] || {
+        slug: image.category,
+        label: image.category,
+        sortOrder: 100,
+      };
+
+      return {
+        src: image.url,
+        category,
+        sortOrder: image.id,
+        alt: image.title?.[language] || image.title?.en || room.name,
+      };
+    }),
+  ];
   const amenities = room.facilities?.length
     ? room.facilities
     : DEFAULT_AMENITIES;
@@ -100,7 +163,17 @@ export default function RoomDetailPage() {
           : []),
       ];
 
-  const otherRooms = villa.rooms.filter((r) => r.id !== room.id).slice(0, 2);
+  const otherRooms = villa.rooms
+    .filter((r) => r.id !== room.id)
+    .slice(0, 2)
+    .map((otherRoom) =>
+      isMonthly
+        ? {
+            ...otherRoom,
+            gallery: getMonthlyGallery(villaId, otherRoom.id),
+          }
+        : otherRoom,
+    );
 
   const nightCount =
     checkIn && checkOut
@@ -108,6 +181,25 @@ export default function RoomDetailPage() {
       : 0;
 
   const canBook = Boolean(checkIn && checkOut);
+  const displayedRate = isMonthly ? getMonthlyPrice(room) : room.price;
+  const billingCount = isMonthly
+    ? Math.max(1, Math.ceil(nightCount / 30))
+    : nightCount;
+  const totalPrice = displayedRate * billingCount;
+  const perPeriodLabel = isMonthly
+    ? language === "ID"
+      ? "/ bulan"
+      : "/ month"
+    : t("common.perNight");
+  const billingUnitLabel = isMonthly
+    ? language === "ID"
+      ? "bulan"
+      : billingCount === 1
+        ? "month"
+        : "months"
+    : nightCount === 1
+      ? t("calendar.night")
+      : t("calendar.nights");
 
   const handleBookNow = () => {
     if (!canBook) return;
@@ -119,6 +211,7 @@ export default function RoomDetailPage() {
       adults: String(adults),
       children: String(childrenCount),
     });
+    if (isMonthly) params.set("stayType", "monthly");
     router.push(
       `/properties/${villaId}/${roomId}/booking?${params.toString()}`,
     );
@@ -128,7 +221,19 @@ export default function RoomDetailPage() {
     <main className="w-full pb-24 md:pb-32 font-sans tracking-wide antialiased">
       {/* ── GALLERY ── */}
       <section className="w-full max-w-[1440px] mx-auto px-4 sm:px-8 md:px-16 pt-24 md:pt-32">
-        <RoomGallery images={gallery} alt={room.name} isDark={isDark} />
+        {isMonthly ? (
+          <MonthlyDetailGallery
+            images={gallery}
+            alt={room.name}
+            isDark={isDark}
+          />
+        ) : (
+          <RoomGallery
+            images={lightboxGallery}
+            alt={room.name}
+            isDark={isDark}
+          />
+        )}
       </section>
 
       {/* ── BREADCRUMB: Home / Properties / [Nama Room] ── */}
@@ -137,17 +242,17 @@ export default function RoomDetailPage() {
           className={`text-[10px] font-medium tracking-[0.25em] uppercase mb-6 flex items-center gap-2 ${isDark ? "text-neutral-500" : "text-neutral-400"}`}
         >
           <Link
-            href="/properties"
+            href="/"
             className={isDark ? "hover:text-white" : "hover:text-[#011434]"}
           >
             {t("nav.home")}
           </Link>
           <span>/</span>
           <Link
-            href="/properties"
+            href={isMonthly ? "/monthly" : "/properties"}
             className={isDark ? "hover:text-white" : "hover:text-[#011434]"}
           >
-            {t("nav.properties")}
+            {isMonthly ? t("nav.monthly") : t("nav.properties")}
           </Link>
           <span>/</span>
           <span style={{ color: accentText }}>{room.name}</span>
@@ -277,12 +382,12 @@ export default function RoomDetailPage() {
                 </span>
                 <p className="flex items-baseline gap-1.5 mb-1">
                   <span className="font-numbers text-3xl font-semibold leading-none">
-                    {formatPrice(room.price, currency, language)}
+                    {formatPrice(displayedRate, currency, language)}
                   </span>
                   <span
                     className={`text-[11px] font-sans font-light ${isDark ? "text-neutral-400" : "text-neutral-500"}`}
                   >
-                    {t("common.perNight")}
+                    {perPeriodLabel}
                   </span>
                 </p>
                 <p
@@ -327,21 +432,15 @@ export default function RoomDetailPage() {
                           }
                         >
                           <span className="font-numbers">
-                            {formatPrice(room.price, currency, language)}
+                            {formatPrice(displayedRate, currency, language)}
                           </span>{" "}
-                          × <span className="font-numbers">{nightCount}</span>{" "}
-                          {nightCount === 1
-                            ? t("calendar.night")
-                            : t("calendar.nights")}
+                          × <span className="font-numbers">{billingCount}</span>{" "}
+                          {billingUnitLabel}
                         </span>
                         <span
                           className={`font-numbers ${isDark ? "text-neutral-200" : "text-neutral-800"}`}
                         >
-                          {formatPrice(
-                            room.price * nightCount,
-                            currency,
-                            language,
-                          )}
+                          {formatPrice(totalPrice, currency, language)}
                         </span>
                       </div>
                       <div
@@ -353,11 +452,7 @@ export default function RoomDetailPage() {
                           className="font-numbers"
                           style={{ color: accentText }}
                         >
-                          {formatPrice(
-                            room.price * nightCount,
-                            currency,
-                            language,
-                          )}
+                          {formatPrice(totalPrice, currency, language)}
                         </span>
                       </div>
                     </>
@@ -486,6 +581,8 @@ export default function RoomDetailPage() {
                 groupId={villaId}
                 groupName={villa.name}
                 isDark={isDark}
+                billingPeriod={isMonthly ? "month" : "night"}
+                basePath={isMonthly ? "/monthly" : "/properties"}
               />
             ))}
           </div>

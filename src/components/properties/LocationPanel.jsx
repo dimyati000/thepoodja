@@ -1,5 +1,9 @@
 "use client";
 import { useSettings } from "@/components/SettingsProvider";
+import {
+  createGoogleMapsDirectionsUrl,
+  createOpenStreetMapEmbedUrl,
+} from "@/lib/maps";
 
 export function LocationPanel({ villa, isDark }) {
   const { t } = useSettings();
@@ -9,20 +13,20 @@ export function LocationPanel({ villa, isDark }) {
 
   const lat = villa.coords?.lat ?? -8.6905;
   const lng = villa.coords?.lng ?? 115.2625;
-  const bbox = `${lng - 0.02},${lat - 0.015},${lng + 0.02},${lat + 0.015}`;
-  const mapSrc = `https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&layer=mapnik&marker=${lat},${lng}`;
+  const mapSrc = createOpenStreetMapEmbedUrl(lat, lng);
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
       <div
         style={{ borderColor }}
-        className="lg:col-span-7 border h-[320px] sm:h-[400px] overflow-hidden"
+        className="lg:col-span-7 border relative h-[320px] sm:h-[400px] rounded-sm overflow-hidden shadow-md"
       >
         <iframe
           title={`Map of ${villa.name}`}
           src={mapSrc}
-          className="w-full h-full grayscale-[15%]"
+          className="w-full h-full border-0 grayscale-[15%] transition-[filter] duration-500"
           loading="lazy"
+          allowFullScreen
         />
       </div>
 
@@ -64,7 +68,7 @@ export function LocationPanel({ villa, isDark }) {
         </ul>
 
         <a
-          href={`https://www.google.com/maps/search/?api=1&query=${lat},${lng}`}
+          href={createGoogleMapsDirectionsUrl(lat, lng)}
           target="_blank"
           rel="noopener noreferrer"
           style={{ color: accent }}

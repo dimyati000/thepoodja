@@ -8,7 +8,13 @@ import { localize } from "@/lib/i18n";
 import { formatPrice } from "@/lib/currency";
 import { Icon } from "@/components/Icon";
 
-export function VillaCard({ villa, groupId, groupName }) {
+export function VillaCard({
+  villa,
+  groupId,
+  groupName,
+  billingPeriod = "night",
+  basePath = "/properties",
+}) {
   const { isDark } = useTheme();
   const [currentImg, setCurrentImg] = useState(0);
   const { currency, language } = useSettings();
@@ -31,11 +37,16 @@ export function VillaCard({ villa, groupId, groupName }) {
 
   const labels = {
     night: language === "ID" ? "malam" : "night",
+    month: language === "ID" ? "bulan" : "month",
   };
+  const isMonthly = billingPeriod === "month";
+  const displayedPrice = isMonthly
+    ? (villa.monthlyPrice ?? villa.monthly_price ?? villa.price * 30)
+    : villa.price;
 
   return (
     <Link
-      href={`/properties/${groupId}/${villa.id}`}
+      href={`${basePath}/${groupId}/${villa.id}`}
       className={`flex flex-col justify-between overflow-hidden border transition-all duration-500 h-full ${
         isDark
           ? "bg-[#00102A]/40 border-white/10 hover:border-white/20"
@@ -70,9 +81,9 @@ export function VillaCard({ villa, groupId, groupName }) {
 
         <div className="absolute bottom-4 left-4 z-20 text-white">
           <p className="text-xl font-serif font-semibold tracking-wide flex items-end gap-1 font-numbers drop-shadow-sm">
-            {formatPrice(villa.price, currency, language)}
+            {formatPrice(displayedPrice, currency, language)}
             <span className="text-xs font-sans font-light opacity-90 pb-0.5">
-              / {labels.night}
+              / {isMonthly ? labels.month : labels.night}
             </span>
           </p>
         </div>

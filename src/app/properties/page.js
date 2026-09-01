@@ -6,8 +6,10 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useTheme } from "@/components/ThemeAndLayoutProviders";
 import { useSettings } from "@/components/SettingsProvider";
 import { VILLAS_DATA, LOCATIONS } from "@/constants/villas";
+import { getMonthlyGallery } from "@/constants/monthlyProperties";
 import { SectionLabel } from "@/components/SectionLabel";
 import { VillaCard } from "@/components/properties/VillaCard";
+import { MonthlyHeroBanner } from "@/components/properties/MonthlyHeroBanner";
 import { PropertySearchBar } from "@/components/properties/PropertySearchBar";
 import { StickySearchBar } from "@/components/properties/StickySearchBar";
 import { WhyBookWithUs } from "@/components/WhyBookWithUs";
@@ -58,6 +60,27 @@ const COPY = {
       "Our property-management approach is built around personal hospitality, combining authentic local character with international resort standards. Every villa is designed as its own sanctuary with a private pool, modern comforts, and tropical surroundings.",
     about2:
       "From Seminyak's beachfront luxury to Ubud's calm landscapes, Poodja pairs every stay with a best-rate promise, direct reservations, and service tailored to each guest.",
+  },
+};
+
+const MONTHLY_COPY = {
+  id: {
+    ...COPY.id,
+    eyebrow: "KOLEKSI LONG STAY",
+    title: "VILLA BULANAN",
+    heroDesc:
+      "Koleksi villa pilihan untuk hunian bulanan yang nyaman dan fleksibel di Bali.",
+    listLabel: "HUNIAN BULANAN",
+    listTitle: "TEMUKAN VILLA LONG STAY ANDA",
+  },
+  en: {
+    ...COPY.en,
+    eyebrow: "THE LONG-STAY COLLECTION",
+    title: "MONTHLY VILLAS",
+    heroDesc:
+      "A curated collection of comfortable, flexible monthly residences across Bali.",
+    listLabel: "MONTHLY RESIDENCES",
+    listTitle: "FIND YOUR LONG-STAY VILLA",
   },
 };
 
@@ -188,19 +211,20 @@ function dateFromParam(value) {
     : null;
 }
 
-function PropertiesContent() {
+export function PropertiesContent() {
   const { isDark } = useTheme();
   const { language, setCheckIn, setCheckOut } = useSettings();
 
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
+  const isMonthly = pathname === "/monthly";
 
   const inlineSearchRef = useRef(null);
   const [stickyVisible, setStickyVisible] = useState(false);
 
   const lang = language === "ID" ? "id" : "en";
-  const text = COPY[lang];
+  const text = isMonthly ? MONTHLY_COPY[lang] : COPY[lang];
   const paramsString = searchParams.toString();
 
   const activeLocationFilter = useMemo(() => {
@@ -246,12 +270,15 @@ function PropertiesContent() {
       VILLAS_DATA.flatMap((group) =>
         (group.rooms || []).map((room) => ({
           ...room,
+          gallery: isMonthly
+            ? getMonthlyGallery(group.id, room.id)
+            : room.gallery,
           groupId: group.id,
           groupName: group.name,
           groupLocation: group.location,
         })),
       ),
-    [],
+    [isMonthly],
   );
 
   const villas = useMemo(() => {
@@ -305,38 +332,45 @@ function PropertiesContent() {
       />
 
       {/* Hero section */}
-      <section className="relative flex min-h-[520px] w-full items-end pb-20 pt-28 md:min-h-[610px] md:pb-28">
-        <Image
-          src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=2000&q=90"
-          alt="Poodja luxury villa"
-          fill
-          priority
-          sizes="100vw"
-          className="object-cover object-center"
+      {isMonthly ? (
+        <MonthlyHeroBanner
+          villas={allVillas}
+          text={text}
         />
+      ) : (
+        <section className="relative flex min-h-[520px] w-full items-end pb-20 pt-28 md:min-h-[610px] md:pb-28">
+          <Image
+            src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=2000&q=90"
+            alt="Poodja luxury villa"
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover object-center"
+          />
 
-        <div className="absolute inset-0 bg-gradient-to-r from-black/55 via-black/15 to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/10" />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/55 via-black/15 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/10" />
 
-        <div className="relative z-10 mx-auto w-full max-w-[1380px] px-6">
-          <p className="mb-4 text-[10px] font-bold uppercase tracking-[0.38em] text-[#FCD57B] md:text-xs">
-            {text.eyebrow}
-          </p>
+          <div className="relative z-10 mx-auto w-full max-w-[1380px] px-6">
+            <p className="mb-4 text-[10px] font-bold uppercase tracking-[0.38em] text-[#FCD57B] md:text-xs">
+              {text.eyebrow}
+            </p>
 
-          <h1
-            style={{
-              fontFamily: "var(--font-cormorant-garamond)",
-            }}
-            className="mb-4 max-w-3xl text-4xl font-semibold uppercase leading-none tracking-wide text-white md:text-6xl"
-          >
-            {text.title}
-          </h1>
+            <h1
+              style={{
+                fontFamily: "var(--font-cormorant-garamond)",
+              }}
+              className="mb-4 max-w-3xl text-4xl font-semibold uppercase leading-none tracking-wide text-white md:text-6xl"
+            >
+              {text.title}
+            </h1>
 
-          <p className="max-w-xl text-sm font-light leading-relaxed text-white/80 md:text-base">
-            {text.heroDesc}
-          </p>
-        </div>
-      </section>
+            <p className="max-w-xl text-sm font-light leading-relaxed text-white/80 md:text-base">
+              {text.heroDesc}
+            </p>
+          </div>
+        </section>
+      )}
 
       {/* Search form */}
       <div className="relative z-30 mx-auto w-full max-w-[1380px] px-4 sm:px-6">
@@ -429,6 +463,8 @@ function PropertiesContent() {
                 groupId={villa.groupId}
                 groupName={villa.groupName}
                 isDark={isDark}
+                billingPeriod={isMonthly ? "month" : "night"}
+                basePath={isMonthly ? "/monthly" : "/properties"}
               />
             ))}
           </div>
@@ -453,7 +489,11 @@ function PropertiesContent() {
         features={features}
         labelText={text.promise}
         headingText={text.why}
-        sectionId="why-book-with-us-properties"
+        sectionId={
+          isMonthly
+            ? "why-book-with-us-monthly"
+            : "why-book-with-us-properties"
+        }
       />
 
       {/* FAQ */}

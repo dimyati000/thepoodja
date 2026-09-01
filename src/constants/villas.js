@@ -1159,6 +1159,8 @@ export const DEFAULT_REVIEWS = [
   {
     name: "Andy P.",
     origin: "Indonesia",
+    avatar:
+      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80",
     rating: 5.0,
     text: {
       en: "It was an enjoyable stay and we'd love to return again in the future. Leisure in the villa to enjoy the serenity, and the staff was very helpful and professional to attend our needs.",
@@ -1168,6 +1170,8 @@ export const DEFAULT_REVIEWS = [
   {
     name: "Marcela",
     origin: "Uruguay",
+    avatar:
+      "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80",
     rating: 5.0,
     text: {
       en: "If you are looking for something tropical and hidden, out of the hustle and bustle, this is it. Friendly staff, comfy beds, and the breakfast was a holiday highlight on its own.",
@@ -1177,6 +1181,8 @@ export const DEFAULT_REVIEWS = [
   {
     name: "Anthony",
     origin: "Australia",
+    avatar:
+      "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=150&q=80",
     rating: 5.0,
     text: {
       en: "Staff were excellent throughout. Everything was exactly as described, and the housekeeping team kept the room immaculate every single day.",
@@ -1186,6 +1192,8 @@ export const DEFAULT_REVIEWS = [
   {
     name: "Jen",
     origin: "Australia",
+    avatar:
+      "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=150&q=80",
     rating: 5.0,
     text: {
       en: "We stayed four nights relaxing, enjoying the climate, and being in one spot. Didn't need to leave the property at all — it was a 10/10 for us.",
