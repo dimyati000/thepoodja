@@ -39,13 +39,10 @@ export function MonthlyHeroBanner({ villas = [], text }) {
     return () => window.clearInterval(timer);
   }, [slides.length]);
 
-  useEffect(() => {
-    if (activeIndex >= slides.length) setActiveIndex(0);
-  }, [activeIndex, slides.length]);
-
   if (!slides.length) return null;
 
-  const activeSlide = slides[activeIndex];
+  const normalizedActiveIndex = activeIndex % slides.length;
+  const activeSlide = slides[normalizedActiveIndex];
   const previousLabel = language === "ID" ? "Sebelumnya" : "Previous";
   const nextLabel = language === "ID" ? "Berikutnya" : "Next";
   const viewLabel = language === "ID" ? "Lihat villa" : "View villa";
@@ -72,7 +69,7 @@ export function MonthlyHeroBanner({ villas = [], text }) {
             priority={index === 0}
             sizes="100vw"
             className={`object-cover transition-[opacity,transform] duration-[1400ms] ease-out ${
-              index === activeIndex
+              index === normalizedActiveIndex
                 ? "scale-100 opacity-100"
                 : "pointer-events-none scale-[1.025] opacity-0"
             }`}
@@ -120,7 +117,7 @@ export function MonthlyHeroBanner({ villas = [], text }) {
         </div>
       </div>
 
-      <div className="absolute bottom-6 left-1/2 z-20 flex w-[calc(100%-3rem)] max-w-xl -translate-x-1/2 items-center gap-4 text-white md:bottom-8">
+      <div className="absolute bottom-20 left-1/2 z-20 flex w-[calc(100%-3rem)] max-w-xl -translate-x-1/2 items-center gap-4 text-white md:bottom-24">
         <button
           type="button"
           onClick={() => move(-1)}
@@ -137,12 +134,12 @@ export function MonthlyHeroBanner({ villas = [], text }) {
               key={slide.id}
               onClick={() => setActiveIndex(index)}
               aria-label={`Slide ${index + 1}`}
-              aria-current={index === activeIndex}
+              aria-current={index === normalizedActiveIndex}
               className="h-5 flex-1 py-[9px]"
             >
               <span
                 className={`block h-px transition-colors ${
-                  index === activeIndex ? "bg-[#FCD57B]" : "bg-white/35"
+                  index === normalizedActiveIndex ? "bg-[#FCD57B]" : "bg-white/35"
                 }`}
               />
             </button>
@@ -150,7 +147,7 @@ export function MonthlyHeroBanner({ villas = [], text }) {
         </div>
 
         <span className="font-numbers text-[9px] tracking-[0.2em] text-white/70">
-          {String(activeIndex + 1).padStart(2, "0")} / {String(slides.length).padStart(2, "0")}
+          {String(normalizedActiveIndex + 1).padStart(2, "0")} / {String(slides.length).padStart(2, "0")}
         </span>
 
         <button
