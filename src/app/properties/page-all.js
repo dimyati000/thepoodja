@@ -17,8 +17,8 @@ import { useSettings } from "@/components/SettingsProvider";
 import { VILLAS_DATA, LOCATIONS } from "@/constants/villas";
 import { SectionLabel } from "@/components/SectionLabel";
 import { VillaCard } from "@/components/properties/VillaCard";
-import { PropertySearchBar } from "@/components/properties/PropertySearchBar";
-import { StickySearchBar } from "@/components/properties/StickySearchBar";
+import { PropertySearchBar } from "@/components/PropertySearchBar";
+import { StickySearchBar } from "@/components/StickySearchBar";
 import { formatDateLabel } from "@/lib/dateUtils";
 
 function parseDateParam(value) {

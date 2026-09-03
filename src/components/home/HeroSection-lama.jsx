@@ -1,8 +1,8 @@
 "use client";
 import { useRef } from "react";
 import Image from "next/image";
-import { PropertySearchBar } from "../properties/PropertySearchBar";
-import { StickySearchBar } from "../properties/StickySearchBar";
+import { PropertySearchBar } from "../PropertySearchBar";
+import { StickySearchBar } from "../StickySearchBar";
 import { Icon } from "@/components/Icon";
 
 const DEFAULT_SLIDES = [

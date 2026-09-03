@@ -474,17 +474,19 @@ export function PropertySearchBar({ isDark, compact = false, popupDirection = "d
   };
 
   const dividerClass = isDark ? "divide-white/10" : "divide-black/10";
-  const wrapperBg = isDark ? "rgba(1,20,52,0.92)" : "rgba(255,255,255,0.97)";
+  const wrapperBg = isDark
+    ? "rgba(1, 14, 34, 0.75)"
+    : "rgba(255, 255, 255, 0.85)";
   const wrapperBorder = isDark
-    ? "1px solid rgba(255,255,255,0.08)"
-    : "1px solid rgba(0,0,0,0.06)";
+    ? "1px solid rgba(252, 213, 123, 0.18)"
+    : "1px solid rgba(1, 20, 52, 0.15)";
 
   return (
     <div
       style={{
         background: wrapperBg,
-        backdropFilter: "blur(24px)",
-        WebkitBackdropFilter: "blur(24px)",
+        backdropFilter: "blur(16px)",
+        WebkitBackdropFilter: "blur(16px)",
         border: wrapperBorder,
       }}
       className={`relative z-[120] mx-auto grid w-full max-w-[1040px] grid-cols-1 divide-y overflow-visible rounded-sm shadow-lg md:grid-cols-12 md:divide-x md:divide-y-0 ${dividerClass}`}

@@ -8,7 +8,7 @@ import { useSettings } from "@/components/SettingsProvider";
 import { VILLAS_DATA } from "@/constants/villas";
 import { SectionLabel } from "@/components/SectionLabel";
 import { VillaCard } from "../../components/properties/VillaCard";
-import { PropertySearchBar } from "@/components/properties/PropertySearchBar";
+import { PropertySearchBar } from "@/components/PropertySearchBar";
 import { FAQAccordion } from "@/components/FAQAccordion";
 import { WhyBookWithUs } from "@/components/WhyBookWithUs";
 import { Icon } from "@/components/Icon";
